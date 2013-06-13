@@ -78,7 +78,7 @@ CREATE TABLE `trefservicios` (
 #
 
 CREATE TABLE `tmedicoxservicio` (
-  `MES_CODIGO` tinyint(4) NOT NULL,
+  `MES_CODIGO` tinyint(4) NOT NULL AUTO_INCREMENT,
   `MER_CODIGO` smallint(6) DEFAULT NULL,
   `RES_CODIGO` smallint(6) DEFAULT NULL,
   `MES_ACTIVO` enum('activo','inactivo') NOT NULL,
@@ -87,7 +87,7 @@ CREATE TABLE `tmedicoxservicio` (
   KEY `FK_RMSXRS` (`RES_CODIGO`),
   CONSTRAINT `FK_RMSXMR` FOREIGN KEY (`MER_CODIGO`) REFERENCES `tmedicoreferenciado` (`MER_CODIGO`),
   CONSTRAINT `FK_RMSXRS` FOREIGN KEY (`RES_CODIGO`) REFERENCES `trefservicios` (`RES_CODIGO`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='CADA MEDICO ASIGNADO A UN SERVICIO EN EL ESTABLECIMIENTO REF';
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1 COMMENT='CADA MEDICO ASIGNADO A UN SERVICIO EN EL ESTABLECIMIENTO REF';
 
 #
 # Structure for the `tempresas` table : 
@@ -135,7 +135,7 @@ CREATE TABLE `tpaciente` (
   KEY `FK_RPACIENTESEGURO` (`SEG_CODIGO`),
   CONSTRAINT `FK_RPACIENTEEMPRESA` FOREIGN KEY (`EMP_CODIGO`) REFERENCES `tempresas` (`EMP_CODIGO`),
   CONSTRAINT `FK_RPACIENTESEGURO` FOREIGN KEY (`SEG_CODIGO`) REFERENCES `tseguros` (`SEG_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='LISTADO DE PACIENTES';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COMMENT='LISTADO DE PACIENTES';
 
 #
 # Structure for the `tmedicoreferente` table : 
@@ -204,11 +204,11 @@ CREATE TABLE `tunidadmedico` (
 
 CREATE TABLE `ttramite` (
   `TRA_CODIGO` int(11) NOT NULL AUTO_INCREMENT,
-  `TRA_ESTADO` enum('pendiente','confirmado','atendido','cancelado') DEFAULT NULL,
+  `TRA_ESTADO` enum('pendiente','asignado','confirmado','cancelado','atendido') DEFAULT 'pendiente',
   `PAC_CODIGO` int(11) DEFAULT NULL,
   `RES_CODIGO` smallint(6) DEFAULT NULL,
   `UNM_CODIGO` smallint(6) DEFAULT NULL,
-  `TRA_SISTEMA` enum('publico','privado') DEFAULT NULL,
+  `TRA_SISTEMA` enum('publico','privado') DEFAULT 'publico',
   `TRA_FECHA` date NOT NULL,
   `TRA_HORA` time NOT NULL,
   `TRA_MOTIVO` varchar(1500) NOT NULL,
@@ -267,7 +267,7 @@ CREATE TABLE `tdiagsie10` (
   `DIA_CODIGO` smallint(6) NOT NULL,
   `TRA_CODIGO` int(11) DEFAULT NULL,
   `SIE_CODIGO` varchar(12) DEFAULT NULL,
-  `DIA_DIAGNOS` varchar(3) NOT NULL,
+  `DIA_DIAGNOS` enum('pre','def') NOT NULL,
   PRIMARY KEY (`DIA_CODIGO`),
   KEY `FK_RDXS` (`TRA_CODIGO`),
   KEY `FK_RSXD` (`SIE_CODIGO`),
@@ -280,16 +280,33 @@ CREATE TABLE `tdiagsie10` (
 #
 
 CREATE TABLE `tusuario` (
-  `usu_codigo` tinyint(4) NOT NULL AUTO_INCREMENT,
-  `usu_usuario` varchar(20) NOT NULL,
-  `usu_clave` varchar(50) NOT NULL,
-  `usu_tipo` enum('admin','referente','contrareferente') NOT NULL,
-  `usu_activo` enum('activo','inactivo') NOT NULL,
-  `usu_fecha` datetime DEFAULT NULL,
-  PRIMARY KEY (`usu_codigo`),
-  UNIQUE KEY `usu_usuario` (`usu_usuario`),
-  UNIQUE KEY `usu_usuario_2` (`usu_usuario`)
+  `USU_CODIGO` tinyint(4) NOT NULL AUTO_INCREMENT,
+  `USU_USUARIO` varchar(20) NOT NULL,
+  `USU_CLAVE` varchar(200) NOT NULL,
+  `USU_TIPO` enum('admin','referente','contrareferente') NOT NULL,
+  `USU_ACTIVO` enum('activo','inactivo') NOT NULL,
+  `USU_FECHA` datetime DEFAULT NULL,
+  `MED_CODIGO` smallint(6) DEFAULT NULL,
+  PRIMARY KEY (`USU_CODIGO`),
+  UNIQUE KEY `usu_usuario` (`USU_USUARIO`),
+  UNIQUE KEY `usu_usuario_2` (`USU_USUARIO`),
+  UNIQUE KEY `USU_USUARIO_3` (`USU_USUARIO`),
+  UNIQUE KEY `MED_CODIGO` (`MED_CODIGO`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+#
+# Definition for the `vlocalunidad` view : 
+#
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW vlocalunidad AS 
+  select 
+    `tlocalizacion`.`LOC_CODIGO` AS `LOC_CODIGO`,
+    `tunidad`.`UNI_CODIGO` AS `UNI_CODIGO`,
+    `tlocalizacion`.`LOC_CPARR` AS `LOC_CPARR`,
+    `tlocalizacion`.`LOC_CCAN` AS `LOC_CCAN`,
+    `tlocalizacion`.`LOC_CPRO` AS `LOC_CPRO` 
+  from 
+    (`tlocalizacion` join `tunidad` on((`tlocalizacion`.`LOC_CODIGO` = `tunidad`.`LOC_CODIGO`)));
 
 #
 # Definition for the `vunidadmedico` view : 
@@ -355,12 +372,32 @@ INSERT INTO `trefservicios` (`RES_CODIGO`, `SER_CODIGO`, `REF_CODIGO`) VALUES
 COMMIT;
 
 #
+# Data for the `tmedicoxservicio` table  (LIMIT 0,500)
+#
+
+INSERT INTO `tmedicoxservicio` (`MES_CODIGO`, `MER_CODIGO`, `RES_CODIGO`, `MES_ACTIVO`) VALUES 
+  (1,1,3,'activo'),
+  (2,1,4,'inactivo'),
+  (3,1,2,'activo'),
+  (4,3,1,'activo'),
+  (5,3,4,'inactivo'),
+  (6,3,2,'activo'),
+  (7,3,3,'inactivo'),
+  (8,4,4,'activo'),
+  (9,2,4,'inactivo'),
+  (10,1,1,'activo'),
+  (11,4,1,'inactivo'),
+  (12,2,1,'activo'),
+  (13,2,3,'activo');
+COMMIT;
+
+#
 # Data for the `tempresas` table  (LIMIT 0,500)
 #
 
 INSERT INTO `tempresas` (`EMP_CODIGO`, `EMP_DESCRIP`, `EMP_OBSERV`) VALUES 
-  (1,'a','h'),
-  (2,'j','i');
+  (1,'empresa1','observacion'),
+  (2,'empre2','obserbi');
 COMMIT;
 
 #
@@ -377,8 +414,9 @@ COMMIT;
 #
 
 INSERT INTO `tpaciente` (`PAC_CODIGO`, `SEG_CODIGO`, `EMP_CODIGO`, `PAC_CEDULA`, `PAC_PNOM`, `PAC_SNOM`, `PAC_PAPE`, `PAC_SAPE`, `PAC_FCH_NAC`, `PAC_GENERO`, `PAC_EST_CIV`, `PAC_INSTRUC`, `PAC_HC`, `PAC_TELEF`) VALUES 
-  (1,2,1,'1003043872','a','b','c','d','1988-09-05','masculino','casado','Superior','hc1','0985528967'),
-  (2,NULL,NULL,'j','m','n','b','v','1999-00-00','femenino','soltero','primaria','jn','0999999999');
+  (1,2,2,'1003043872','Alexis','Fernando','Saransig','Chiza','1988-09-05','masculino','casado','Superior','hc1','0985528967'),
+  (2,NULL,2,'2001030435','m','n','b','v','1999-00-00','femenino','soltero','primaria','jn','0999999999'),
+  (3,2,1,'200103000','Fucken','xyz','asd','qwe','1988-09-05','masculino','casado','Primaria','hc3','098884774747');
 COMMIT;
 
 #
@@ -386,7 +424,7 @@ COMMIT;
 #
 
 INSERT INTO `tmedicoreferente` (`MED_CODIGO`, `MED_CODMED`, `MED_ESPECIAL`, `MED_OBSERV`, `MED_ESTADO`, `MED_PNOM`, `MED_SNOM`, `MED_PAPE`, `MED_SAPE`) VALUES 
-  (1,'codmedi','espec','Obs','activo','nom ww   ','snom','bleble ','2ape    '),
+  (1,'codmedi','espec','Obs','activo','nom','snom','bleble ','2ape    '),
   (2,'med1','esp2','observ2','activo','al','fe','sa','ch'),
   (3,'med1','esp2','observ2','activo','al ','fe','sa ','ch '),
   (4,'med1','esp2','observ2','activo','al ','fe','sa ','ch '),
@@ -17805,11 +17843,11 @@ COMMIT;
 # Data for the `tusuario` table  (LIMIT 0,500)
 #
 
-INSERT INTO `tusuario` (`usu_codigo`, `usu_usuario`, `usu_clave`, `usu_tipo`, `usu_activo`, `usu_fecha`) VALUES 
-  (1,'usu1','7815696ecbf1c96e6894b779456d330e','admin','activo','2013-05-18 10:28:12'),
-  (2,'usu2','7815696ecbf1c96e6894b779456d330e','referente','activo','2013-05-16 23:59:31'),
-  (3,'usu3','7815696ecbf1c96e6894b779456d330e','contrareferente','activo',NULL),
-  (4,'usu4','76d80224611fc919a5d54f0ff9fba446','admin','activo',NULL);
+INSERT INTO `tusuario` (`USU_CODIGO`, `USU_USUARIO`, `USU_CLAVE`, `USU_TIPO`, `USU_ACTIVO`, `USU_FECHA`, `MED_CODIGO`) VALUES 
+  (1,'usuario1','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-06-05 22:04:51',1),
+  (2,'usuario2','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-06-05 22:16:51',2),
+  (3,'usu3','7815696ecbf1c96e6894b779456d330e','contrareferente','activo',NULL,3),
+  (4,'usu4','76d80224611fc919a5d54f0ff9fba446','admin','activo',NULL,4);
 COMMIT;
 
 
