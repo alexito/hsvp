@@ -1,6 +1,60 @@
 var sie10 = null;
+var pd = '';
+function saveTramiteUnidad(){
+  
+  var codpac = _("cod_paciente").value;
+  
+  //variables para buscar el UNM_CODIGO
+  var codmed = _("cod_medref").value;
+  var coduni = _("cmbunidad").value;
+  
+  //variables para buscar el RES_CODIGO
+  var codser = _("cod_servicio").value;
+  var codref = _("cod_referenciado").value;
+  
+  var mot = _("motivo_ref").value;
+  var res = _("resumen_ref").value;
+  var hal = _("hallazgo_ref").value;
+  var pla = _("plan_ref").value;
+  
+  pd = '';
+  var dia = getDiagnosticoCodes();
+  if(dia == ''){
+    alert('Ingrese al menos un diagnostico. Debe ser seleccionado obligatoriamente de la lista desplegada.');
+    return;
+  }
+  
+  if(codpac == "" || codmed == "" || coduni == "" || codser == "" || codref == "" ||
+    mot == "" || res == "" || hal == "" || pla == ""){
+    alert('Todos los campos son requeridos, ingrese datos validos.');
+    return;
+  } else {        
+    status.innerHTML = '<br><img src="images/loading.gif">';       
+    $("#table_content").hide(300);
+    var ajax = ajaxObj("POST", "tramite_uni.php");
+    ajax.onreadystatechange = function() {
+      if(ajaxReturn(ajax) == true) {        
+        alert('Se envió correctamente la REFERENCIA.');
+        window.location.href = 'tramite_uni.php';
+      }
+    }
+    ajax.send("codpac="+codpac+"&codmed="+codmed+"&coduni="+coduni+"&codser="+codser+
+      "&codref="+codref+"&mot="+mot+"&res="+res+"&hal="+hal+"&pla="+pla+"&dia="+dia+"&pd="+pd);        
+  }
+}
 
-
+function getDiagnosticoCodes(){
+  var dat = '';
+  var vals = $('#sie10').find('.cod_diag_class');  
+  var i = 0;
+  for(; i < vals.length - 1; i++){
+    pd = pd + $(vals[i]).siblings('input:radio:checked').val() + '-';
+    dat = dat + $(vals[i]).val() + '-'; 
+  }  
+  dat = dat + $(vals[i]).val(); 
+  pd = pd + $(vals[i]).siblings('input:radio:checked').val();
+  return dat;
+}
 
 function autocompletePaciente(){
   var pacientes = new Array();
@@ -54,7 +108,9 @@ function autocompleteServicio(){
       });
     }
   }
-  ajax.send("autoserv=true");
+  //En caso de implementar con otra entidad referenciada, se debera modificar codigo
+  //en esta funcion y enviar el cod de dicha entidad en la variable ref
+  ajax.send("autoserv=true&ref=1");
 }
 
 

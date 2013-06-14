@@ -1,4 +1,6 @@
 var countriesArray, countries;
+var diag_fields;
+var diag_counter;
 
 function _(x){
   return document.getElementById(x);
@@ -6,13 +8,17 @@ function _(x){
 
 //To create new Localization - Clean fields
 window.onload = function init() {
-  var diag_counter = 2;
+  
+  
   ////Get the current page name
   val = window.location.href;
   val = val.split('/');
   val = val[val.length -1]
   
   if(val == 'tramite_uni.php'){
+    diag_counter = 2;
+    diag_fields = new Array();
+    
     //Set localizacion data
     getLocalizacionData();
     //Load Paciente autocomplete data
@@ -95,10 +101,11 @@ window.onload = function init() {
         }
       });
     });
-  
-    $('#add-serv').click(function(){
-      $('#sie10').append('<tr ><td><input type="hidden" name="cod_diag" id="cod-diag-' + diag_counter + '" value="" />'+
-        '<input style="width:25px;" type="radio" name="group-' + diag_counter + '" value="pre">PRE<input style="width:25px;" type="radio" name="group-' + diag_counter + '" value="def">DEF<input style="width:400px; margin-left:9px;" type="text" name="diagnostico" id="diagnostico-auto-' + diag_counter + '"/>'+
+      
+    //Aniade un nuevo campo para ingresar un nuevo diagnostico
+    $('#add-diag').click(function(){
+      $('#sie10').append('<tr ><td><input class="cod_diag_class" type="hidden" name="cod_diag" id="cod-diag-' + diag_counter + '" value="" />'+
+        '<input style="width:25px;" type="radio" name="group-' + diag_counter + '" value="pre" checked="true">PRE<input style="width:25px;" type="radio" name="group-' + diag_counter + '" value="def">DEF<input style="width:400px; margin-left:9px;" type="text" name="diagnostico" id="diagnostico-auto-' + diag_counter + '"/>'+
         '<a class="elim-diag" href="#"><img style="width:25px; margin-left:10px;margin-right:10px; margin-bottom: -8px;" src="images/icono-eliminar.png">Eliminar</a></td></tr>');
     
       // Initialize ajax autocomplete:
@@ -118,17 +125,25 @@ window.onload = function init() {
           return re.test(suggestion.value);
         }
       });
-      diag_counter++;
+      diag_fields[diag_counter] = true;
       $('.elim-diag').click(function (){
+        var pos = $('#position', this).val();
+        diag_fields[pos] = false;
         $(this).parent().parent().remove();
         return false;
       });
+      diag_counter++;
       return false;
     });
     
   }
   
-  
+  //Guarda los datos del referente
+  $('#saveTramiteUnidad').click(function(){
+      //window.location.href = 'tramite_uni.php';
+      saveTramiteUnidad();
+      //getDiagnosticoCodes();
+    });
   
   /////Muestra msg olvido clave
   $('#olvidoclave').click(function(){

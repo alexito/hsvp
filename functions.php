@@ -36,9 +36,9 @@ function getPacienteData($db_conx, $cod) {
   echo $data;
 }
 
-function getServicioAutocomplete($db_conx) {
+function getServicioAutocomplete($db_conx, $ref = 1) {
 
-  $sql = "SELECT * FROM tservicios ORDER BY ser_descrip ASC";
+  $sql = "SELECT ser_codigo, ser_descrip FROM vreferenciaservicio WHERE ref_codigo = $ref ORDER BY ser_descrip ASC";
   $query = mysqli_query($db_conx, $sql);
   $data = '';
   if ($query) {

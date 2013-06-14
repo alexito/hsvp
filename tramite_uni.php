@@ -9,6 +9,45 @@ if ($user_ok == FALSE || $log_tipo != 'referente') {
   exit();
 }
 ?><?php
+if (isset($_POST['codpac'])) {//Almacena los datos del tramite como referencia
+  $codpac = $_POST['codpac'];
+  $codmed = $_POST['codmed'];
+  $coduni = $_POST['coduni'];
+  $codser = $_POST['codser'];
+  $codref = $_POST['codref'];
+  $mot = $_POST['mot'];
+  $res = $_POST['res'];
+  $hal = $_POST['hal'];
+  $pla = $_POST['pla'];
+  $dia = $_POST['dia'];
+  $pd = $_POST['pd'];
+
+  $sql = "SELECT unm_codigo FROM tunidadmedico WHERE med_codigo = $codmed AND uni_codigo = $coduni";
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+  $codunm = $row[0];
+
+  $sql = "SELECT res_codigo FROM trefservicios WHERE ser_codigo = $codser AND ref_codigo = $codref";
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+  $codres = $row[0];
+
+  $sql = "INSERT INTO ttramite (pac_codigo, res_codigo, unm_codigo, tra_fecha, tra_motivo, tra_resum_cuad_clin,
+    tra_hall_exm_proc_diag, tra_plan_trat) 
+      VALUES( $codpac, $codres, $coduni, NOW(),'$mot', '$res', '$hal', '$pla')";
+  $query = mysqli_query($db_conx, $sql);
+  $uid = mysqli_insert_id($db_conx);
+
+  //ALMACENA EL TRAMITE CON LOS DIAGNOSTICOS
+  $tem = explode('-', $dia);
+  $tempd = explode('-', $pd);
+  for ($i = 0; $i < count($tem); $i++) {
+    $sql = "INSERT INTO tdiagsie10 (tra_codigo, sie_codigo, dia_diagnos) 
+      VALUES( $uid, $tem[$i], '$tempd[$i]')";
+    $query = mysqli_query($db_conx, $sql);
+  }
+  exit();
+}
 if (isset($_POST['loadserv'])) {//Obtiene los datos del paciente seleccionado
   getServicioData($db_conx, $_POST['cod']);
   exit();
@@ -22,6 +61,11 @@ if (isset($_POST['autopac'])) {//Carga los datos del autocompletado de pacientes
   exit();
 }
 if (isset($_POST['autoserv'])) {//Carga los datos del autocompletado de pacientes
+  //EN CASO DE CONTAR CON OTRA ENTIDAD REFERENCIADA SE DEBERA ENVIAR EL CODIGO DE
+  //DICHA ENTIDAD .::. POR EL MOMENTO QUEDA CON LA UNICA ENTIDAD HSVP COD=1
+  //EJEMPLO: 
+  //$ref = $_POST['ref'];
+  //getServicioAutocomplete($db_conx, $ref);
   getServicioAutocomplete($db_conx);
   exit();
 }
@@ -84,6 +128,11 @@ if (isset($_POST["d"])) {
           <div id="genform_style">
             <form name="genform" id="genform" onsubmit="return false;">
               <input type="hidden" name="cod_tramite" id="cod_tramite" value="" />              
+              <input type="hidden" name="cod_medref" id="cod_medref" value="<?php echo $log_id; ?>" />
+              <!-- ESTE CAMPO ALMACENA EL ID DE LA ENTIDAD REFERENCIADA - POR DEFECTO TIENE EL CODIGO 1
+              QUE PERTENECECE AL HSVP, SE DEBERA IMPLEMENTAR CODIGO PARA ASIGNAR EL COD CORRESPONDIENTE
+              EN CASO DE SER OTRA LA ENTIDAD REFERENCIADA-->
+              <input type="hidden" name="cod_referenciado" id="cod_referenciado" value="1" />
 
               <table><tr>
                   <td  style="width: 500px;"><h2>Referencia</h2></td>
@@ -140,11 +189,11 @@ if (isset($_POST["d"])) {
               </table>
               <table id="sie10" class="tr-data">
                 <tr><td><label>Diagnóstico:</label><span class="data" id="serv">
-                      <a id="add-serv" href="#">Añadir <img style="width: 20px; margin-bottom: -4px;" src="images/icono-anadir2.png"></a>
+                      <a id="add-diag" href="#">Añadir <img style="width: 20px; margin-bottom: -4px;" src="images/icono-anadir2.png"></a>
                     </span></td></tr>
                 <tr><td>
-                    <input type="hidden" name="cod_diag" id="cod-diag-1" value="" />
-                    <input style="width:25px;" type="radio" name="group-1" value="pre">PRE
+                    <input class="cod_diag_class" type="hidden" name="cod_diag" id="cod-diag-1" value="" />
+                    <input style="width:25px;" type="radio" name="group-1" value="pre" checked="true">PRE
                     <input style="width:25px;" type="radio" name="group-1" value="def">DEF
                     <input style="width:400px;" type="text" name="diagnostico" id="diagnostico-auto-1"/>                      
                   </td></tr>
@@ -152,27 +201,27 @@ if (isset($_POST["d"])) {
               <table><tr>
                   <td>
                     <label style="width: 400px;">Motivo de Referencia:</label>
-                    <textarea style="width: 520px; height: 70px;" id="motivo-ref" cols="20" rows="2"></textarea>
+                    <textarea style="width: 520px; height: 70px;" id="motivo_ref" cols="20" rows="2"></textarea>
                   </td>
                 </tr><tr>
                   <td>
                     <label style="width: 400px;">Resumen del Cuadro Clínico:</label>
-                    <textarea style="width: 520px; height: 70px;" id="resumen-ref" cols="20" rows="2"></textarea>
+                    <textarea style="width: 520px; height: 70px;" id="resumen_ref" cols="20" rows="2"></textarea>
                   </td>
                 </tr><tr>
                   <td>
                     <label style="width: 400px;">Hallazgos relevantes de examenes y procedimientos diagnósticos:</label>
-                    <textarea style="width: 520px; height: 70px;" id="hallazgo-ref" cols="20" rows="2"></textarea>
+                    <textarea style="width: 520px; height: 70px;" id="hallazgo_ref" cols="20" rows="2"></textarea>
                   </td>
                 </tr><tr class="tr-data">
                   <td>
                     <label style="width: 400px;">Plan tratamiento realizado:</label>
-                    <textarea style="width: 520px; height: 70px;" id="plan-ref" cols="20" rows="2"></textarea>
+                    <textarea style="width: 520px; height: 70px;" id="plan_ref" cols="20" rows="2"></textarea>
                   </td>
                 </tr></table>
               <table><tr style="float: left; margin-left: 150px;"><td>
                     <a style="margin-top: 10px;" class="nuevo" href="tramite_uni.php">Nuevo</a></td><td>
-                    <a id="submitbtn" onclick="">Enviar...</a> </td><td>
+                    <a id="saveTramiteUnidad" onclick="">Enviar...</a> </td><td>
                     <span id="status"></span></td>
                 </tr>
               </table>
