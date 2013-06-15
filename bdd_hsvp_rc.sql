@@ -19,6 +19,15 @@ CREATE DATABASE `bdd_hsvp_rc`
 USE `bdd_hsvp_rc`;
 
 #
+# Structure for the `table1` table : 
+#
+
+CREATE TABLE `table1` (
+  `ID` int(11) DEFAULT NULL,
+  `FECHA` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+#
 # Structure for the `tmedicoreferenciado` table : 
 #
 
@@ -45,7 +54,7 @@ CREATE TABLE `treferenciado` (
   `REF_SIGLAS` varchar(6) NOT NULL,
   `REF_OBSERV` varchar(40) NOT NULL,
   PRIMARY KEY (`REF_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='LISTA DE ESTABLECIMIENTO QUE RECIBEN REFERENCIA';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='LISTA DE ESTABLECIMIENTO QUE RECIBEN REFERENCIA';
 
 #
 # Structure for the `tservicios` table : 
@@ -71,7 +80,7 @@ CREATE TABLE `trefservicios` (
   KEY `FK_RSXR` (`SER_CODIGO`),
   CONSTRAINT `FK_RRXS` FOREIGN KEY (`REF_CODIGO`) REFERENCES `treferenciado` (`REF_CODIGO`),
   CONSTRAINT `FK_RSXR` FOREIGN KEY (`SER_CODIGO`) REFERENCES `tservicios` (`SER_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COMMENT='SERVICIOS IDENTIFICADOS EN UN HOSPITAL REFERENCIADO';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='SERVICIOS IDENTIFICADOS EN UN HOSPITAL REFERENCIADO';
 
 #
 # Structure for the `tmedicoxservicio` table : 
@@ -209,17 +218,16 @@ CREATE TABLE `ttramite` (
   `RES_CODIGO` smallint(6) DEFAULT NULL,
   `UNM_CODIGO` smallint(6) DEFAULT NULL,
   `TRA_SISTEMA` enum('publico','privado') DEFAULT 'publico',
-  `TRA_FECHA` date NOT NULL,
-  `TRA_HORA` time NOT NULL,
+  `TRA_FECHA` datetime NOT NULL,
   `TRA_MOTIVO` varchar(1500) NOT NULL,
   `TRA_RESUM_CUAD_CLIN` varchar(1500) NOT NULL,
   `TRA_HALL_EXM_PROC_DIAG` varchar(1500) NOT NULL,
   `TRA_PLAN_TRAT` varchar(1500) NOT NULL,
   `TRA_SALA` varchar(6) DEFAULT NULL,
   `TRA_CAMA` varchar(6) DEFAULT NULL,
-  `TRA_TIPO` enum('publico','privado') NOT NULL,
-  `TRA_ACTIVO` enum('activo','inactivo') NOT NULL,
-  `TRA_JUSTIF` enum('si','no') NOT NULL,
+  `TRA_TIPO` enum('referencia','contrareferencia') NOT NULL DEFAULT 'referencia',
+  `TRA_ACTIVO` enum('activo','inactivo') NOT NULL DEFAULT 'activo',
+  `TRA_JUSTIF` enum('si','no') NOT NULL DEFAULT 'no',
   PRIMARY KEY (`TRA_CODIGO`),
   KEY `FK_RESTABLECTRAMITE` (`RES_CODIGO`),
   KEY `FK_RTRAMITEESTADO` (`TRA_ESTADO`),
@@ -229,7 +237,7 @@ CREATE TABLE `ttramite` (
   CONSTRAINT `FK_RESTABLECTRAMITE` FOREIGN KEY (`RES_CODIGO`) REFERENCES `trefservicios` (`RES_CODIGO`),
   CONSTRAINT `FK_RTRAMITEPACIENTE` FOREIGN KEY (`PAC_CODIGO`) REFERENCES `tpaciente` (`PAC_CODIGO`),
   CONSTRAINT `FK_TUNIDADMEDICOXTRAMITE` FOREIGN KEY (`UNM_CODIGO`) REFERENCES `tunidadmedico` (`UNM_CODIGO`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='CONTIENE LOS REGISTROS DE CADA REFERENCIA O CONTRAREFERENCIA';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 AVG_ROW_LENGTH=8192 COMMENT='CONTIENE LOS REGISTROS DE CADA REFERENCIA O CONTRAREFERENCIA';
 
 #
 # Structure for the `tasignacion` table : 
@@ -264,16 +272,16 @@ CREATE TABLE `tsie10` (
 #
 
 CREATE TABLE `tdiagsie10` (
-  `DIA_CODIGO` smallint(6) NOT NULL,
+  `DIA_CODIGO` int(11) NOT NULL AUTO_INCREMENT,
   `TRA_CODIGO` int(11) DEFAULT NULL,
   `SIE_CODIGO` varchar(12) DEFAULT NULL,
-  `DIA_DIAGNOS` enum('pre','def') NOT NULL,
+  `DIA_DIAGNOS` enum('pre','def') NOT NULL DEFAULT 'pre',
   PRIMARY KEY (`DIA_CODIGO`),
   KEY `FK_RDXS` (`TRA_CODIGO`),
   KEY `FK_RSXD` (`SIE_CODIGO`),
   CONSTRAINT `FK_RDXS` FOREIGN KEY (`TRA_CODIGO`) REFERENCES `ttramite` (`TRA_CODIGO`),
   CONSTRAINT `FK_RSXD` FOREIGN KEY (`SIE_CODIGO`) REFERENCES `tsie10` (`SIE_CODIGO`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='CONTIENE LOS DIAGNOSTICOS DEL SIE10 PARA CADA TRAMITE, PÚEDE';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 AVG_ROW_LENGTH=3276 COMMENT='CONTIENE LOS DIAGNOSTICOS DEL SIE10 PARA CADA TRAMITE, PÚEDE';
 
 #
 # Structure for the `tusuario` table : 
@@ -309,6 +317,43 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
     (`tlocalizacion` join `tunidad` on((`tlocalizacion`.`LOC_CODIGO` = `tunidad`.`LOC_CODIGO`)));
 
 #
+# Definition for the `vreferencias_uni` view : 
+#
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW vreferencias_uni AS 
+  select 
+    `tmedicoreferente`.`MED_CODIGO` AS `MED_CODIGO`,
+    `ttramite`.`TRA_CODIGO` AS `TRA_CODIGO`,
+    `ttramite`.`TRA_FECHA` AS `TRA_FECHA`,
+    `tpaciente`.`PAC_CEDULA` AS `PAC_CEDULA`,
+    `tpaciente`.`PAC_PAPE` AS `PAC_PAPE`,
+    `tpaciente`.`PAC_SAPE` AS `PAC_SAPE`,
+    `tpaciente`.`PAC_PNOM` AS `PAC_PNOM`,
+    `tpaciente`.`PAC_SNOM` AS `PAC_SNOM`,
+    `ttramite`.`TRA_MOTIVO` AS `TRA_MOTIVO`,
+    `tservicios`.`SER_DESCRIP` AS `SER_DESCRIP`,
+    `ttramite`.`TRA_ESTADO` AS `TRA_ESTADO`,
+    `ttramite`.`TRA_ACTIVO` AS `TRA_ACTIVO` 
+  from 
+    (((((`trefservicios` join `ttramite` on((`trefservicios`.`RES_CODIGO` = `ttramite`.`RES_CODIGO`))) join `tservicios` on((`trefservicios`.`SER_CODIGO` = `tservicios`.`SER_CODIGO`))) join `tpaciente` on((`ttramite`.`PAC_CODIGO` = `tpaciente`.`PAC_CODIGO`))) join `tunidadmedico` on((`ttramite`.`UNM_CODIGO` = `tunidadmedico`.`UNM_CODIGO`))) join `tmedicoreferente` on((`tunidadmedico`.`MED_CODIGO` = `tmedicoreferente`.`MED_CODIGO`))) 
+  order by 
+    `ttramite`.`TRA_FECHA` desc;
+
+#
+# Definition for the `vreferenciaservicio` view : 
+#
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW vreferenciaservicio AS 
+  select 
+    `treferenciado`.`REF_CODIGO` AS `REF_CODIGO`,
+    `treferenciado`.`REF_DESCRIP` AS `REF_DESCRIP`,
+    `trefservicios`.`RES_CODIGO` AS `RES_CODIGO`,
+    `tservicios`.`SER_CODIGO` AS `SER_CODIGO`,
+    `tservicios`.`SER_DESCRIP` AS `SER_DESCRIP` 
+  from 
+    ((`treferenciado` join `trefservicios` on((`treferenciado`.`REF_CODIGO` = `trefservicios`.`REF_CODIGO`))) join `tservicios` on((`trefservicios`.`SER_CODIGO` = `tservicios`.`SER_CODIGO`)));
+
+#
 # Definition for the `vunidadmedico` view : 
 #
 
@@ -331,6 +376,14 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
     (`tunidadmedico`.`UNM_ACTIVO` = 'activo');
 
 #
+# Data for the `table1` table  (LIMIT 0,500)
+#
+
+INSERT INTO `table1` (`ID`, `FECHA`) VALUES 
+  (9999,'2013-06-13 21:18:10');
+COMMIT;
+
+#
 # Data for the `tmedicoreferenciado` table  (LIMIT 0,500)
 #
 
@@ -346,7 +399,8 @@ COMMIT;
 #
 
 INSERT INTO `treferenciado` (`REF_CODIGO`, `REF_DESCRIP`, `REF_SIGLAS`, `REF_OBSERV`) VALUES 
-  (1,'ref1','hsvp','hsvp');
+  (1,'ref1','hsvp','hsvp'),
+  (2,'ref2','abc','xyz');
 COMMIT;
 
 #
@@ -368,7 +422,8 @@ INSERT INTO `trefservicios` (`RES_CODIGO`, `SER_CODIGO`, `REF_CODIGO`) VALUES
   (1,1,1),
   (2,2,1),
   (3,3,1),
-  (4,4,1);
+  (4,4,1),
+  (5,3,2);
 COMMIT;
 
 #
@@ -380,7 +435,7 @@ INSERT INTO `tmedicoxservicio` (`MES_CODIGO`, `MER_CODIGO`, `RES_CODIGO`, `MES_A
   (2,1,4,'inactivo'),
   (3,1,2,'activo'),
   (4,3,1,'activo'),
-  (5,3,4,'inactivo'),
+  (5,3,4,'activo'),
   (6,3,2,'activo'),
   (7,3,3,'inactivo'),
   (8,4,4,'activo'),
@@ -452,7 +507,7 @@ COMMIT;
 INSERT INTO `tunidad` (`UNI_CODIGO`, `LOC_CODIGO`, `UNI_DESCRIP`, `UNI_OBSERV`, `UNI_ACTIVO`) VALUES 
   (1,1,'Unidad1','Observacion','activo'),
   (2,4,'Unidad2','obs','activo'),
-  (3,2,'Unidad3','obsd','activo'),
+  (3,2,'Unidad3','obsd','inactivo'),
   (4,3,'Unidad4','Obs4','activo'),
   (5,2,'Unidad5','Observacion','activo');
 COMMIT;
@@ -478,6 +533,16 @@ INSERT INTO `tunidadmedico` (`UNM_CODIGO`, `MED_CODIGO`, `UNI_CODIGO`, `UNM_ACTI
   (28,1,5,'activo'),
   (29,2,5,'activo'),
   (30,3,1,'activo');
+COMMIT;
+
+#
+# Data for the `ttramite` table  (LIMIT 0,500)
+#
+
+INSERT INTO `ttramite` (`TRA_CODIGO`, `TRA_ESTADO`, `PAC_CODIGO`, `RES_CODIGO`, `UNM_CODIGO`, `TRA_SISTEMA`, `TRA_FECHA`, `TRA_MOTIVO`, `TRA_RESUM_CUAD_CLIN`, `TRA_HALL_EXM_PROC_DIAG`, `TRA_PLAN_TRAT`, `TRA_SALA`, `TRA_CAMA`, `TRA_TIPO`, `TRA_ACTIVO`, `TRA_JUSTIF`) VALUES 
+  (1,'pendiente',2,2,27,'publico','2013-06-15 14:28:15','motivo1','resumen1','hall1','plan1',NULL,NULL,'referencia','activo','no'),
+  (2,'pendiente',1,1,2,'publico','2013-06-15 14:29:27','motivo2','res2','hall2','plan2',NULL,NULL,'referencia','activo','no'),
+  (3,'pendiente',2,3,4,'publico','2013-06-15 14:30:34','mot3','res3','hall3','plan3',NULL,NULL,'referencia','activo','no');
 COMMIT;
 
 #
@@ -17840,14 +17905,25 @@ INSERT INTO `tsie10` (`SIE_CODIGO`, `SIE_DESCRIP`, `SIE_CODIF`) VALUES
 COMMIT;
 
 #
+# Data for the `tdiagsie10` table  (LIMIT 0,500)
+#
+
+INSERT INTO `tdiagsie10` (`DIA_CODIGO`, `TRA_CODIGO`, `SIE_CODIGO`, `DIA_DIAGNOS`) VALUES 
+  (1,1,'250','pre'),
+  (2,2,'19','pre'),
+  (3,2,'1295','pre'),
+  (4,3,'687','pre');
+COMMIT;
+
+#
 # Data for the `tusuario` table  (LIMIT 0,500)
 #
 
 INSERT INTO `tusuario` (`USU_CODIGO`, `USU_USUARIO`, `USU_CLAVE`, `USU_TIPO`, `USU_ACTIVO`, `USU_FECHA`, `MED_CODIGO`) VALUES 
-  (1,'usuario1','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-06-05 22:04:51',1),
-  (2,'usuario2','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-06-05 22:16:51',2),
+  (1,'usuario1','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-06-15 15:01:22',1),
+  (2,'usuario2','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-06-15 14:29:40',2),
   (3,'usu3','7815696ecbf1c96e6894b779456d330e','contrareferente','activo',NULL,3),
-  (4,'usu4','76d80224611fc919a5d54f0ff9fba446','admin','activo',NULL,4);
+  (4,'usuario4','a8f5f167f44f4964e6c998dee827110c','admin','activo','2013-06-15 14:16:44',4);
 COMMIT;
 
 
