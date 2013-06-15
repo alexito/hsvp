@@ -50,7 +50,7 @@ window.onload = function init() {
     })
   
     $.ajax({
-      url: 'sie10.php',
+      url: 'php_includes/sie10.php',
       dataType: 'json'
     }).done(function (source) {
 
@@ -88,6 +88,7 @@ window.onload = function init() {
       $('#diagnostico-auto-1').autocomplete({        
         lookup: countriesArray,
         minChars: 3,
+        width: 800,
         autoSelectFirst: true,
         onSelect: function(elem){
           var id = $(this).attr('id');
@@ -105,7 +106,7 @@ window.onload = function init() {
     //Aniade un nuevo campo para ingresar un nuevo diagnostico
     $('#add-diag').click(function(){
       $('#sie10').append('<tr ><td><input class="cod_diag_class" type="hidden" name="cod_diag" id="cod-diag-' + diag_counter + '" value="" />'+
-        '<input style="width:25px;" type="radio" name="group-' + diag_counter + '" value="pre" checked="true">PRE<input style="width:25px;" type="radio" name="group-' + diag_counter + '" value="def">DEF<input style="width:400px; margin-left:9px;" type="text" name="diagnostico" id="diagnostico-auto-' + diag_counter + '"/>'+
+        '<input style="width:25px;" type="radio" name="group-' + diag_counter + '" value="pre" checked="true">PRE<input style="width:25px;" type="radio" name="group-' + diag_counter + '" value="def">DEF<input style="width:650px; margin-left:9px;" type="text" name="diagnostico" id="diagnostico-auto-' + diag_counter + '"/>'+
         '<a class="elim-diag" href="#"><img style="width:25px; margin-left:10px;margin-right:10px; margin-bottom: -8px;" src="images/icono-eliminar.png">Eliminar</a></td></tr>');
     
       // Initialize ajax autocomplete:
@@ -113,6 +114,7 @@ window.onload = function init() {
         // serviceUrl: '/autosuggest/service/url',
         lookup: countriesArray,
         minChars: 3, 
+        width: 800,
         autoSelectFirst: true,
         onSelect: function(elem){
           var id = $(this).attr('id');

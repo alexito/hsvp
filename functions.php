@@ -90,7 +90,7 @@ function SelectValuesUnidadesPerteneceMedico($db_conx, $cod_med) {
   $query = mysqli_query($db_conx, $sql);
 
   $n_filas = $query->num_rows;
-  $data = '<select style="width: 300px;" onchange="getLocalizacionData();"';
+  $data = '<select style="width: 400px;" onchange="getLocalizacionData();"';
   if ($n_filas == 1) {
     $data .= 'id="cmbunidad" disabled="true">';
     $row = mysqli_fetch_array($query);

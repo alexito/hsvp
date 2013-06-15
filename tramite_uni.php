@@ -5,7 +5,7 @@ include_once("functions.php");
 include_once("php_includes/check_login_status.php");
 
 if ($user_ok == FALSE || $log_tipo != 'referente') {
-  header("location: index.php");
+  header("location: logout.php");
   exit();
 }
 ?><?php
@@ -124,7 +124,7 @@ if (isset($_POST["d"])) {
       <?php include_once("php_includes/template_pageTop.php"); ?>
 
       <div id="templatemo_main">
-        <div id="pageMiddle">
+        <div class="tramite-class" id="pageMiddle">
           <div id="genform_style">
             <form name="genform" id="genform" onsubmit="return false;">
               <input type="hidden" name="cod_tramite" id="cod_tramite" value="" />              
@@ -139,7 +139,7 @@ if (isset($_POST["d"])) {
                   <td><?php echo date("d M y H:m", time()); ?></td>
                 </tr></table><table><tr>
                   <td>
-                    <label>Unidad: </label>
+                    <label><h5>Unidad:</h5></label>
                     <?php SelectValuesUnidadesPerteneceMedico($db_conx, $log_id) ?>
                   </td>
                 </tr><tr class="tr-data">
@@ -149,13 +149,14 @@ if (isset($_POST["d"])) {
                 </tr></table><table>
                 <tr>
                   <td>
-                    <label style="width: 300px;">Cédula del paciente: </label>
+                    <label><h5>Paciente:</h5></label>
+                    <label style="width: 400px;">Cédula o Historial Clínico: </label>
                     <input type="hidden" name="cod_paciente" id="cod_paciente" value="" />
-                    <input style="width: 300px;" type="text" name="paciente" id="paciente-auto"/>
+                    <input style="width: 400px;" type="text" name="paciente" id="paciente-auto"/>
                     <span style="position: absolute;margin-left: 10px;">
-                      <img id="searchPaciente" src="images/icono-buscar.png" style="cursor:pointer ;display: block; width: 20px; margin-left: 10px;"><span>Buscar</span>
+                      <img id="searchPaciente" src="images/icono-buscar.png" style="cursor:pointer ;display: block; width: 20px; margin-left: 10px;"><span><a onclick="javascript:return false;">Buscar</a></span>
                     </span><span style="position: absolute;margin-left: 70px;">
-                      <a href="paciente.php" target="blank"><img id="searchPaciente" src="images/icono-anadir.png" style="display: block; width: 20px; margin-left: 10px;"></a><span>Nuevo</span>
+                      <a href="paciente.php" target="blank"><img id="searchPaciente" src="images/icono-anadir.png" style="display: block; width: 20px; margin-left: 5px;"><span>Nuevo</span></a>
                     </span>
                   </td>
                 </tr></table><table class="custom-table">
@@ -180,48 +181,48 @@ if (isset($_POST["d"])) {
               </table><table>
                 <tr class="tr-data">
                   <td>
-                    <label style="width: 150px;">Servicio requerido: </label>
+                    <label style="width: 150px;"><h5>Servicio requerido:</h5></label>
                     <input type="hidden" name="cod_servicio" id="cod_servicio" value="" />
-                    <input style="width: 300px; margin-bottom: 20px;" type="text" name="servicio" id="servicio-auto"/>
-                    <span style="position: absolute;margin-left: 10px;"><a href="servicios.php" target="blank"><img id="searchServcio" src="images/icono-anadir.png" style="display: block; width: 20px; margin-left: 10px;"></a><span>Nuevo</span></span>
+                    <input style="width: 400px; margin-bottom: 20px;" type="text" name="servicio" id="servicio-auto"/>
+                    <span style="position: absolute;margin-left: 10px;"><a href="servicios.php" target="blank"><img id="searchServcio" src="images/icono-anadir.png" style="display: block; width: 20px; margin-left: 5px;"><span>Nuevo</span></a></span>
                   </td>
                 </tr>    
               </table>
               <table id="sie10" class="tr-data">
-                <tr><td><label>Diagnóstico:</label><span class="data" id="serv">
-                      <a id="add-diag" href="#">Añadir <img style="width: 20px; margin-bottom: -4px;" src="images/icono-anadir2.png"></a>
+                <tr><td><label><h5>Diagnóstico:</h5></label><span class="data" id="serv">
+                      <a id="add-diag" href="#"><img style="width: 20px; margin-bottom: -4px; margin-right: 10px;" src="images/icono-anadir2.png">Añadir</a>
                     </span></td></tr>
                 <tr><td>
                     <input class="cod_diag_class" type="hidden" name="cod_diag" id="cod-diag-1" value="" />
                     <input style="width:25px;" type="radio" name="group-1" value="pre" checked="true">PRE
                     <input style="width:25px;" type="radio" name="group-1" value="def">DEF
-                    <input style="width:400px;" type="text" name="diagnostico" id="diagnostico-auto-1"/>                      
+                    <input style="width:650px;" type="text" name="diagnostico" id="diagnostico-auto-1"/>                      
                   </td></tr>
               </table>
               <table><tr>
                   <td>
-                    <label style="width: 400px;">Motivo de Referencia:</label>
-                    <textarea style="width: 520px; height: 70px;" id="motivo_ref" cols="20" rows="2"></textarea>
+                    <label style="width: 400px;"><h5>Motivo de Referencia:</h5></label>
+                    <textarea style="width: 770px; height: 70px;" id="motivo_ref" cols="20" rows="2"></textarea>
                   </td>
                 </tr><tr>
                   <td>
-                    <label style="width: 400px;">Resumen del Cuadro Clínico:</label>
-                    <textarea style="width: 520px; height: 70px;" id="resumen_ref" cols="20" rows="2"></textarea>
+                    <label style="width: 400px;"><h5>Resumen del Cuadro Clínico:</h5></label>
+                    <textarea style="width: 770px; height: 70px;" id="resumen_ref" cols="20" rows="2"></textarea>
                   </td>
                 </tr><tr>
                   <td>
-                    <label style="width: 400px;">Hallazgos relevantes de examenes y procedimientos diagnósticos:</label>
-                    <textarea style="width: 520px; height: 70px;" id="hallazgo_ref" cols="20" rows="2"></textarea>
+                    <label style="width: 400px;"><h5>Hallazgos relevantes de examenes y procedimientos diagnósticos:</h5></label>
+                    <textarea style="width: 770px; height: 70px;" id="hallazgo_ref" cols="20" rows="2"></textarea>
                   </td>
                 </tr><tr class="tr-data">
                   <td>
-                    <label style="width: 400px;">Plan tratamiento realizado:</label>
-                    <textarea style="width: 520px; height: 70px;" id="plan_ref" cols="20" rows="2"></textarea>
+                    <label style="width: 400px;"><h5>Plan tratamiento realizado:</h5></label>
+                    <textarea style="width: 770px; height: 70px;" id="plan_ref" cols="20" rows="2"></textarea>
                   </td>
                 </tr></table>
               <table><tr style="float: left; margin-left: 150px;"><td>
                     <a style="margin-top: 10px;" class="nuevo" href="tramite_uni.php">Nuevo</a></td><td>
-                    <a id="saveTramiteUnidad" onclick="">Enviar...</a> </td><td>
+                    <a class="a-button" id="saveTramiteUnidad" onclick="">Enviar...</a> </td><td>
                     <span id="status"></span></td>
                 </tr>
               </table>

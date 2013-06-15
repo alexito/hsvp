@@ -2,10 +2,10 @@
 include_once("php_includes/db_conx.php");
 include_once("functions.php");
 
-session_start();
-// If user is logged in, header them away
-if (isset($_SESSION["username"])) {
-  header("location: message.php?msg=Error inesperado - medico_referente.php");
+include_once("php_includes/check_login_status.php");
+
+if ($user_ok == FALSE || $log_tipo != 'admin') {
+  header("location: logout.php");
   exit();
 }
 ?><?php

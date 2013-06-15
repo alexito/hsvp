@@ -2,7 +2,12 @@
 include_once("php_includes/db_conx.php");
 include_once("functions.php");
 
-session_start();
+include_once("php_includes/check_login_status.php");
+
+if ($user_ok == FALSE || $log_tipo != 'admin') {
+  header("location: logout.php");
+  exit();
+}
 ?><?php
 //When Change the selected option in combobox
 if (isset($_POST["get"])) {

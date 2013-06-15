@@ -380,7 +380,7 @@ label {
   margin: 16px 4px; 
 }
 
-a#submitbtn{
+a.a-button{
   background: none repeat scroll 0 0 #F9F9F9;
   border: 1px solid #A7A7A7;
   color: #222222;
@@ -626,4 +626,8 @@ button#editar {
 .custom-table tr td{
   padding: 5px;
     width: 180px;
+}
+
+.tramite-class label{
+/*  width: 600px;*/
 }

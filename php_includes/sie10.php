@@ -1,11 +1,9 @@
 <?php
 
-include_once("php_includes/db_conx.php");
-include_once("php_includes/check_login_status.php");
+include_once("db_conx.php");
+include_once("check_login_status.php");
 if ($user_ok == true) {
-
   $sie = array();
-
   $sql = "SELECT sie_codigo, sie_descrip FROM tsie10";
   $query = mysqli_query($db_conx, $sql);
   if ($query) {
