@@ -18,7 +18,7 @@
       <li><a href="#">Unidad</a>
         <ul>
           <li><a href="tramite_uni.php">Crear Referencia</a></li>
-          <li><a href="tramite_ref.php">Ver Referencias</a></li>
+          <li><a href="referencias_uni.php">Ver Referencias</a></li>
           <li><a href="paciente.php">Nuevo Paciente</a></li>                    
         </ul>
       </li>

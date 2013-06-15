@@ -34,7 +34,7 @@ if (isset($_POST['codpac'])) {//Almacena los datos del tramite como referencia
 
   $sql = "INSERT INTO ttramite (pac_codigo, res_codigo, unm_codigo, tra_fecha, tra_motivo, tra_resum_cuad_clin,
     tra_hall_exm_proc_diag, tra_plan_trat) 
-      VALUES( $codpac, $codres, $coduni, NOW(),'$mot', '$res', '$hal', '$pla')";
+      VALUES( $codpac, $codres, $codunm, NOW(),'$mot', '$res', '$hal', '$pla')";
   $query = mysqli_query($db_conx, $sql);
   $uid = mysqli_insert_id($db_conx);
 
@@ -136,7 +136,7 @@ if (isset($_POST["d"])) {
 
               <table><tr>
                   <td  style="width: 500px;"><h2>Referencia</h2></td>
-                  <td><?php echo date("d M y H:m", time()); ?></td>
+                  <td><?php //echo date("d M y H:m", time()); ?></td>
                 </tr></table><table><tr>
                   <td>
                     <label><h5>Unidad:</h5></label>

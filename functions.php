@@ -1,4 +1,41 @@
 <?php
+
+function SelectReferenciasUnidad($db_conx,$codmed, $n_items = 10, $p_actual = 1) {
+  $sql = "SELECT * FROM vreferencias_uni WHERE MED_CODIGO = $codmed";
+  $query = mysqli_query($db_conx, $sql);
+  $n_columnas = $query->field_count;
+  $n_filas = $query->num_rows;
+  $data = '<tr class="row_header">
+            <td>Nro. Trámite</td>
+            <td>Fecha</td>
+            <td>Cédula</td>
+            <td>Nombre Completo</td>            
+            <td>Motivo</td>
+            <td>Servicio</td>
+            <td>Estado</td>
+            <td>Activo</td>
+            <td>Accion</td>
+        </tr>';
+  $c = 0;
+  while ($c < $n_filas) {
+    $row = mysqli_fetch_array($query);
+    $data .= '<tr class="row_data">';
+    for ($i = 1; $i < $n_columnas; $i++) {
+      if($i == 4){
+        $data .= "<td><span>$row[$i] $row[5]<br>$row[6] $row[7]</span></td>";
+        $i = 8;
+      }
+      $data .= "<td><span>$row[$i]</span></td>";
+    }
+   
+    $data .= '<td><a href="views/tramitex.php">Ver</a><br><a href="#">Editar</a></td></tr>';
+    //print( $data);
+    $c++;
+  }
+  echo $data;
+}
+
+
 function getServicioData($db_conx, $cod) {
   $sql = "SELECT ser_descrip FROM tservicios WHERE ser_codigo = '$cod' LIMIT 1";
   $query = mysqli_query($db_conx, $sql);
