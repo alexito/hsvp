@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 // Set Session data to an empty array
 $_SESSION = array();
@@ -11,11 +10,6 @@ if (isset($_COOKIE["codigo"]) && isset($_COOKIE["usuario"]) && isset($_COOKIE["c
 }
 // Destroy the session variables
 session_destroy();
-// Double check to see if their sessions exists
-if (isset($_SESSION['usuario'])) {
-  header("location: message.php?msg=Error:_Logout_Failed");
-} else {
-  header("location: index.php");
-  exit();
-}
+header("location: index.php");
+
 ?>

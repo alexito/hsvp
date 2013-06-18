@@ -152,7 +152,7 @@ if (isset($_POST["d"])) {
                     <label><h5>Paciente:</h5></label>
                     <label style="width: 400px;">Cédula o Historial Clínico: </label>
                     <input type="hidden" name="cod_paciente" id="cod_paciente" value="" />
-                    <input style="width: 400px;" type="text" name="paciente" id="paciente-auto"/>
+                    <input placeholder="Escriba la Cédula o Historial clínico y presione Enter." style="width: 400px;" type="text" name="paciente" id="paciente-auto"/>
                     <span style="position: absolute;margin-left: 10px;">
                       <img id="searchPaciente" src="images/icono-buscar.png" style="cursor:pointer ;display: block; width: 20px; margin-left: 10px;"><span><a onclick="javascript:return false;">Buscar</a></span>
                     </span><span style="position: absolute;margin-left: 70px;">
@@ -183,8 +183,8 @@ if (isset($_POST["d"])) {
                   <td>
                     <label style="width: 150px;"><h5>Servicio requerido:</h5></label>
                     <input type="hidden" name="cod_servicio" id="cod_servicio" value="" />
-                    <input style="width: 400px; margin-bottom: 20px;" type="text" name="servicio" id="servicio-auto"/>
-                    <span style="position: absolute;margin-left: 10px;"><a href="servicios.php" target="blank"><img id="searchServcio" src="images/icono-anadir.png" style="display: block; width: 20px; margin-left: 5px;"><span>Nuevo</span></a></span>
+                    <input placeholder="Escriba y seleccione un servicio de la lista." style="width: 400px; margin-bottom: 20px;" type="text" name="servicio" id="servicio-auto"/>
+                    <span style="position: absolute;margin-left: 10px;"></span>
                   </td>
                 </tr>    
               </table>
@@ -196,7 +196,7 @@ if (isset($_POST["d"])) {
                     <input class="cod_diag_class" type="hidden" name="cod_diag" id="cod-diag-1" value="" />
                     <input style="width:25px;" type="radio" name="group-1" value="pre" checked="true">PRE
                     <input style="width:25px;" type="radio" name="group-1" value="def">DEF
-                    <input style="width:650px;" type="text" name="diagnostico" id="diagnostico-auto-1"/>                      
+                    <input placeholder="Ingrese mínimo 3 letras y luego seleccione un Diagnóstico de la lista." style="width:650px;" type="text" name="diagnostico" id="diagnostico-auto-1"/>                      
                   </td></tr>
               </table>
               <table><tr>

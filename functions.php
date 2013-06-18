@@ -1,5 +1,5 @@
 <?php
-
+ 
 function SelectReferenciasUnidad($db_conx,$codmed, $n_items = 10, $p_actual = 1) {
   $sql = "SELECT * FROM vreferencias_uni WHERE MED_CODIGO = $codmed";
   $query = mysqli_query($db_conx, $sql);
@@ -23,7 +23,8 @@ function SelectReferenciasUnidad($db_conx,$codmed, $n_items = 10, $p_actual = 1)
     for ($i = 1; $i < $n_columnas; $i++) {
       if($i == 4){
         $data .= "<td><span>$row[$i] $row[5]<br>$row[6] $row[7]</span></td>";
-        $i = 8;
+        $data .= "<td><span>" . customSubstring($row[8], 50) . "</span></td>";
+        $i = 9;
       }
       $data .= "<td><span>$row[$i]</span></td>";
     }
@@ -49,7 +50,7 @@ function getServicioData($db_conx, $cod) {
 
 
 function getPacienteData($db_conx, $cod) {
-  $sql = "SELECT * FROM tpaciente WHERE pac_cedula = '$cod' OR pac_hc = '$cod' LIMIT 1";
+  $sql = "SELECT * FROM tpaciente WHERE pac_codigo = $cod OR pac_cedula = '$cod' OR pac_hc = '$cod' LIMIT 1";
   $query = mysqli_query($db_conx, $sql);
   $data = '';
   if ($query) {
@@ -655,6 +656,19 @@ function SelectValuesServicios_MReferenciado($db_conx, $table, $multiple = NULL)
   }
   $data .= '</select>';
   echo $data;
+}
+
+function customSubstring($text, $nc){
+  $res = '';
+  $i = 0;
+  
+  for(; $i < strlen($text) && $i < $nc; $i++){
+    $res .= $text[$i];
+  }
+  if($i == $nc){
+    $res .= '...';
+  }
+  return $res;
 }
 
 ?>

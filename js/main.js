@@ -14,7 +14,19 @@ window.onload = function init() {
   val = window.location.href;
   val = val.split('/');
   val = val[val.length -1]
-  
+  val = val.split('?');
+  val = val[0]
+  if(val == 'ver_referencias_uni.php'){
+    var vars = [], hash, anchor;
+    var q = document.URL.split('?')[1];
+    if(q != undefined){
+      q = q.split('=');
+      if(q[0] == 'cod_tramite'){
+        getTramitePaciente(q[1]);
+      }     
+    }
+    
+  }
   if(val == 'tramite_uni.php'){
     diag_counter = 2;
     diag_fields = new Array();
@@ -32,7 +44,7 @@ window.onload = function init() {
     //SIE10 
     //Icono Buscar Paciente.
     $('#searchPaciente').click(function(){
-      searchPaciente();
+      searchPaciente(0);
     });
   
     $.fn.enterKey = function (fnc) {
@@ -46,7 +58,7 @@ window.onload = function init() {
       })
     }
     $("#paciente-auto").enterKey(function () {
-      searchPaciente();
+      searchPaciente(0);
     })
   
     $.ajax({
@@ -106,7 +118,8 @@ window.onload = function init() {
     //Aniade un nuevo campo para ingresar un nuevo diagnostico
     $('#add-diag').click(function(){
       $('#sie10').append('<tr ><td><input class="cod_diag_class" type="hidden" name="cod_diag" id="cod-diag-' + diag_counter + '" value="" />'+
-        '<input style="width:25px;" type="radio" name="group-' + diag_counter + '" value="pre" checked="true">PRE<input style="width:25px;" type="radio" name="group-' + diag_counter + '" value="def">DEF<input style="width:650px; margin-left:9px;" type="text" name="diagnostico" id="diagnostico-auto-' + diag_counter + '"/>'+
+        '<input style="width:25px;" type="radio" name="group-' + diag_counter + '" value="pre" checked="true">PRE<input style="width:25px;" type="radio" name="group-' + diag_counter +
+        '" value="def">DEF<input placeholder="Ingrese mínimo 3 letras y luego seleccione un Diagnóstico de la lista." style="width:650px; margin-left:9px;" type="text" name="diagnostico" id="diagnostico-auto-' + diag_counter + '"/>'+
         '<a class="elim-diag" href="#"><img style="width:25px; margin-left:10px;margin-right:10px; margin-bottom: -8px;" src="images/icono-eliminar.png">Eliminar</a></td></tr>');
     
       // Initialize ajax autocomplete:
@@ -136,16 +149,15 @@ window.onload = function init() {
       });
       diag_counter++;
       return false;
-    });
-    
+    });    
   }
   
   //Guarda los datos del referente
   $('#saveTramiteUnidad').click(function(){
-      //window.location.href = 'tramite_uni.php';
-      saveTramiteUnidad();
-      //getDiagnosticoCodes();
-    });
+    //window.location.href = 'tramite_uni.php';
+    saveTramiteUnidad();
+  //getDiagnosticoCodes();
+  });
   
   /////Muestra msg olvido clave
   $('#olvidoclave').click(function(){

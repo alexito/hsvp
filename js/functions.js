@@ -129,38 +129,54 @@ function loadServicio(suggestion){
   ajax.send("loadserv=true&cod="+suggestion.data);
 }
 
-//function loadPaciente(suggestion) {
-function searchPaciente(){
-  var cod = $('#paciente-auto').val();
-  if(cod == ''){
-    alert('Por favor, ingrese el numero de Cedula del Paciente.');
-    return false;
-  }
-  var ajax = ajaxObj("POST", "tramite_uni.php");
+function getTramitePaciente(tra_cod){
+  var ajax = ajaxObj("POST", "ver_referencias_uni.php");
   ajax.onreadystatechange = function() {
     if(ajaxReturn(ajax) == true) {      
       var resp = ajax.responseText;
-      resp = resp.split(',');
-      if(resp[0] == ''){
-        alert('No se encontraron datos del paciente. Por favor, revise el dato ingresado o registre un nuevo paciente.');
-        return false;
-      }        
-      _('pape').innerHTML = resp[0];
-      _('sape').innerHTML = resp[1];
-      _('nom').innerHTML = resp[2];
-      _('ced').innerHTML = resp[3];
-      _('fnac').innerHTML = resp[4];
-      _('hc').innerHTML = resp[5];
-      _('gen').innerHTML = resp[6];
-      _('ec').innerHTML = resp[7];
-      _('tel').innerHTML = resp[8];
-      _('ins').innerHTML = resp[9];
-      _('emp').innerHTML = resp[10];
-      _('seg').innerHTML = resp[11];
-      $('#cod_paciente').val(resp[12]);
+      searchPaciente(resp);
     }
   }
-  ajax.send("pac=true&cod="+cod);
+  ajax.send("tra=true&cod="+tra_cod);
+}
+
+//function loadPaciente(suggestion) {
+function searchPaciente(pac_cod){
+  var cod;
+  if(pac_cod != 0){
+    cod = pac_cod;
+  }else{
+    cod = $('#paciente-auto').val();
+    if(cod == ''){
+      alert('Por favor, ingrese el numero de Cedula del Paciente.');
+      return false;
+    }
+  }
+var ajax = ajaxObj("POST", "tramite_uni.php");
+ajax.onreadystatechange = function() {
+  if(ajaxReturn(ajax) == true) {      
+    var resp = ajax.responseText;
+    resp = resp.split(',');
+    if(resp[0] == ''){
+      alert('No se encontraron datos del paciente. Por favor, revise el dato ingresado o registre un nuevo paciente.');
+      return false;
+    }        
+    _('pape').innerHTML = resp[0];
+    _('sape').innerHTML = resp[1];
+    _('nom').innerHTML = resp[2];
+    _('ced').innerHTML = resp[3];
+    _('fnac').innerHTML = resp[4];
+    _('hc').innerHTML = resp[5];
+    _('gen').innerHTML = resp[6];
+    _('ec').innerHTML = resp[7];
+    _('tel').innerHTML = resp[8];
+    _('ins').innerHTML = resp[9];
+    _('emp').innerHTML = resp[10];
+    _('seg').innerHTML = resp[11];
+    $('#cod_paciente').val(resp[12]);
+  }
+}
+ajax.send("pac=true&cod="+cod);
 //ajax.send("pac=true&cod="+suggestion.data);
 }
 
