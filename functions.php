@@ -1,6 +1,121 @@
-<?php
- 
-function SelectReferenciasUnidad($db_conx,$codmed, $n_items = 10, $p_actual = 1) {
+<?php 
+function selectTramitePaciente($db_conx, $cod_tra){
+  
+}
+
+function selectTramiteLocalizacion($db_conx, $cod_tra){
+  $sql = "SELECT unm_codigo FROM ttramite WHERE tra_codigo =" . $cod_tra;
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+  $sql = "SELECT uni_codigo FROM tunidadmedico WHERE unm_codigo =" . $row[0];
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+  $tem = $row[0];
+
+  $sql = "SELECT uni_descrip FROM tunidad WHERE uni_codigo =" . $row[0];
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+
+  $data = '<table><tr>
+                  <td>
+                    <h5><span class="uni" id="uni">' . $row[0];
+
+  $sql = "SELECT loc_cparr, loc_ccan, loc_cpro FROM vlocalunidad WHERE uni_codigo =" . $tem;
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+  $data .= '</span></h5>
+                  </td>
+                </tr><tr class="tr-data">
+                  <td><h6>Parroquia:</h6><span id="par">' . $row[0] . '</span></td>
+                  <td><h6>Cantón:</h6><span id="can">' . $row[1] . '</span></td>
+                  <td><h6>Provincia:</h6><span id="pro">' . $row[2] . '</span></td>
+                </tr></table>';
+  echo $data;
+}
+
+function selectTramiteData($db_conx, $cod_tra){
+  $sql = "SELECT tra_motivo, tra_resum_cuad_clin, tra_hall_exm_proc_diag, tra_plan_trat, tra_fecha, tra_estado, tra_sala, tra_cama, tra_tipo, tra_justif FROM ttramite WHERE tra_codigo =". $cod_tra;
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+  $data = '<table><tr>
+                  <td>
+                    <label style="width: 400px;"><h5>Motivo de Referencia:</h5></label>
+                    <span id="motivo_ref">' . $row[0] . '</span>
+                  </td>
+                </tr><tr>
+                  <td>
+                    <label style="width: 400px;"><h5>Resumen del Cuadro Clínico:</h5></label>
+                    <span id="resumen_ref">' . $row[1] . '</span>
+                  </td>
+                </tr><tr>
+                  <td>
+                    <label style="width: 500px;"><h5>Hallazgos relevantes de examenes y procedimientos diagnósticos:</h5></label>
+                    <span id="hallazgo_ref">' . $row[2] . '</span>
+                  </td>
+                </tr><tr class="tr-data">
+                  <td>
+                    <label style="width: 400px;"><h5>Plan tratamiento realizado:</h5></label>
+                    <span id="plan_ref">' . $row[3] . '</span>
+                  </td>
+                </tr></table><table class="tr-data">
+                <tr>
+                  <td>
+                    <label style="width: 25%;"><h5>Fecha:</h5></label>
+                    <span id="fec">' . $row[4] . '</span>
+                  </td>
+                  <td>
+                    <label style="width: 25%;"><h5>Estado:</h5></label>
+                    <span id="est">' . $row[5] . '</span>
+                  </td>
+                  <td>
+                    <label style="width: 25%;"><h5>Sala:</h5></label>
+                    <span id="sal">' . $row[6] . '</span>
+                  </td>
+                  <td>
+                    <label style="width: 25%;"><h5>Cama:</h5></label>
+                    <span id="cam">' . $row[7] . '</span>
+                  </td>
+                </tr>
+                <tr >
+                  <td>
+                    <label style="width: 25%;"><h5>Tipo:</h5></label>
+                    <span id="tip">' . $row[8] . '</span>
+                  </td>
+                  <td>
+                    <label style="width: 25%;"><h5>Justificado:</h5></label>
+                    <span id="jus">' . $row[9] . '</span>
+                  </td> 
+                </tr>
+              </table>';
+  echo $data;
+}
+
+function selectTramiteDiagnostico($db_conx, $cod_tra){
+  $sql = "SELECT dia_diagnos, sie_descrip FROM vtramitesie10 WHERE tra_codigo =". $cod_tra;
+  $query = mysqli_query($db_conx, $sql);
+  $n_columnas = $query->field_count;
+  $n_filas = $query->num_rows;
+  $data = '';
+  $c = 0;
+  while ($c < $n_filas) {
+    $row = mysqli_fetch_array($query);
+    $data .= "<li>$row[0] | $row[1]</li>";
+    $c++;
+  }
+  echo $data;
+}
+
+function selectTramiteServicio($db_conx, $cod_tra){
+  $sql = "SELECT res_codigo FROM ttramite WHERE tra_codigo =". $cod_tra;
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+  $sql = "SELECT ser_descrip FROM vreferenciaservicio WHERE res_codigo =". $row[0];
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+  echo $row[0];
+}
+
+function SelectReferenciasUnidad($db_conx, $codmed, $n_items = 10, $p_actual = 1) {
   $sql = "SELECT * FROM vreferencias_uni WHERE MED_CODIGO = $codmed";
   $query = mysqli_query($db_conx, $sql);
   $n_columnas = $query->field_count;
@@ -29,7 +144,7 @@ function SelectReferenciasUnidad($db_conx,$codmed, $n_items = 10, $p_actual = 1)
       $data .= "<td><span>$row[$i]</span></td>";
     }
    
-    $data .= '<td><a href="views/tramitex.php">Ver</a><br><a href="#">Editar</a></td></tr>';
+    $data .= '<td><a href="ver_referencias_uni.php?cod_tramite=' . $row[1] . '">Ver<br>Editar</a></td></tr>';
     //print( $data);
     $c++;
   }

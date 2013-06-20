@@ -10,7 +10,7 @@ if ($user_ok == FALSE || $log_tipo != 'referente') {
 }
 ?><?php
 if (isset($_POST['tra'])) {//Obtiene el cod del Paciente relacionado a este tramite
-  $sql = "SELECT pac_codigo FROM ttramite WHERE tra_codigo =". $_POST['cod'];
+  $sql = "SELECT pac_codigo FROM ttramite WHERE tra_codigo =" . $_POST['cod'];
   $query = mysqli_query($db_conx, $sql);
   $row = mysqli_fetch_array($query);
   echo $row[0];
@@ -18,7 +18,7 @@ if (isset($_POST['tra'])) {//Obtiene el cod del Paciente relacionado a este tram
 }
 if (!isset($_GET['cod_tramite'])) {//Carga los datos del autocompletado de pacientes
   header("location: referencias_uni.php");
-  exit();  
+  exit();
 }
 ?>
 <!DOCTYPE html>
@@ -35,48 +35,40 @@ if (!isset($_GET['cod_tramite'])) {//Carga los datos del autocompletado de pacie
           <div id="genform_style">
             <form name="genform" id="genform" onsubmit="return false;">
               <input type="hidden" name="cod_tramite" id="cod_tramite" value="" />              
-              
+
               <table><tr>
-                  <td  style="width: 500px;"><h2>Referencia</h2></td>
-                  <td><?php //echo date("d M y H:m", time()); ?></td>
-                </tr></table><table><tr>
-                  <td>
-                    <label><h5>Unidad:</h5></label>
-                    <span class="uni" id="par"></span>
-                  </td>
-                </tr><tr class="tr-data">
-                  <td><label>Parroquia:</label><span class="data" id="par">parroquia</span></td>
-                  <td><label>Cantón:</label><span class="data" id="can">canton</span></td>
-                  <td><label>Provincia:</label><span class="data" id="pro">provincia</span></td>
-                </tr></table><table>
+                  <td  style="width: 500px;"><h2>Referencia</h2></td>                  
+                </tr></table>
+              <?php selectTramiteLocalizacion($db_conx, $_GET['cod_tramite']); ?>
+              <table class="custom-table">
                 <tr>
                   <td>
                     <label><h5>Paciente:</h5></label>                    
                   </td>
-                </tr></table><table class="custom-table">
-                <tr style="margin-top: 20px;float: left;">
-                  <td><label>Apellido P.:</label><span class="data" id="pape"></span></td>
-                  <td><label>Apellido M.:</label><span class="data" id="sape"></span></td>
-                  <td><label>Nombre:</label><span class="data" id="nom"></span></td>
-                  <td><label>Cédula:</label><span class="data" id="ced"></span></td>
+                </tr>
+                <tr style="margin-top: -10px;float: left;">
+                  <td><h6>Apellido P.:</h6><span id="pape"></span></td>
+                  <td><h6>Apellido M.:</h6><span id="sape"></span></td>
+                  <td><h6>Nombre:</h6><span id="nom"></span></td>
+                  <td><h6>Cédula:</h6><span id="ced"></span></td>
                 </tr> 
                 <tr style="float: left;">
-                  <td><label>F. Nacimiento:</label><span class="data" id="fnac"></span></td>
-                  <td><label>Historia C.:</label><span class="data" id="hc"></span></td>
-                  <td><label>Género:</label><span class="data" id="gen"></span></td>
-                  <td><label>Est. Civil:</label><span class="data" id="ec"></span></td>
+                  <td><h6>F. Nacimiento:</h6><span id="fnac"></span></td>
+                  <td><h6>Historia C.:</h6><span id="hc"></span></td>
+                  <td><h6>Género:</h6><span id="gen"></span></td>
+                  <td><h6>Est. Civil:</h6><span id="ec"></span></td>
                 </tr> 
                 <tr class="tr-data">
-                  <td><label>Teléfono:</label><span class="data" id="tel"></span></td>
-                  <td><label>Instrucción:</label><span class="data" id="ins"></span></td>
-                  <td><label>Empresa:</label><span class="data" id="emp"></span></td>
-                  <td><label>Seguro:</label><span class="data" id="seg"></span></td>                    
+                  <td><h6>Teléfono:</h6><span id="tel"></span></td>
+                  <td><h6>Instrucción:</h6><span id="ins"></span></td>
+                  <td><h6>Empresa:</h6><span id="emp"></span></td>
+                  <td><h6>Seguro:</h6><span id="seg"></span></td>                    
                 </tr> 
               </table><table>
                 <tr class="tr-data">
                   <td>
                     <label style="width: 150px;"><h5>Servicio requerido:</h5></label>                    
-                    <span class="data" id="ser"></span>
+                    <span id="ser"><?php selectTramiteServicio($db_conx, $_GET['cod_tramite']); ?></span>
                   </td>
                 </tr>    
               </table>
@@ -84,31 +76,11 @@ if (!isset($_GET['cod_tramite'])) {//Carga los datos del autocompletado de pacie
                 <tr><td><label><h5>Diagnóstico:</h5></label></td></tr>
                 <tr><td>
                     <ul>
-                      <?php //CARGAR LOS DIAGNOSTICOS ?>
+                      <?php selectTramiteDiagnostico($db_conx, $_GET['cod_tramite']); ?>
                     </ul>
                   </td></tr>
               </table>
-              <table><tr>
-                  <td>
-                    <label style="width: 400px;"><h5>Motivo de Referencia:</h5></label>
-                    <span id="motivo_ref"></span>
-                  </td>
-                </tr><tr>
-                  <td>
-                    <label style="width: 400px;"><h5>Resumen del Cuadro Clínico:</h5></label>
-                    <span id="resumen_ref"></span>
-                  </td>
-                </tr><tr>
-                  <td>
-                    <label style="width: 400px;"><h5>Hallazgos relevantes de examenes y procedimientos diagnósticos:</h5></label>
-                    <span id="hallazgo_ref"></span>
-                  </td>
-                </tr><tr class="tr-data">
-                  <td>
-                    <label style="width: 400px;"><h5>Plan tratamiento realizado:</h5></label>
-                    <span id="plan_ref"></span>
-                  </td>
-                </tr></table>
+              <?php selectTramiteData($db_conx, $_GET['cod_tramite']); ?>
               <table><tr style="float: left; margin-left: 150px;"><td>
                     <a style="margin-top: 10px;" class="nuevo" href="tramite_uni.php">Nuevo</a></td><td>
                     <a class="a-button" id="saveTramiteUnidad" onclick="">Guardar...</a> </td><td>
