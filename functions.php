@@ -1,5 +1,41 @@
 <?php 
 
+function SelectReferenciasHospitalPendiente($db_conx, $codmed, $n_items = 10, $p_actual = 1) {
+  $sql = "SELECT * FROM vreferencias_uni WHERE tra_estado = 'pendiente'";
+  $query = mysqli_query($db_conx, $sql);
+  $n_columnas = $query->field_count;
+  $n_filas = $query->num_rows;
+  $data = '<tr class="row_header">
+            <td>Nro. Tra.</td>
+            <td>Fecha</td>
+            <td>Cédula</td>
+            <td>Nombre Completo</td>            
+            <td>Motivo</td>
+            <td>Servicio</td>
+            <td>Estado</td>
+            <td>Activo</td>
+            <td>Accion</td>
+        </tr>';
+  $c = 0;
+  while ($c < $n_filas) {
+    $row = mysqli_fetch_array($query);
+    $data .= '<tr class="row_data">';
+    for ($i = 1; $i < $n_columnas; $i++) {
+      if($i == 4){
+        $data .= "<td><span>$row[$i] $row[5]<br>$row[6] $row[7]</span></td>";
+        $data .= "<td><span>" . customSubstring($row[8], 50) . "</span></td>";
+        $i = 9;
+      }
+      $data .= "<td><span>$row[$i]</span></td>";
+    }
+   
+    $data .= '<td><a target="_blank" href="ver_referencias_hos.php?cod_tramite=' . $row[1] . '">Ver<br>Editar</a></td></tr>';
+    //print( $data);
+    $c++;
+  }
+  echo $data;
+}
+
 function isTramiteCanceled($db_conx, $tra_codigo){
   $sql = "SELECT * FROM ttramite WHERE tra_codigo =  $tra_codigo AND tra_estado = 'cancelado'";
   $query = mysqli_query($db_conx, $sql);
@@ -168,7 +204,6 @@ function SelectReferenciasUnidad($db_conx, $codmed, $n_items = 10, $p_actual = 1
   }
   echo $data;
 }
-
 
 function getServicioData($db_conx, $cod) {
   $sql = "SELECT ser_descrip FROM tservicios WHERE ser_codigo = '$cod' LIMIT 1";

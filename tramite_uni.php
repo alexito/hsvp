@@ -4,8 +4,10 @@ include_once("functions.php");
 
 include_once("php_includes/check_login_status.php");
 
-if ($user_ok == FALSE || $log_tipo != 'referente') {
-  header("location: logout.php");
+if ($log_tipo == 'contrareferente' && isset($_POST['pac'])) {
+  
+} else if ($user_ok == FALSE || $log_tipo != 'referente') {
+  header("location: index.php");
   exit();
 }
 ?><?php
@@ -60,7 +62,7 @@ if (isset($_POST['loadserv'])) {//Obtiene los datos del paciente seleccionado
   getServicioData($db_conx, $_POST['cod']);
   exit();
 }
-if (isset($_POST['pac'])) {//Obtiene los datos del paciente seleccionado
+if (isset($_POST['pac']) || ($log_tipo == 'contrareferente' && isset($_POST['codpac']))) {//Obtiene los datos del paciente seleccionado
   getPacienteData($db_conx, $_POST['cod']);
   exit();
 }
@@ -144,7 +146,7 @@ if (isset($_POST["d"])) {
 
               <table><tr>
                   <td  style="width: 500px;"><h2>Referencia</h2></td>
-                  <td><?php //echo date("d M y H:m", time());  ?></td>
+                  <td><?php //echo date("d M y H:m", time());   ?></td>
                 </tr></table><table><tr>
                   <td>
                     <label><h5>Unidad:</h5></label>

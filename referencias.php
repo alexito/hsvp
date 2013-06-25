@@ -22,7 +22,7 @@ if ($user_ok == FALSE || $log_tipo != 'contrareferente') {
         <div class="col_w900">
           <div id="table_content" class="tablestyle">
             <table id="table_data">              
-              <?php SelectReferenciasUnidad($db_conx, $log_id, 10, 1); ?>
+              <?php SelectReferenciasHospitalPendiente($db_conx, $log_id, 10, 1); ?>
             </table>
           </div>
         </div>

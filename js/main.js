@@ -16,16 +16,23 @@ window.onload = function init() {
   val = val[val.length -1]
   val = val.split('?');
   val = val[0]
-  if(val == 'ver_referencias_uni.php'){
-    
+  if(val == 'ver_referencias_hos.php'){    
+    var q = document.URL.split('?')[1];
+    if(q != undefined){
+      q = q.split('=');
+      if(q[0] == 'cod_tramite'){
+        getTramitePacienteHos(q[1]);
+      }     
+    }    
+  }
+  if(val == 'ver_referencias_uni.php'){    
     var q = document.URL.split('?')[1];
     if(q != undefined){
       q = q.split('=');
       if(q[0] == 'cod_tramite'){
         getTramitePaciente(q[1]);
       }     
-    }
-    
+    }    
   }
   if(val == 'tramite_uni.php'){
     diag_counter = 2;
@@ -151,6 +158,10 @@ window.onload = function init() {
       return false;
     });    
   }
+  
+  $(function() {
+    $( "#fecha-atencion" ).datetimepicker();
+  });
   
   //Guarda los datos del referente
   $('#saveTramiteUnidad').click(function(){

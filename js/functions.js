@@ -151,6 +151,17 @@ function getTramitePaciente(tra_cod){
   ajax.send("tra=true&cod="+tra_cod);
 }
 
+function getTramitePacienteHos(tra_cod){
+  var ajax = ajaxObj("POST", "ver_referencias_hos.php");
+  ajax.onreadystatechange = function() {
+    if(ajaxReturn(ajax) == true) {      
+      var resp = ajax.responseText;
+      searchPaciente(resp);
+    }
+  }
+  ajax.send("tra=true&cod="+tra_cod);
+}
+
 //function loadPaciente(suggestion) {
 function searchPaciente(pac_cod){
   var cod;
@@ -163,31 +174,31 @@ function searchPaciente(pac_cod){
       return false;
     }
   }
-var ajax = ajaxObj("POST", "tramite_uni.php");
-ajax.onreadystatechange = function() {
-  if(ajaxReturn(ajax) == true) {      
-    var resp = ajax.responseText;
-    resp = resp.split(',');
-    if(resp[0] == ''){
-      alert('No se encontraron datos del paciente. Por favor, revise el dato ingresado o registre un nuevo paciente.');
-      return false;
-    }        
-    _('pape').innerHTML = resp[0];
-    _('sape').innerHTML = resp[1];
-    _('nom').innerHTML = resp[2];
-    _('ced').innerHTML = resp[3];
-    _('fnac').innerHTML = resp[4];
-    _('hc').innerHTML = resp[5];
-    _('gen').innerHTML = resp[6];
-    _('ec').innerHTML = resp[7];
-    _('tel').innerHTML = resp[8];
-    _('ins').innerHTML = resp[9];
-    _('emp').innerHTML = resp[10];
-    _('seg').innerHTML = resp[11];
-    $('#cod_paciente').val(resp[12]);
+  var ajax = ajaxObj("POST", "tramite_uni.php");
+  ajax.onreadystatechange = function() {
+    if(ajaxReturn(ajax) == true) {      
+      var resp = ajax.responseText;
+      resp = resp.split(',');
+      if(resp[0] == ''){
+        alert('No se encontraron datos del paciente. Por favor, revise el dato ingresado o registre un nuevo paciente.');
+        return false;
+      }        
+      _('pape').innerHTML = resp[0];
+      _('sape').innerHTML = resp[1];
+      _('nom').innerHTML = resp[2];
+      _('ced').innerHTML = resp[3];
+      _('fnac').innerHTML = resp[4];
+      _('hc').innerHTML = resp[5];
+      _('gen').innerHTML = resp[6];
+      _('ec').innerHTML = resp[7];
+      _('tel').innerHTML = resp[8];
+      _('ins').innerHTML = resp[9];
+      _('emp').innerHTML = resp[10];
+      _('seg').innerHTML = resp[11];
+      $('#cod_paciente').val(resp[12]);
+    }
   }
-}
-ajax.send("pac=true&cod="+cod);
+  ajax.send("pac=true&cod="+cod);
 //ajax.send("pac=true&cod="+suggestion.data);
 }
 
