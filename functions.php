@@ -1,6 +1,24 @@
 <?php 
-function selectTramitePaciente($db_conx, $cod_tra){
-  
+
+function isTramiteCanceled($db_conx, $tra_codigo){
+  $sql = "SELECT * FROM ttramite WHERE tra_codigo =  $tra_codigo AND tra_estado = 'cancelado'";
+  $query = mysqli_query($db_conx, $sql);
+  if ($query->num_rows > 0) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+function verficarTramitePertenencia($db_conx, $tra_codigo, $med_codigo){
+  $sql = "SELECT unm_codigo FROM ttramite WHERE tra_codigo =" . $tra_codigo;
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+  $sql = "SELECT * FROM tunidadmedico WHERE med_codigo = $med_codigo AND unm_codigo = " . $row[0];
+  $query = mysqli_query($db_conx, $sql);
+  if ($query->num_rows > 0) {
+    return TRUE;
+  }
+  return FALSE;
 }
 
 function selectTramiteLocalizacion($db_conx, $cod_tra){
@@ -144,7 +162,7 @@ function SelectReferenciasUnidad($db_conx, $codmed, $n_items = 10, $p_actual = 1
       $data .= "<td><span>$row[$i]</span></td>";
     }
    
-    $data .= '<td><a href="ver_referencias_uni.php?cod_tramite=' . $row[1] . '">Ver<br>Editar</a></td></tr>';
+    $data .= '<td><a target="_blank" href="ver_referencias_uni.php?cod_tramite=' . $row[1] . '">Ver<br>Editar</a></td></tr>';
     //print( $data);
     $c++;
   }

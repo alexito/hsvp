@@ -4,7 +4,7 @@ include_once("functions.php");
 
 include_once("php_includes/check_login_status.php");
 
-if ($user_ok == FALSE || $log_tipo != 'referente') {
+if ($user_ok == FALSE || $log_tipo != 'contrareferente') {
   header("location: referencias_uni.php");
   exit();
 }

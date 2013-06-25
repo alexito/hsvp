@@ -17,7 +17,7 @@ window.onload = function init() {
   val = val.split('?');
   val = val[0]
   if(val == 'ver_referencias_uni.php'){
-    var vars = [], hash, anchor;
+    
     var q = document.URL.split('?')[1];
     if(q != undefined){
       q = q.split('=');
@@ -157,6 +157,21 @@ window.onload = function init() {
     //window.location.href = 'tramite_uni.php';
     saveTramiteUnidad();
   //getDiagnosticoCodes();
+  });
+  
+  //Cuadro de dialogo para cancelar un tramite
+  $('#cancelTramite').click(function(){
+    $('.custom-row1').hide(500,function(){
+      $('.custom-row2').show(800);
+    });
+  });
+  $('#cancelTramiteNo').click(function(){
+    $('.custom-row2').hide(500,function(){
+      $('.custom-row1').show(800);
+    });
+  });
+  $('#cancelTramiteSi').click(function(){
+    cancelTramiteUnidad();
   });
   
   /////Muestra msg olvido clave

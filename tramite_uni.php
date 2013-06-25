@@ -9,6 +9,14 @@ if ($user_ok == FALSE || $log_tipo != 'referente') {
   exit();
 }
 ?><?php
+if (isset($_POST['cancel'])) {//Cancela el tramite enviado desde la pagina ver_referencia_uni
+  $cod = $_POST['cod'];
+  $sql = "UPDATE ttramite SET 
+             tra_estado = 'cancelado'
+             WHERE tra_codigo = $cod";
+  $query = mysqli_query($db_conx, $sql);
+}
+
 if (isset($_POST['codpac'])) {//Almacena los datos del tramite como referencia
   $codpac = $_POST['codpac'];
   $codmed = $_POST['codmed'];
@@ -136,7 +144,7 @@ if (isset($_POST["d"])) {
 
               <table><tr>
                   <td  style="width: 500px;"><h2>Referencia</h2></td>
-                  <td><?php //echo date("d M y H:m", time()); ?></td>
+                  <td><?php //echo date("d M y H:m", time());  ?></td>
                 </tr></table><table><tr>
                   <td>
                     <label><h5>Unidad:</h5></label>

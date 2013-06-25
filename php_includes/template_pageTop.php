@@ -24,7 +24,7 @@
       </li>
       <li><a href="#">Hospital</a>
         <ul>
-          <li><a href="tramite_uni.php">Ver Referencias</a></li>                           
+          <li><a href="referencias.php">Ver Referencias</a></li>                           
         </ul>
       </li>
       <li><a href="logout.php">Salir</a></li>

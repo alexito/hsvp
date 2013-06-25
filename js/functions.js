@@ -1,5 +1,18 @@
 var sie10 = null;
 var pd = '';
+
+function cancelTramiteUnidad(){
+  var cod = _('cod_tramite').value;
+  var ajax = ajaxObj("POST", "tramite_uni.php");
+  ajax.onreadystatechange = function(){
+    if(ajaxReturn(ajax) == true) {      
+      window.location.href = 'ver_referencias_uni.php';
+      alert('El trámite se canceló correctamente');      
+    }
+  }  
+  ajax.send("cancel=true&cod="+cod);
+}
+
 function saveTramiteUnidad(){
   
   var codpac = _("cod_paciente").value;
@@ -115,7 +128,6 @@ function autocompleteServicio(){
 
 
 function loadServicio(suggestion){
-
   var ajax = ajaxObj("POST", "tramite_uni.php");
   ajax.onreadystatechange = function(){
     if(ajaxReturn(ajax) == true) {      
@@ -125,7 +137,6 @@ function loadServicio(suggestion){
       $('#cod_servicio').val(resp[1]);
     }
   }
-  
   ajax.send("loadserv=true&cod="+suggestion.data);
 }
 
