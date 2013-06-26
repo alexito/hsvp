@@ -12,6 +12,7 @@
 <!--<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />  -->
  <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
  <script src="js/jquery.autocomplete.min.js"></script>
+ <script src="js/jquery-ui-timepicker-addon.js"></script>
   
 <!--  Template Libraries -->
 
