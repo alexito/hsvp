@@ -16,6 +16,40 @@ if (isset($_POST['tra'])) {//Carga los datos del autocompletado de pacientes
   echo $row[0];
   exit();
 }
+if (isset($_POST['cancel'])) {//Cancela el tramite enviado desde la pagina ver_referencia_uni
+  $cod = $_POST['cod'];
+  $sql = "UPDATE ttramite SET 
+             tra_estado = 'cancelado'
+             WHERE tra_codigo = $cod";
+  $query = mysqli_query($db_conx, $sql);
+  exit();
+}
+
+if (isset($_POST['asignar'])) {//Cancela el tramite enviado desde la pagina ver_referencia_uni
+  $cod_tra = $_POST['cod'];
+  $cod_mes = $_POST['cod_mes'];
+  $fecha = $_POST['fecha'];
+  
+  //CREA UN REGISTRO CON LA ASIGNACION DEL MEDICO A ESTE TRATAMIENTO - ES UNICO
+  $sql = "INSERT INTO tasignacion (mes_codigo, tra_codigo, asi_fecha, asi_activo) 
+             VALUES ($cod_mes, $cod_tra, '$fecha', 'activo')";
+  $query = mysqli_query($db_conx, $sql);
+  
+  $sala = $_POST['sala'];
+  $cama = $_POST['cama'];
+  $observ = $_POST['observ'];
+  
+  //ACTUALIZA LOS DATOS DEL TRAMITE.
+  $sql = "UPDATE ttramite SET      
+             tra_estado = 'asignado',
+             tra_sala = '$sala',
+             tra_cama = '$cama',             
+             tra_observ = '$observ'
+             WHERE tra_codigo = $cod_tra";
+  $query = mysqli_query($db_conx, $sql);
+  exit();
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,7 +64,7 @@ if (isset($_POST['tra'])) {//Carga los datos del autocompletado de pacientes
         <div class="tramite-class" id="pageMiddle">
           <div id="genform_style" style="border-bottom: medium none;">
             <form name="genform" id="genform" onsubmit="return false;">
-              <input type="hidden" name="cod_tramite" id="cod_tramite" value="<?php echo $_GET['cod_tramite'];?>" />              
+              <input type="hidden" name="cod_tramite" id="cod_tramite" value="<?php echo $_GET['cod_tramite']; ?>" />              
 
               <table><tr>
                   <td  style="width: 500px;"><h2>Referencia</h2></td>                  
@@ -77,22 +111,58 @@ if (isset($_POST['tra'])) {//Carga los datos del autocompletado de pacientes
                   </td></tr>
               </table>
               <?php selectTramiteData($db_conx, $_GET['cod_tramite']); ?>
-              
-              <?php if(!isTramiteCanceled($db_conx, $_GET['cod_tramite'])){?>
-              <table><tr class="custom-row1" style="float: left; margin-left: 350px;"><td>                    
-                    <td><a class="a-button" id="cancelTramite" >CANCELAR TRAMITE...</a></td>
-                </tr><tr class="custom-row2" style="display: none; margin-left: 300px; border: 3px dotted red;float: left;padding: 18px;">
-                      <td><span id="status">El trámite se cancelará de forma permanente,<br>¿Desea continuar con la cancelación del trámite?</span></td>
-                      <td style="float: left;margin-left: 90px;margin-top: 20px;"><a class="a-button" id="cancelTramiteSi" >SI</a></td>
-                      <td style="float: left;margin-top: 20px;"><a class="a-button" id="cancelTramiteNo" >NO</a></td>
-                    </tr>
-                    <tr>
-                      <td> 
-                      <input placeholder="Fecha de atención." style="width: 200px;" type="text" id="fecha-atencion"/>
-                      </td>
-                    </tr>
-              </table>
-              <?php }?>
+
+              <?php if (isTramitePendiente($db_conx, $_GET['cod_tramite'])) { ?>
+                <table class="tr-data">
+                  <tr>
+                    <td style="width: 60%;">
+                      <h5>Médicos disponibles:</h5>
+                      <?php SelectValuesMedicoServicio($db_conx, $_GET['cod_tramite']); ?>
+                    </td>
+                    <td>
+                      <table>
+                        <tr>
+                          <td>
+                            <h5>Asignar fecha de atención:</h5>
+                            <input placeholder="Fecha de atención." style="width: 200px;" type="text" id="fecha-atencion"/>
+                          </td>                    
+                        </tr>
+                        <tr>
+                          <td>
+                            <h5>Sala:</h5>
+                            <input placeholder="Sala (opcional)" style="width: 200px;" type="text" id="sala"/>
+                          </td>                    
+                        </tr>
+                        <tr>
+                          <td>
+                            <h5>Cama:</h5>
+                            <input placeholder="Cama (opcional)" style="width: 200px;" type="text" id="cama"/>
+                          </td>                    
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h5>Observación:</h5>
+                      <textarea style="height: 150px; width: 390px;" id="observacion" cols="20" rows="2"></textarea>
+                    </td>
+                    <td>
+                      <table>
+                        <tr class="custom-row1"><td>                    
+                            <a style="float: left; margin-top: 100px; margin: 4px; width: 180px;" class="a-button" id="asignar-tramite" >ASIGNAR TRAMITE...</a></td>
+                        </tr><tr class="custom-row1">
+                          <td><a style="float: left; margin: 4px; width: 180px;" class="a-button" id="cancelTramite" >CANCELAR TRAMITE...</a></td>
+                        </tr><tr class="custom-row2" style="display: none; border: 3px dotted red;float: left;padding: 18px;">
+                          <td><span id="status">El trámite se cancelará de forma permanente,<br>¿Desea continuar con la cancelación del trámite?</span></td>
+                          <td style="float: left;margin-left: 90px;margin-top: 20px;"><a class="a-button" id="cancelTramiteHospitalSi" >SI</a></td>
+                          <td style="float: left;margin-top: 20px;"><a class="a-button" id="cancelTramiteNo" >NO</a></td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>                
+              <?php } ?>
             </form>
           </div>
         </div>

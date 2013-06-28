@@ -1,13 +1,81 @@
 var sie10 = null;
 var pd = '';
 
+function checkDate(fecha){
+  var tdate = new Date();
+  var d = tdate.getDate(); //yeilds day
+  var m = tdate.getMonth() + 1; //yeilds month
+  var y = tdate.getFullYear(); //yeilds year
+  var h = tdate.getHours();
+  var mi = tdate.getMinutes();
+  
+  var tem = fecha.split(' ');
+  var f = tem[0].split('/');
+  var t = tem[1].split(':');
+  
+  if(f[0] >= y){
+    if(f[1] >= m){
+      if(f[2] > d){
+        return true;
+      }else if(f[2] == d){
+        if(t[0] >= h){
+          if(t[1] > mi){
+            return true;
+          }
+        }
+    }
+  }
+}
+return false;
+}
+
+function asignarTramiteHospital(){
+  var cod = _('cod_tramite').value;
+  var cod_mes = _('cmbmedicoservicio').value;
+  var fecha = _('fecha-atencion').value;
+  var sala = _('sala').value;
+  var cama = _('cama').value;
+  var observ = _('observacion').value;
+  
+  if(cod_mes == "" || fecha == ""){
+    alert('Debe seleccionar un Médico y Asignar la fecha de atención.');  
+    return;
+  }
+  
+  if(!checkDate(fecha)){
+    alert('La fecha debe ser posterior a la actual.')
+    return;
+  }
+  
+  var ajax = ajaxObj("POST", "ver_referencias_hos.php");
+  ajax.onreadystatechange = function(){
+    if(ajaxReturn(ajax) == true) {      
+      window.location.href = 'referencias.php';
+      alert('El trámite fue ASIGNADO CORRECTAMENTE');      
+    }
+  }  
+  ajax.send("asignar=true&cod=" + cod + "&cod_mes=" + cod_mes + "&fecha=" + fecha + "&sala=" + sala + "&cama=" + cama + "&observ=" + observ);
+}
+
+function cancelTramiteHospital(){
+  var cod = _('cod_tramite').value;
+  var ajax = ajaxObj("POST", "ver_referencias_hos.php");
+  ajax.onreadystatechange = function(){
+    if(ajaxReturn(ajax) == true) {      
+      window.location.href = 'referencias.php';
+      alert('El trámite se CANCELÓ CORRECTAMENTE');      
+    }
+  }  
+  ajax.send("cancel=true&cod=" + cod);
+}
+
 function cancelTramiteUnidad(){
   var cod = _('cod_tramite').value;
   var ajax = ajaxObj("POST", "tramite_uni.php");
   ajax.onreadystatechange = function(){
     if(ajaxReturn(ajax) == true) {      
       window.location.href = 'ver_referencias_uni.php';
-      alert('El trámite se canceló correctamente');      
+      alert('El trámite se CANCELÓ CORRECTAMENTE');      
     }
   }  
   ajax.send("cancel=true&cod="+cod);

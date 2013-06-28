@@ -44,7 +44,7 @@
 			closeText: 'Listo',
 			amNames: ['AM', 'A'],
 			pmNames: ['PM', 'P'],
-			timeFormat: 'HH:mm:ss',
+			timeFormat: 'HH:mm',
 			timeSuffix: '',
 			timeOnlyTitle: 'Choose Time',
 			timeText: 'Tiempo',

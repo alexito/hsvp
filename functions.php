@@ -1,7 +1,32 @@
-<?php 
+<?php
+
+function SelectValuesMedicoServicio($db_conx, $tra_codigo) {
+  $data = '<select style="width:400px;" size="10" class="cmbmedicoservicio" id="cmbmedicoservicio">';
+
+  $sql = "SELECT res_codigo FROM ttramite WHERE tra_codigo =" . $tra_codigo;
+  $query = mysqli_query($db_conx, $sql);
+
+  if ($query->num_rows > 0) {
+    $row = mysqli_fetch_array($query);
+
+    $sql = "SELECT mes_codigo, mer_pape, mer_sape, mer_pnom, mer_snom FROM vmedicoxservicio WHERE res_codigo = $row[0]";
+    $query = mysqli_query($db_conx, $sql);
+
+    $n_filas = $query->num_rows;
+
+    $c = 0;
+    while ($c < $n_filas) {
+      $row = mysqli_fetch_array($query);
+      $data .= '<option value="' . $row[0] . '">' . $row[1] .' '. $row[2] .' '. $row[3] .' '. $row[4]. '</option>';
+      $c++;
+    }
+  }
+  $data .= '</select>';
+  echo $data;
+}
 
 function SelectReferenciasHospitalPendiente($db_conx, $codmed, $n_items = 10, $p_actual = 1) {
-  $sql = "SELECT * FROM vreferencias_uni WHERE tra_estado = 'pendiente'";
+  $sql = "SELECT * FROM vreferencias_uni WHERE tra_estado = 'pendiente' ORDER BY tra_fecha ASC";
   $query = mysqli_query($db_conx, $sql);
   $n_columnas = $query->field_count;
   $n_filas = $query->num_rows;
@@ -21,14 +46,14 @@ function SelectReferenciasHospitalPendiente($db_conx, $codmed, $n_items = 10, $p
     $row = mysqli_fetch_array($query);
     $data .= '<tr class="row_data">';
     for ($i = 1; $i < $n_columnas; $i++) {
-      if($i == 4){
+      if ($i == 4) {
         $data .= "<td><span>$row[$i] $row[5]<br>$row[6] $row[7]</span></td>";
         $data .= "<td><span>" . customSubstring($row[8], 50) . "</span></td>";
         $i = 9;
       }
       $data .= "<td><span>$row[$i]</span></td>";
     }
-   
+
     $data .= '<td><a target="_blank" href="ver_referencias_hos.php?cod_tramite=' . $row[1] . '">Ver<br>Editar</a></td></tr>';
     //print( $data);
     $c++;
@@ -36,7 +61,16 @@ function SelectReferenciasHospitalPendiente($db_conx, $codmed, $n_items = 10, $p
   echo $data;
 }
 
-function isTramiteCanceled($db_conx, $tra_codigo){
+function isTramitePendiente($db_conx, $tra_codigo) {
+  $sql = "SELECT * FROM ttramite WHERE tra_codigo =  $tra_codigo AND tra_estado = 'pendiente'";
+  $query = mysqli_query($db_conx, $sql);
+  if ($query->num_rows > 0) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+function isTramiteCanceled($db_conx, $tra_codigo) {
   $sql = "SELECT * FROM ttramite WHERE tra_codigo =  $tra_codigo AND tra_estado = 'cancelado'";
   $query = mysqli_query($db_conx, $sql);
   if ($query->num_rows > 0) {
@@ -45,7 +79,7 @@ function isTramiteCanceled($db_conx, $tra_codigo){
   return FALSE;
 }
 
-function verficarTramitePertenencia($db_conx, $tra_codigo, $med_codigo){
+function verficarTramitePertenencia($db_conx, $tra_codigo, $med_codigo) {
   $sql = "SELECT unm_codigo FROM ttramite WHERE tra_codigo =" . $tra_codigo;
   $query = mysqli_query($db_conx, $sql);
   $row = mysqli_fetch_array($query);
@@ -57,7 +91,7 @@ function verficarTramitePertenencia($db_conx, $tra_codigo, $med_codigo){
   return FALSE;
 }
 
-function selectTramiteLocalizacion($db_conx, $cod_tra){
+function selectTramiteLocalizacion($db_conx, $cod_tra) {
   $sql = "SELECT unm_codigo FROM ttramite WHERE tra_codigo =" . $cod_tra;
   $query = mysqli_query($db_conx, $sql);
   $row = mysqli_fetch_array($query);
@@ -87,8 +121,8 @@ function selectTramiteLocalizacion($db_conx, $cod_tra){
   echo $data;
 }
 
-function selectTramiteData($db_conx, $cod_tra){
-  $sql = "SELECT tra_motivo, tra_resum_cuad_clin, tra_hall_exm_proc_diag, tra_plan_trat, tra_fecha, tra_estado, tra_sala, tra_cama, tra_tipo, tra_justif FROM ttramite WHERE tra_codigo =". $cod_tra;
+function selectTramiteData($db_conx, $cod_tra) {
+  $sql = "SELECT tra_motivo, tra_resum_cuad_clin, tra_hall_exm_proc_diag, tra_plan_trat, tra_fecha, tra_estado, tra_sala, tra_cama, tra_tipo, tra_justif FROM ttramite WHERE tra_codigo =" . $cod_tra;
   $query = mysqli_query($db_conx, $sql);
   $row = mysqli_fetch_array($query);
   $data = '<table><tr>
@@ -144,8 +178,8 @@ function selectTramiteData($db_conx, $cod_tra){
   echo $data;
 }
 
-function selectTramiteDiagnostico($db_conx, $cod_tra){
-  $sql = "SELECT dia_diagnos, sie_descrip FROM vtramitesie10 WHERE tra_codigo =". $cod_tra;
+function selectTramiteDiagnostico($db_conx, $cod_tra) {
+  $sql = "SELECT dia_diagnos, sie_descrip FROM vtramitesie10 WHERE tra_codigo =" . $cod_tra;
   $query = mysqli_query($db_conx, $sql);
   $n_columnas = $query->field_count;
   $n_filas = $query->num_rows;
@@ -159,11 +193,11 @@ function selectTramiteDiagnostico($db_conx, $cod_tra){
   echo $data;
 }
 
-function selectTramiteServicio($db_conx, $cod_tra){
-  $sql = "SELECT res_codigo FROM ttramite WHERE tra_codigo =". $cod_tra;
+function selectTramiteServicio($db_conx, $cod_tra) {
+  $sql = "SELECT res_codigo FROM ttramite WHERE tra_codigo =" . $cod_tra;
   $query = mysqli_query($db_conx, $sql);
   $row = mysqli_fetch_array($query);
-  $sql = "SELECT ser_descrip FROM vreferenciaservicio WHERE res_codigo =". $row[0];
+  $sql = "SELECT ser_descrip FROM vreferenciaservicio WHERE res_codigo =" . $row[0];
   $query = mysqli_query($db_conx, $sql);
   $row = mysqli_fetch_array($query);
   echo $row[0];
@@ -190,14 +224,14 @@ function SelectReferenciasUnidad($db_conx, $codmed, $n_items = 10, $p_actual = 1
     $row = mysqli_fetch_array($query);
     $data .= '<tr class="row_data">';
     for ($i = 1; $i < $n_columnas; $i++) {
-      if($i == 4){
+      if ($i == 4) {
         $data .= "<td><span>$row[$i] $row[5]<br>$row[6] $row[7]</span></td>";
         $data .= "<td><span>" . customSubstring($row[8], 50) . "</span></td>";
         $i = 9;
       }
       $data .= "<td><span>$row[$i]</span></td>";
     }
-   
+
     $data .= '<td><a target="_blank" href="ver_referencias_uni.php?cod_tramite=' . $row[1] . '">Ver<br>Editar</a></td></tr>';
     //print( $data);
     $c++;
@@ -210,34 +244,33 @@ function getServicioData($db_conx, $cod) {
   $query = mysqli_query($db_conx, $sql);
   $data = '';
   if ($query) {
-      $row = mysqli_fetch_array($query);
-      $data .= "$row[0]";      
+    $row = mysqli_fetch_array($query);
+    $data .= "$row[0]";
   }
   echo $data;
 }
-
 
 function getPacienteData($db_conx, $cod) {
   $sql = "SELECT * FROM tpaciente WHERE pac_codigo = $cod OR pac_cedula = '$cod' OR pac_hc = '$cod' LIMIT 1";
   $query = mysqli_query($db_conx, $sql);
   $data = '';
   if ($query) {
-      $row = mysqli_fetch_array($query);
-      $seg = '-';
-      $sqltem = "SELECT seg_descrip FROM tseguros WHERE seg_codigo = $row[1]";
-      $querytem = mysqli_query($db_conx, $sqltem);
-      if ($querytem) {
-        $rowtem = mysqli_fetch_array($querytem);
-        $seg = $rowtem[0];
-      }
-      $emp = '-';
-      $sqltem = "SELECT emp_descrip FROM tempresas WHERE emp_codigo = $row[2]";
-      $querytem = mysqli_query($db_conx, $sqltem);
-      if ($querytem) {
-        $rowtem = mysqli_fetch_array($querytem);
-        $emp = $rowtem[0];
-      }
-      $data .= "$row[6],$row[7],$row[4] $row[5],$row[3],$row[8],$row[12],$row[9],$row[10],$row[13],$row[11],$emp,$seg,$row[0]";      
+    $row = mysqli_fetch_array($query);
+    $seg = '-';
+    $sqltem = "SELECT seg_descrip FROM tseguros WHERE seg_codigo = $row[1]";
+    $querytem = mysqli_query($db_conx, $sqltem);
+    if ($querytem) {
+      $rowtem = mysqli_fetch_array($querytem);
+      $seg = $rowtem[0];
+    }
+    $emp = '-';
+    $sqltem = "SELECT emp_descrip FROM tempresas WHERE emp_codigo = $row[2]";
+    $querytem = mysqli_query($db_conx, $sqltem);
+    if ($querytem) {
+      $rowtem = mysqli_fetch_array($querytem);
+      $emp = $rowtem[0];
+    }
+    $data .= "$row[6],$row[7],$row[4] $row[5],$row[3],$row[8],$row[12],$row[9],$row[10],$row[13],$row[11],$emp,$seg,$row[0]";
   }
   echo $data;
 }
@@ -262,7 +295,6 @@ function getServicioAutocomplete($db_conx, $ref = 1) {
   }
   echo $data;
 }
-
 
 function getPacienteAutocomplete($db_conx) {
 
@@ -826,14 +858,14 @@ function SelectValuesServicios_MReferenciado($db_conx, $table, $multiple = NULL)
   echo $data;
 }
 
-function customSubstring($text, $nc){
+function customSubstring($text, $nc) {
   $res = '';
   $i = 0;
-  
-  for(; $i < strlen($text) && $i < $nc; $i++){
+
+  for (; $i < strlen($text) && $i < $nc; $i++) {
     $res .= $text[$i];
   }
-  if($i == $nc){
+  if ($i == $nc) {
     $res .= '...';
   }
   return $res;

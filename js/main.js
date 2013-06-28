@@ -159,6 +159,16 @@ window.onload = function init() {
     });    
   }
   
+  
+  $(function() {
+    $( "#fnac" ).datepicker({
+      minDate: new Date(1900, 10 - 1, 25),
+      maxDate: '+30Y',
+      yearRange: '1900:c',
+      changeMonth: true,
+      changeYear: true
+    });
+  });
   $(function() {
     $( "#fecha-atencion" ).datetimepicker();
   });
@@ -183,6 +193,13 @@ window.onload = function init() {
   });
   $('#cancelTramiteSi').click(function(){
     cancelTramiteUnidad();
+  });
+  
+  $('#cancelTramiteHospitalSi').click(function(){
+    cancelTramiteHospital();
+  });
+  $('#asignar-tramite').click(function(){
+    asignarTramiteHospital();
   });
   
   /////Muestra msg olvido clave

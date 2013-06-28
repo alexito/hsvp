@@ -17,6 +17,7 @@ if (isset($_POST['cancel'])) {//Cancela el tramite enviado desde la pagina ver_r
              tra_estado = 'cancelado'
              WHERE tra_codigo = $cod";
   $query = mysqli_query($db_conx, $sql);
+  exit();
 }
 
 if (isset($_POST['codpac'])) {//Almacena los datos del tramite como referencia
