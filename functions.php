@@ -232,8 +232,7 @@ function SelectReferenciasUnidad($db_conx, $codmed, $n_items = 10, $p_actual = 1
             <td>Nombre Completo</td>            
             <td>Motivo</td>
             <td>Servicio</td>
-            <td>Estado</td>
-            <td>Activo</td>
+            <td>Estado / Tipo</td>
             <td>Accion</td>
         </tr>';
   $c = 0;
@@ -247,6 +246,10 @@ function SelectReferenciasUnidad($db_conx, $codmed, $n_items = 10, $p_actual = 1
         $i = 9;
       }
       $data .= "<td><span>$row[$i]</span></td>";
+      if($i + 3 == $n_columnas){        
+        $data .= "<td><span>" . $row[$i+1] . "<br/>" . $row[$i+2] . "</span></td>";
+        break;
+      }
     }
 
     $data .= '<td><a target="_blank" href="ver_referencias_uni.php?cod_tramite=' . $row[1] . '">Ver<br>Editar</a></td></tr>';
