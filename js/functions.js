@@ -1,6 +1,11 @@
 var sie10 = null;
 var pd = '';
 
+function filtrarReferencias(){
+  var est = _('cmbestadotipo').value;  
+  window.location.href = 'referencias.php?est=' + est;  
+}
+
 function checkDate(fecha){
   var tdate = new Date();
   var d = tdate.getDate(); //yeilds day
@@ -23,13 +28,43 @@ function checkDate(fecha){
             return true;
           }
         }
+      }
     }
   }
-}
-return false;
+  return false;
 }
 
-function asignarTramiteHospital(){
+function contrareferenciaTramiteHospital(){
+  var cod = _('cod_tramite').value;  
+  var observ = $('#observacion-anterior').text() + '\n* ' + _('observacion').value;
+  var jus = $('input:radio:checked').val();
+   
+  var ajax = ajaxObj("POST", "ver_referencias_hos.php");
+  ajax.onreadystatechange = function(){
+    if(ajaxReturn(ajax) == true) {      
+      window.location.href = 'referencias.php';
+      alert('La CONTRAREFERENCIA se envió correctamente.');      
+    }
+  }  
+  ajax.send("contrareferencia=true&cod=" + cod + "&observ=" + observ + "&jus=" + jus);
+}
+
+function atendidoTramiteHospital(){
+  var cod = _('cod_tramite').value;  
+  var observ = $('#observacion-anterior').text() + '\n* ' + _('observacion').value;
+  var jus = $('input:radio:checked').val();
+   
+  var ajax = ajaxObj("POST", "ver_referencias_hos.php");
+  ajax.onreadystatechange = function(){
+    if(ajaxReturn(ajax) == true) {      
+      window.location.href = 'referencias.php';
+      alert('El trámite terminó correctamente.');      
+    }
+  }  
+  ajax.send("atendido=true&cod=" + cod + "&observ=" + observ + "&jus=" + jus);
+}
+
+function confirmarTramiteHospital(){
   var cod = _('cod_tramite').value;
   var cod_mes = _('cmbmedicoservicio').value;
   var fecha = _('fecha-atencion').value;
@@ -51,10 +86,10 @@ function asignarTramiteHospital(){
   ajax.onreadystatechange = function(){
     if(ajaxReturn(ajax) == true) {      
       window.location.href = 'referencias.php';
-      alert('El trámite fue ASIGNADO CORRECTAMENTE');      
+      alert('El trámite fue se guardo correctamente.');      
     }
   }  
-  ajax.send("asignar=true&cod=" + cod + "&cod_mes=" + cod_mes + "&fecha=" + fecha + "&sala=" + sala + "&cama=" + cama + "&observ=" + observ);
+  ajax.send("confirmar=true&cod=" + cod + "&cod_mes=" + cod_mes + "&fecha=" + fecha + "&sala=" + sala + "&cama=" + cama + "&observ=" + observ);
 }
 
 function cancelTramiteHospital(){

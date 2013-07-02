@@ -20,9 +20,33 @@ if ($user_ok == FALSE || $log_tipo != 'contrareferente') {
 
       <div id="templatemo_main">
         <div class="col_w900">
-          <div id="table_content" class="tablestyle">
-            <table id="table_data">              
-              <?php SelectReferenciasHospitalPendiente($db_conx, $log_id, 10, 1); ?>
+          <table class="tr-data">
+            <tr>
+              <td>
+                <label>Ver Trámite:</label>
+                <select id="cmbestadotipo">
+                  <option value="pendiente">Pendiente</option>
+                  <option value="confirmado">Confirmado</option>
+                  <option value="atendido">Atendido</option>
+                  <option value="contrareferencia">Contrareferencia</option>
+                </select>
+              </td>
+              <td>
+                <a class="a-button" id="cargar-referencias" >Cargar...</a>
+              </td>
+            </tr>
+          </table>
+          <div id="table_content" class="tablestyle">            
+            <table id="table_data">
+
+              <?php
+              if (isset($_GET['est'])) {
+                SelectReferenciasHospitalPendiente($db_conx, $log_id, 10, 1, $_GET['est']);
+              } else {
+                SelectReferenciasHospitalPendiente($db_conx, $log_id, 10, 1);
+              }
+              ?>
+
             </table>
           </div>
         </div>

@@ -198,8 +198,17 @@ window.onload = function init() {
   $('#cancelTramiteHospitalSi').click(function(){
     cancelTramiteHospital();
   });
-  $('#asignar-tramite').click(function(){
-    asignarTramiteHospital();
+  $('#confirmar-tramite').click(function(){
+    confirmarTramiteHospital();
+  });
+  $('#atendido-tramite').click(function(){
+    atendidoTramiteHospital();
+  });
+  $('#contrareferencia-tramite').click(function(){
+    contrareferenciaTramiteHospital();
+  });
+  $('#cargar-referencias').click(function(){
+    filtrarReferencias();
   });
   
   /////Muestra msg olvido clave

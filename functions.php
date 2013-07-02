@@ -25,8 +25,12 @@ function SelectValuesMedicoServicio($db_conx, $tra_codigo) {
   echo $data;
 }
 
-function SelectReferenciasHospitalPendiente($db_conx, $codmed, $n_items = 10, $p_actual = 1) {
-  $sql = "SELECT * FROM vreferencias_uni WHERE tra_estado = 'pendiente' ORDER BY tra_fecha ASC";
+function SelectReferenciasHospitalPendiente($db_conx, $codmed, $n_items = 10, $p_actual = 1, $est = 'pendiente') {
+  if($est == 'contrareferencia'){
+    $sql = "SELECT * FROM vreferencias_uni WHERE tra_tipo = '$est' ORDER BY tra_fecha ASC";
+  }else{
+    $sql = "SELECT * FROM vreferencias_uni WHERE tra_estado = '$est' ORDER BY tra_fecha ASC";
+  }
   $query = mysqli_query($db_conx, $sql);
   $n_columnas = $query->field_count;
   $n_filas = $query->num_rows;
@@ -37,8 +41,7 @@ function SelectReferenciasHospitalPendiente($db_conx, $codmed, $n_items = 10, $p
             <td>Nombre Completo</td>            
             <td>Motivo</td>
             <td>Servicio</td>
-            <td>Estado</td>
-            <td>Activo</td>
+            <td>Estado / Tipo</td>
             <td>Accion</td>
         </tr>';
   $c = 0;
@@ -52,6 +55,10 @@ function SelectReferenciasHospitalPendiente($db_conx, $codmed, $n_items = 10, $p
         $i = 9;
       }
       $data .= "<td><span>$row[$i]</span></td>";
+      if($i + 3 == $n_columnas){        
+        $data .= "<td><span>" . $row[$i+1] . "<br/>" . $row[$i+2] . "</span></td>";
+        break;
+      }
     }
 
     $data .= '<td><a target="_blank" href="ver_referencias_hos.php?cod_tramite=' . $row[1] . '">Ver<br>Editar</a></td></tr>';
@@ -59,6 +66,24 @@ function SelectReferenciasHospitalPendiente($db_conx, $codmed, $n_items = 10, $p
     $c++;
   }
   echo $data;
+}
+
+function isTramiteContrareferencia($db_conx, $tra_codigo) {
+  $sql = "SELECT * FROM ttramite WHERE tra_codigo =  $tra_codigo AND tra_tipo = 'contrareferencia'";
+  $query = mysqli_query($db_conx, $sql);
+  if ($query->num_rows > 0) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+function isTramiteConfirmado($db_conx, $tra_codigo) {
+  $sql = "SELECT * FROM ttramite WHERE tra_codigo =  $tra_codigo AND tra_estado = 'confirmado'";
+  $query = mysqli_query($db_conx, $sql);
+  if ($query->num_rows > 0) {
+    return TRUE;
+  }
+  return FALSE;
 }
 
 function isTramitePendiente($db_conx, $tra_codigo) {
@@ -154,18 +179,10 @@ function selectTramiteData($db_conx, $cod_tra) {
                   <td>
                     <label style="width: 25%;"><h5>Estado:</h5></label>
                     <span id="est">' . $row[5] . '</span>
-                  </td>
-                  <td>
-                    <label style="width: 25%;"><h5>Sala:</h5></label>
-                    <span id="sal">' . $row[6] . '</span>
-                  </td>
-                  <td>
-                    <label style="width: 25%;"><h5>Cama:</h5></label>
-                    <span id="cam">' . $row[7] . '</span>
-                  </td>
+                  </td>                  
                 </tr>
                 <tr >
-                  <td>
+                  <td style="width: 30%;">
                     <label style="width: 25%;"><h5>Tipo:</h5></label>
                     <span id="tip">' . $row[8] . '</span>
                   </td>

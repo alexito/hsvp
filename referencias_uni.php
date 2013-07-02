@@ -17,7 +17,6 @@ if ($user_ok == FALSE || $log_tipo != 'referente') {
   <body>
     <div id="templatemo_wrapper">
       <?php include_once("php_includes/template_pageTop.php"); ?>
-
       <div id="templatemo_main">
         <div class="col_w900">
           <div id="table_content" class="tablestyle">
