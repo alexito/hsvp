@@ -12,7 +12,7 @@ if (isset($_SESSION["username"])) {
 if (isset($_POST["seguros"])) {
   $des = $_POST['des'];
   $obs = $_POST['obs'];
-  if ($des == "" || $obs == "") {
+  if ($des == "") {
     echo "The form submission is missing values.";
     exit();
   } else if (isset($_POST["cod"])) { //This is for UPDATE
@@ -33,7 +33,7 @@ if (isset($_POST["seguros"])) {
 if (isset($_POST["empresas"])) {
   $des = $_POST['des'];
   $obs = $_POST['obs'];
-  if ($des == "" || $obs == "") {
+  if ($des == "") {
     echo "The form submission is missing values.";
     exit();
   } else if (isset($_POST["cod"])) { //This is for UPDATE

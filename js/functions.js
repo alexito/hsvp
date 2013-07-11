@@ -290,7 +290,7 @@ function searchPaciente(pac_cod){
       _('sape').innerHTML = resp[1];
       _('nom').innerHTML = resp[2];
       _('ced').innerHTML = resp[3];
-      _('fnac').innerHTML = resp[4];
+      _('fnaci').innerHTML = resp[4];
       _('hc').innerHTML = resp[5];
       _('gen').innerHTML = resp[6];
       _('ec').innerHTML = resp[7];
@@ -457,7 +457,7 @@ function createUnidad(){
   var act = _("cmbactivo").value;
   var obs = _("observacion").value;
   var status = _("status");
-  if(loc == "" || des == "" || act == "" || obs == "" ){
+  if(loc == "" || des == "" || act == "" ){
     status.innerHTML = "Todos los campos son requeridos";
   } else {    
     _("submitbtn").style.display = "none";
@@ -517,7 +517,7 @@ function createMedicoReferente(){
   var sape = _("sape").value;
   var unid = $("#cmbunidad").val();
   var status = _("status");
-  if(codmed == "" || esp == "" || obs == "" || est == "" || pnom == "" ||
+  if(codmed == "" || esp == "" || est == "" || pnom == "" ||
     snom == "" || pape == "" || sape == ""){
     status.innerHTML = "Todos los campos son requeridos";
   } else {    
@@ -580,7 +580,7 @@ function createMedicoReferenciado(){
   var pape = _("pape").value;
   var sape = _("sape").value;
   var status = _("status");
-  if(codmed == "" || esp == "" || obs == "" || est == "" || pnom == "" ||
+  if(codmed == "" || esp == "" || est == "" || pnom == "" ||
     snom == "" || pape == "" || sape == ""){
     status.innerHTML = "Todos los campos son requeridos";
   } else {    
@@ -702,7 +702,7 @@ function editPaciente(id){
 
 function save_edit_Seguro(cod, des, obs)
 {
-  if(des == "" || obs == "") {
+  if(des == "") {
     return false;
   }
   var ajax = ajaxObj("POST", "seguro-empresa.php");  
@@ -726,7 +726,7 @@ function save_edit_Seguro(cod, des, obs)
 
 function save_edit_Empresa(cod, des, obs)
 {
-  if(des == "" || obs == "") {
+  if(des == "") {
     return false;
   }
   var ajax = ajaxObj("POST", "seguro-empresa.php");
@@ -750,7 +750,7 @@ function save_edit_Empresa(cod, des, obs)
 
 function save_edit_Referenciado(cod, des, obs, sig)
 {
-  if(des == "" || obs == "" || sig == "") {
+  if(des == "" || sig == "") {
     return false;
   }
   var ajax = ajaxObj("POST", "referenciado.php");
@@ -816,6 +816,7 @@ function editUsuario(id){
     $('#usuario').val($('span#td_' + id + '_1').text());
     $('#clave').val("");        
     $('#cmbtipo').val($('span#tip_' + id).text());
+    $('#cmbtipo').removeAttr('disabled');
     if($('span#tip_' + id).text() == 'referente'){
       $('#cmbtipo').attr('disabled', true);
     }

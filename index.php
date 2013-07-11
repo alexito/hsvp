@@ -70,18 +70,18 @@ if (isset($_POST["usu"])) {
         <div id="pageMiddle">
 
           <!-- LOGIN FORM -->
-          <div id="genform_style" class="loginfrm">
+          <div id="genform_style" class="loginfrm" style="border-bottom: none;">
             <table>
               <tr>
                 <td>            
-                  <form class="loginclass" id="genform" onsubmit="return false;" style="height: 450px;">
+                  <form class="loginclass" id="genform" onsubmit="return false;" style="height: 210px;">
                     <label>Usuario:</label>
                     <input type="text" id="usuario" onfocus="emptyElement('status')" maxlength="20">
                     <label>Clave:</label>
                     <input type="password" id="clave" onfocus="emptyElement('status')" maxlength="20">
                     <br><br><a id="olvidoclave" href="#">Olvido su clave?</a><br>
                     <button id="submitbtn" onclick="login()">Acceder</button> 
-                    <p id="status"></p>                    
+                    <p id="status"></p>
                   </form>
                 </td>
                 <td id="loginicon">
@@ -93,8 +93,7 @@ if (isset($_POST["usu"])) {
             </table>
             <!-- LOGIN FORM -->
           </div>
-        </div>
-        <div class="cleaner"></div>
+        </div>        
       </div>
     </div>
     <?php include_once("php_includes/template_pageBottom.php"); ?>

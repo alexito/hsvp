@@ -61,15 +61,15 @@ if (isset($_POST["d"])) {
                     <input id="descripcion" type="text" maxlength="25">
                   </td><td>
                     <label>Parroquía:</label>
-                    <input id="parroquia" type="text" maxlength="3">
+                    <input id="parroquia" type="text" maxlength="50">
                   </td>
                 </tr>
                 <tr><td>
                     <label>Cantón:</label>
-                    <input id="canton" type="text" maxlength="3">
+                    <input id="canton" type="text" maxlength="50">
                   </td><td>
                     <label>Provincia:</label>
-                    <input id="provincia" type="text" maxlength="3">
+                    <input id="provincia" type="text" maxlength="50">
                   </td>
                 </tr>
               </table>

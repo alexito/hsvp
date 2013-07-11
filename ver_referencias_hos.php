@@ -108,7 +108,7 @@ if (isset($_POST['confirmar'])) {//Cancela el tramite enviado desde la pagina ve
                   <td><h6>Cédula:</h6><span id="ced"></span></td>
                 </tr> 
                 <tr style="float: left;">
-                  <td><h6>F. Nacimiento:</h6><span id="fnac"></span></td>
+                  <td><h6>F. Nacimiento:</h6><span id="fnaci"></span></td>
                   <td><h6>Historia C.:</h6><span id="hc"></span></td>
                   <td><h6>Género:</h6><span id="gen"></span></td>
                   <td><h6>Est. Civil:</h6><span id="ec"></span></td>

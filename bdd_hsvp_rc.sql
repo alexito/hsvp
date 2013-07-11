@@ -228,6 +228,7 @@ CREATE TABLE `ttramite` (
   `TRA_TIPO` enum('referencia','contrareferencia') NOT NULL DEFAULT 'referencia',
   `TRA_ACTIVO` enum('activo','inactivo') NOT NULL DEFAULT 'activo',
   `TRA_JUSTIF` enum('si','no') NOT NULL DEFAULT 'no',
+  `TRA_OBSERV` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`TRA_CODIGO`),
   KEY `FK_RESTABLECTRAMITE` (`RES_CODIGO`),
   KEY `FK_RTRAMITEESTADO` (`TRA_ESTADO`),
@@ -244,17 +245,17 @@ CREATE TABLE `ttramite` (
 #
 
 CREATE TABLE `tasignacion` (
-  `ASI_CODIGO` smallint(6) NOT NULL,
+  `ASI_CODIGO` smallint(6) NOT NULL AUTO_INCREMENT,
   `MES_CODIGO` tinyint(4) DEFAULT NULL,
   `TRA_CODIGO` int(11) DEFAULT NULL,
-  `ASI_FECHA` date NOT NULL,
+  `ASI_FECHA` datetime NOT NULL,
   `ASI_ACTIVO` enum('activo','inactivo') NOT NULL,
   PRIMARY KEY (`ASI_CODIGO`),
   KEY `FK_RMEDICOASIGNACION` (`MES_CODIGO`),
   KEY `FK_RTRAMITEASIGNACION2` (`TRA_CODIGO`),
   CONSTRAINT `FK_RMEDICOASIGNACION` FOREIGN KEY (`MES_CODIGO`) REFERENCES `tmedicoxservicio` (`MES_CODIGO`),
   CONSTRAINT `FK_RTRAMITEASIGNACION2` FOREIGN KEY (`TRA_CODIGO`) REFERENCES `ttramite` (`TRA_CODIGO`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='ASIGNACION DE FECHAS Y MEDICO POR ESPECIALIDAD PARA ATENCION';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='ASIGNACION DE FECHAS Y MEDICO POR ESPECIALIDAD PARA ATENCION';
 
 #
 # Structure for the `tsie10` table : 
@@ -317,6 +318,29 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
     (`tlocalizacion` join `tunidad` on((`tlocalizacion`.`LOC_CODIGO` = `tunidad`.`LOC_CODIGO`)));
 
 #
+# Definition for the `vmedicoxservicio` view : 
+#
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW vmedicoxservicio AS 
+  select 
+    `tmedicoreferenciado`.`MER_PAPE` AS `MER_PAPE`,
+    `tmedicoreferenciado`.`MER_SAPE` AS `MER_SAPE`,
+    `tmedicoreferenciado`.`MER_PNOM` AS `MER_PNOM`,
+    `tmedicoreferenciado`.`MER_SNOM` AS `MER_SNOM`,
+    `tmedicoxservicio`.`MES_CODIGO` AS `MES_CODIGO`,
+    `tmedicoxservicio`.`RES_CODIGO` AS `RES_CODIGO`,
+    `tservicios`.`SER_DESCRIP` AS `SER_DESCRIP`,
+    `tmedicoxservicio`.`MES_ACTIVO` AS `MES_ACTIVO` 
+  from 
+    (((`tmedicoreferenciado` join `tmedicoxservicio` on((`tmedicoreferenciado`.`MER_CODIGO` = `tmedicoxservicio`.`MER_CODIGO`))) join `trefservicios` on((`tmedicoxservicio`.`RES_CODIGO` = `trefservicios`.`RES_CODIGO`))) join `tservicios` on((`trefservicios`.`SER_CODIGO` = `tservicios`.`SER_CODIGO`))) 
+  where 
+    ((`tmedicoxservicio`.`MES_ACTIVO` = 'activo') and (`tmedicoreferenciado`.`MER_ESTADO` = 'activo')) 
+  group by 
+    `tmedicoxservicio`.`MES_CODIGO`,`tmedicoxservicio`.`RES_CODIGO`,`tservicios`.`SER_DESCRIP`,`tmedicoxservicio`.`MES_ACTIVO`,`tmedicoreferenciado`.`MER_PAPE`,`tmedicoreferenciado`.`MER_SAPE`,`tmedicoreferenciado`.`MER_PNOM`,`tmedicoreferenciado`.`MER_SNOM` 
+  order by 
+    `tmedicoxservicio`.`RES_CODIGO`,`tmedicoreferenciado`.`MER_PAPE`;
+
+#
 # Definition for the `vreferencias_uni` view : 
 #
 
@@ -333,7 +357,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
     `ttramite`.`TRA_MOTIVO` AS `TRA_MOTIVO`,
     `tservicios`.`SER_DESCRIP` AS `SER_DESCRIP`,
     `ttramite`.`TRA_ESTADO` AS `TRA_ESTADO`,
-    `ttramite`.`TRA_ACTIVO` AS `TRA_ACTIVO` 
+    `ttramite`.`TRA_TIPO` AS `TRA_TIPO` 
   from 
     (((((`trefservicios` join `ttramite` on((`trefservicios`.`RES_CODIGO` = `ttramite`.`RES_CODIGO`))) join `tservicios` on((`trefservicios`.`SER_CODIGO` = `tservicios`.`SER_CODIGO`))) join `tpaciente` on((`ttramite`.`PAC_CODIGO` = `tpaciente`.`PAC_CODIGO`))) join `tunidadmedico` on((`ttramite`.`UNM_CODIGO` = `tunidadmedico`.`UNM_CODIGO`))) join `tmedicoreferente` on((`tunidadmedico`.`MED_CODIGO` = `tmedicoreferente`.`MED_CODIGO`))) 
   order by 
@@ -352,6 +376,40 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
     `tservicios`.`SER_DESCRIP` AS `SER_DESCRIP` 
   from 
     ((`treferenciado` join `trefservicios` on((`treferenciado`.`REF_CODIGO` = `trefservicios`.`REF_CODIGO`))) join `tservicios` on((`trefservicios`.`SER_CODIGO` = `tservicios`.`SER_CODIGO`)));
+
+#
+# Definition for the `vtramitesie10` view : 
+#
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW vtramitesie10 AS 
+  select 
+    `tdiagsie10`.`DIA_CODIGO` AS `DIA_CODIGO`,
+    `tdiagsie10`.`TRA_CODIGO` AS `TRA_CODIGO`,
+    `tsie10`.`SIE_CODIGO` AS `SIE_CODIGO`,
+    `tsie10`.`SIE_DESCRIP` AS `SIE_DESCRIP`,
+    `tsie10`.`SIE_CODIF` AS `SIE_CODIF`,
+    `tdiagsie10`.`DIA_DIAGNOS` AS `DIA_DIAGNOS` 
+  from 
+    ((`ttramite` join `tdiagsie10` on((`ttramite`.`TRA_CODIGO` = `tdiagsie10`.`TRA_CODIGO`))) join `tsie10` on((`tdiagsie10`.`SIE_CODIGO` = `tsie10`.`SIE_CODIGO`)));
+
+#
+# Definition for the `vtramitexmedicoref` view : 
+#
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW vtramitexmedicoref AS 
+  select 
+    `ttramite`.`TRA_CODIGO` AS `TRA_CODIGO`,
+    `ttramite`.`TRA_ESTADO` AS `TRA_ESTADO`,
+    `tasignacion`.`ASI_FECHA` AS `ASI_FECHA`,
+    `ttramite`.`TRA_SALA` AS `TRA_SALA`,
+    `ttramite`.`TRA_CAMA` AS `TRA_CAMA`,
+    `ttramite`.`TRA_OBSERV` AS `TRA_OBSERV`,
+    `tmedicoreferenciado`.`MER_PAPE` AS `MER_PAPE`,
+    `tmedicoreferenciado`.`MER_SAPE` AS `MER_SAPE`,
+    `tmedicoreferenciado`.`MER_PNOM` AS `MER_PNOM`,
+    `tmedicoreferenciado`.`MER_SNOM` AS `MER_SNOM` 
+  from 
+    (((`tmedicoreferenciado` join `tmedicoxservicio` on((`tmedicoreferenciado`.`MER_CODIGO` = `tmedicoxservicio`.`MER_CODIGO`))) join `tasignacion` on((`tmedicoxservicio`.`MES_CODIGO` = `tasignacion`.`MES_CODIGO`))) join `ttramite` on((`tasignacion`.`TRA_CODIGO` = `ttramite`.`TRA_CODIGO`)));
 
 #
 # Definition for the `vunidadmedico` view : 
@@ -388,10 +446,10 @@ COMMIT;
 #
 
 INSERT INTO `tmedicoreferenciado` (`MER_CODIGO`, `MER_CODMED`, `MER_ESPECIAL`, `MER_OBSERV`, `MER_ESTADO`, `MER_PNOM`, `MER_SNOM`, `MER_PAPE`, `MER_SAPE`) VALUES 
-  (1,'a','a','a','activo','a','a','a','a'),
-  (2,'codme','esp','observacion','activo','pnom','snom','pape','sape'),
-  (3,'c','c','c','activo','c','c','c','cc'),
-  (4,'d','d','d','activo','d','d','d','d');
+  (1,'codmed1','espe','aobser','activo','carlos','segnom','Ariape','segape'),
+  (2,'codme','esp','observacion','activo','pnom','snom','Bape','sape'),
+  (3,'cod3','esp3','cobser','activo','paul','vicente','Capellido','sapellido'),
+  (4,'cod4','esp4','dobservacion4','activo','nombre4','segno4','Dap4','seg4');
 COMMIT;
 
 #
@@ -470,7 +528,7 @@ COMMIT;
 
 INSERT INTO `tpaciente` (`PAC_CODIGO`, `SEG_CODIGO`, `EMP_CODIGO`, `PAC_CEDULA`, `PAC_PNOM`, `PAC_SNOM`, `PAC_PAPE`, `PAC_SAPE`, `PAC_FCH_NAC`, `PAC_GENERO`, `PAC_EST_CIV`, `PAC_INSTRUC`, `PAC_HC`, `PAC_TELEF`) VALUES 
   (1,2,2,'1003043872','Alexis','Fernando','Saransig','Chiza','1988-09-05','masculino','casado','Superior','hc1','0985528967'),
-  (2,NULL,2,'2001030435','m','n','b','v','1999-00-00','femenino','soltero','primaria','jn','0999999999'),
+  (2,NULL,2,'2001030435','m','n','b','v','1998-06-17','femenino','soltero','primaria','jn','0999999999'),
   (3,2,1,'200103000','Fucken','xyz','asd','qwe','1988-09-05','masculino','casado','Primaria','hc3','098884774747');
 COMMIT;
 
@@ -539,10 +597,19 @@ COMMIT;
 # Data for the `ttramite` table  (LIMIT 0,500)
 #
 
-INSERT INTO `ttramite` (`TRA_CODIGO`, `TRA_ESTADO`, `PAC_CODIGO`, `RES_CODIGO`, `UNM_CODIGO`, `TRA_SISTEMA`, `TRA_FECHA`, `TRA_MOTIVO`, `TRA_RESUM_CUAD_CLIN`, `TRA_HALL_EXM_PROC_DIAG`, `TRA_PLAN_TRAT`, `TRA_SALA`, `TRA_CAMA`, `TRA_TIPO`, `TRA_ACTIVO`, `TRA_JUSTIF`) VALUES 
-  (1,'pendiente',2,2,27,'publico','2013-06-15 14:28:15','motivo1','resumen1','hall1','plan1',NULL,NULL,'referencia','activo','no'),
-  (2,'pendiente',1,1,2,'publico','2013-06-15 14:29:27','motivo2','res2','hall2','plan2',NULL,NULL,'referencia','activo','no'),
-  (3,'pendiente',2,3,4,'publico','2013-06-15 14:30:34','mot3','res3','hall3','plan3',NULL,NULL,'referencia','activo','no');
+INSERT INTO `ttramite` (`TRA_CODIGO`, `TRA_ESTADO`, `PAC_CODIGO`, `RES_CODIGO`, `UNM_CODIGO`, `TRA_SISTEMA`, `TRA_FECHA`, `TRA_MOTIVO`, `TRA_RESUM_CUAD_CLIN`, `TRA_HALL_EXM_PROC_DIAG`, `TRA_PLAN_TRAT`, `TRA_SALA`, `TRA_CAMA`, `TRA_TIPO`, `TRA_ACTIVO`, `TRA_JUSTIF`, `TRA_OBSERV`) VALUES 
+  (1,'confirmado',2,2,27,'publico','2013-06-15 14:28:15','motivo1','resumen1','hall1','plan1','sala1','cama1','contrareferencia','activo','si','\n                        observacion del tramite 1\n* esta es la verdadera contrareferencia :)'),
+  (2,'atendido',1,1,2,'publico','2013-06-15 14:29:27','motivo2','res2','hall2','plan2','','','referencia','activo','si','\n                        El paciente puede demorarse 10 minutos porque tiene dificultades.\n* El paciente necesita que le retiren las bendas de la mano izquierda en 2 semanas.'),
+  (3,'pendiente',2,3,4,'publico','2013-06-15 14:30:34','mot3','res3','hall3','plan3',NULL,NULL,'referencia','activo','no','Ninguna');
+COMMIT;
+
+#
+# Data for the `tasignacion` table  (LIMIT 0,500)
+#
+
+INSERT INTO `tasignacion` (`ASI_CODIGO`, `MES_CODIGO`, `TRA_CODIGO`, `ASI_FECHA`, `ASI_ACTIVO`) VALUES 
+  (1,3,1,'2013-06-29 14:00:00','activo'),
+  (2,12,2,'2013-07-03 14:30:00','activo');
 COMMIT;
 
 #
@@ -17920,10 +17987,10 @@ COMMIT;
 #
 
 INSERT INTO `tusuario` (`USU_CODIGO`, `USU_USUARIO`, `USU_CLAVE`, `USU_TIPO`, `USU_ACTIVO`, `USU_FECHA`, `MED_CODIGO`) VALUES 
-  (1,'usuario1','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-06-15 15:01:22',1),
-  (2,'usuario2','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-06-15 14:29:40',2),
-  (3,'usu3','7815696ecbf1c96e6894b779456d330e','contrareferente','activo',NULL,3),
-  (4,'usuario4','a8f5f167f44f4964e6c998dee827110c','admin','activo','2013-06-15 14:16:44',4);
+  (1,'usuario1','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-06-26 09:09:31',1),
+  (2,'usuario2','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-07-02 09:15:59',2),
+  (3,'usuario3','a8f5f167f44f4964e6c998dee827110c','contrareferente','activo','2013-07-02 09:20:02',3),
+  (4,'usuario4','a8f5f167f44f4964e6c998dee827110c','admin','activo','2013-06-26 23:15:49',4);
 COMMIT;
 
 

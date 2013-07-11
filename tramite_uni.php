@@ -178,7 +178,7 @@ if (isset($_POST["d"])) {
                   <td><label>Cédula:</label><span class="data" id="ced"></span></td>
                 </tr> 
                 <tr style="float: left;">
-                  <td><label>F. Nacimiento:</label><span class="data" id="fnac"></span></td>
+                  <td><label>F. Nacimiento:</label><span class="data" id="fnaci"></span></td>
                   <td><label>Historia C.:</label><span class="data" id="hc"></span></td>
                   <td><label>Género:</label><span class="data" id="gen"></span></td>
                   <td><label>Est. Civil:</label><span class="data" id="ec"></span></td>

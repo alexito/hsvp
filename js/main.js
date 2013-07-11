@@ -440,7 +440,7 @@ window.onload = function init() {
     $('#clave').val('');
     $('#cmbtipo').val('');
     $('#cmbactivo').val('');
-                
+    $('#cmbtipo').removeAttr('disabled');
     $('#usuario').focus();
     return false;
   });

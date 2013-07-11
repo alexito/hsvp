@@ -271,9 +271,16 @@ function getServicioData($db_conx, $cod) {
 }
 
 function getPacienteData($db_conx, $cod) {
-  $sql = "SELECT * FROM tpaciente WHERE pac_codigo = $cod OR pac_cedula = '$cod' OR pac_hc = '$cod' LIMIT 1";
+  $sql = "SELECT * FROM tpaciente WHERE pac_cedula = '$cod' OR pac_hc = '$cod' LIMIT 1";
   $query = mysqli_query($db_conx, $sql);
   $data = '';
+  
+  if(!$query){
+  $sql = "SELECT * FROM tpaciente WHERE pac_codigo = $cod  LIMIT 1";
+  $query = mysqli_query($db_conx, $sql);
+  $data = '';  
+  }
+  
   if ($query) {
     $row = mysqli_fetch_array($query);
     $seg = '-';
