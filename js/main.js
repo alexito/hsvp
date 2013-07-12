@@ -161,7 +161,21 @@ window.onload = function init() {
   
   
   $(function() {
-    $( "#fnac" ).datepicker({
+    $("#fnac").datepicker({
+      minDate: new Date(1900, 10 - 1, 25),
+      maxDate: '+30Y',
+      yearRange: '1900:c',
+      changeMonth: true,
+      changeYear: true
+    });
+    $("#fecha-desde").datepicker({
+      minDate: new Date(1900, 10 - 1, 25),
+      maxDate: '+30Y',
+      yearRange: '1900:c',
+      changeMonth: true,
+      changeYear: true
+    });
+    $("#fecha-hasta").datepicker({
       minDate: new Date(1900, 10 - 1, 25),
       maxDate: '+30Y',
       yearRange: '1900:c',
@@ -169,6 +183,7 @@ window.onload = function init() {
       changeYear: true
     });
   });
+  
   $(function() {
     $( "#fecha-atencion" ).datetimepicker();
   });

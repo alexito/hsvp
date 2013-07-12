@@ -92,7 +92,8 @@ if (isset($_POST['confirmar'])) {//Cancela el tramite enviado desde la pagina ve
               <input type="hidden" name="cod_tramite" id="cod_tramite" value="<?php echo $_GET['cod_tramite']; ?>" />              
 
               <table><tr>
-                  <td  style="width: 500px;"><h2>Referencia</h2></td>                  
+                  <td  style="width: 500px;"><h3>Referencia </h3></td>
+                  <td><h4>Trámite Nro:  <?php echo $_GET['cod_tramite'];?></h4></td>
                 </tr></table>
               <?php selectTramiteLocalizacion($db_conx, $_GET['cod_tramite']); ?>
               <table class="custom-table">

@@ -57,6 +57,8 @@ if (isset($_POST['codpac'])) {//Almacena los datos del tramite como referencia
       VALUES( $uid, $tem[$i], '$tempd[$i]')";
     $query = mysqli_query($db_conx, $sql);
   }
+  //header("location: ver_referencias_uni.php?cod_tramite=" . $uid);
+  echo $uid;
   exit();
 }
 if (isset($_POST['loadserv'])) {//Obtiene los datos del paciente seleccionado

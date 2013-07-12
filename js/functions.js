@@ -6,6 +6,11 @@ function filtrarReferencias(){
   window.location.href = 'referencias.php?est=' + est;  
 }
 
+function changeOptionFilter(){
+  $('.opt-common').hide();
+  $('#t' + $('#cmbopcion').val()).fadeIn(200);
+}
+
 function checkDate(fecha){
   var tdate = new Date();
   var d = tdate.getDate(); //yeilds day
@@ -151,7 +156,7 @@ function saveTramiteUnidad(){
     ajax.onreadystatechange = function() {
       if(ajaxReturn(ajax) == true) {        
         alert('Se envió correctamente la REFERENCIA.');
-        window.location.href = 'tramite_uni.php';
+        window.location.href = 'ver_referencias_uni.php?cod_tramite=' + ajax.responseText;
       }
     }
     ajax.send("codpac="+codpac+"&codmed="+codmed+"&coduni="+coduni+"&codser="+codser+
@@ -814,7 +819,7 @@ function editUsuario(id){
   }, 'slow', function(){
     $('#cod_usuario').val(id);
     $('#usuario').val($('span#td_' + id + '_1').text());
-    $('#clave').val("");        
+    $('#clave').val("");
     $('#cmbtipo').val($('span#tip_' + id).text());
     $('#cmbtipo').removeAttr('disabled');
     if($('span#tip_' + id).text() == 'referente'){

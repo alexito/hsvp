@@ -17,7 +17,7 @@ function SelectValuesMedicoServicio($db_conx, $tra_codigo) {
     $c = 0;
     while ($c < $n_filas) {
       $row = mysqli_fetch_array($query);
-      $data .= '<option value="' . $row[0] . '">' . $row[1] .' '. $row[2] .' '. $row[3] .' '. $row[4]. '</option>';
+      $data .= '<option value="' . $row[0] . '">' . $row[1] . ' ' . $row[2] . ' ' . $row[3] . ' ' . $row[4] . '</option>';
       $c++;
     }
   }
@@ -26,9 +26,9 @@ function SelectValuesMedicoServicio($db_conx, $tra_codigo) {
 }
 
 function SelectReferenciasHospitalPendiente($db_conx, $codmed, $n_items = 10, $p_actual = 1, $est = 'pendiente') {
-  if($est == 'contrareferencia'){
+  if ($est == 'contrareferencia') {
     $sql = "SELECT * FROM vreferencias_uni WHERE tra_tipo = '$est' ORDER BY tra_fecha ASC";
-  }else{
+  } else {
     $sql = "SELECT * FROM vreferencias_uni WHERE tra_estado = '$est' ORDER BY tra_fecha ASC";
   }
   $query = mysqli_query($db_conx, $sql);
@@ -55,8 +55,8 @@ function SelectReferenciasHospitalPendiente($db_conx, $codmed, $n_items = 10, $p
         $i = 9;
       }
       $data .= "<td><span>$row[$i]</span></td>";
-      if($i + 3 == $n_columnas){        
-        $data .= "<td><span>" . $row[$i+1] . "<br/>" . $row[$i+2] . "</span></td>";
+      if ($i + 3 == $n_columnas) {
+        $data .= "<td><span>" . $row[$i + 1] . "<br/>" . $row[$i + 2] . "</span></td>";
         break;
       }
     }
@@ -246,8 +246,8 @@ function SelectReferenciasUnidad($db_conx, $codmed, $n_items = 10, $p_actual = 1
         $i = 9;
       }
       $data .= "<td><span>$row[$i]</span></td>";
-      if($i + 3 == $n_columnas){        
-        $data .= "<td><span>" . $row[$i+1] . "<br/>" . $row[$i+2] . "</span></td>";
+      if ($i + 3 == $n_columnas) {
+        $data .= "<td><span>" . $row[$i + 1] . "<br/>" . $row[$i + 2] . "</span></td>";
         break;
       }
     }
@@ -274,14 +274,14 @@ function getPacienteData($db_conx, $cod) {
   $sql = "SELECT * FROM tpaciente WHERE pac_cedula = '$cod' OR pac_hc = '$cod' LIMIT 1";
   $query = mysqli_query($db_conx, $sql);
   $data = '';
-  
-  if(!$query){
-  $sql = "SELECT * FROM tpaciente WHERE pac_codigo = $cod  LIMIT 1";
-  $query = mysqli_query($db_conx, $sql);
-  $data = '';  
+
+  if (!$query || $query->num_rows == 0) {
+    $sql = "SELECT * FROM tpaciente WHERE pac_codigo = $cod  LIMIT 1";
+    $query = mysqli_query($db_conx, $sql);
+    $data = '';
   }
-  
-  if ($query) {
+
+  if ($query ->num_rows > 0) {
     $row = mysqli_fetch_array($query);
     $seg = '-';
     $sqltem = "SELECT seg_descrip FROM tseguros WHERE seg_codigo = $row[1]";
