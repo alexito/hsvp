@@ -25,13 +25,12 @@ function SelectValuesMedicoServicio($db_conx, $tra_codigo) {
   echo $data;
 }
 
-function SelectReferenciasHospitalPendiente($db_conx, $codmed, $n_items = 10, $p_actual = 1, $est = 'pendiente') {
-  if ($est == 'contrareferencia') {
-    $sql = "SELECT * FROM vreferencias_uni WHERE tra_tipo = '$est' ORDER BY tra_fecha ASC";
-  } else {
-    $sql = "SELECT * FROM vreferencias_uni WHERE tra_estado = '$est' ORDER BY tra_fecha ASC";
+function SelectReferenciasHospital($db_conx, $query = null) {
+  if ($query == null) {
+    $sql = "SELECT * FROM vreferencias_uni WHERE tra_estado = 'pendiente' ORDER BY tra_fecha ASC LIMIT 20";
+    $query = mysqli_query($db_conx, $sql);
   }
-  $query = mysqli_query($db_conx, $sql);
+  
   $n_columnas = $query->field_count;
   $n_filas = $query->num_rows;
   $data = '<tr class="row_header">
@@ -45,8 +44,8 @@ function SelectReferenciasHospitalPendiente($db_conx, $codmed, $n_items = 10, $p
             <td>Accion</td>
         </tr>';
   $c = 0;
-  while ($c < $n_filas) {
-    $row = mysqli_fetch_array($query);
+  while ($row = mysqli_fetch_array($query)) {
+    //$row = mysqli_fetch_array($query)
     $data .= '<tr class="row_data">';
     for ($i = 1; $i < $n_columnas; $i++) {
       if ($i == 4) {
@@ -281,7 +280,7 @@ function getPacienteData($db_conx, $cod) {
     $data = '';
   }
 
-  if ($query ->num_rows > 0) {
+  if ($query->num_rows > 0) {
     $row = mysqli_fetch_array($query);
     $seg = '-';
     $sqltem = "SELECT seg_descrip FROM tseguros WHERE seg_codigo = $row[1]";

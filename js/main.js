@@ -222,10 +222,7 @@ window.onload = function init() {
   $('#contrareferencia-tramite').click(function(){
     contrareferenciaTramiteHospital();
   });
-  $('#cargar-referencias').click(function(){
-    filtrarReferencias();
-  });
-  
+    
   /////Muestra msg olvido clave
   $('#olvidoclave').click(function(){
     $('#msg').show(200);

@@ -1,11 +1,22 @@
 <?php
 include_once("php_includes/db_conx.php");
 include_once("functions.php");
+include_once("functions2.php");
 
 include_once("php_includes/check_login_status.php");
 
 if ($user_ok == FALSE || $log_tipo != 'contrareferente') {
   header("location: logout.php");
+  exit();
+}
+?>
+<?php
+  if(isset($_POST['btn'])) {//Filtra los datos
+    if($_POST['op'] == "op1"){
+      filtrarReferenciasHospitalOp1($db_conx, $_POST['btn'], $_POST['rxp'], $_POST['pa'], $_POST['est']);
+    }
+  
+  
   exit();
 }
 ?>
@@ -20,6 +31,7 @@ if ($user_ok == FALSE || $log_tipo != 'contrareferente') {
 
       <div id="templatemo_main">
         <div class="col_w900">
+          <input type="hidden" id="load-page1" value="1" />
           <table class="tr-data">
             <tr>
               <td style="width: 250px;">
@@ -57,19 +69,15 @@ if ($user_ok == FALSE || $log_tipo != 'contrareferente') {
                 </span>
               </td>              
               <td>
-                <a class="a-button" id="cargar-referencias" >Cargar...</a>
+                <a class="a-button" href="javascript:filtrarDatos('referencias', 'car');">Cargar...</a>
               </td>              
             </tr>
-          </table>
+          </table>          
           <div id="table_content" class="tablestyle">            
             <table id="table_data">
 
               <?php
-              if (isset($_GET['est'])) {
-                SelectReferenciasHospitalPendiente($db_conx, $log_id, 10, 1, $_GET['est']);
-              } else {
-                SelectReferenciasHospitalPendiente($db_conx, $log_id, 10, 1);
-              }
+                SelectReferenciasHospital($db_conx);
               ?>
 
             </table>
@@ -81,8 +89,9 @@ if ($user_ok == FALSE || $log_tipo != 'contrareferente') {
                 <input style="width: 50px;" type="text" id="rxp" value="20"/><br/>
               </td>
               <td>
-                <a href="#">Anterior</a>
-                <input style="margin-left: 10px; margin-right: 10px; text-align: center; width: 50px;" type="text" id="pa" value="1"/><a>Siguiente</a>
+                <a href="javascript:filtrarDatos('referencias', 'ant');">Anterior</a>
+                <input disabled="Disabled" style="margin-left: 10px; margin-right: 10px; text-align: center; width: 50px;" type="text" id="pa" value="1"/>
+                <a href="javascript:filtrarDatos('referencias', 'sig');">Siguiente</a>
               </td>
             </tr>
           </table>

@@ -6,6 +6,7 @@
 <script src="js/main.js"></script>
 <script src="js/ajax.js"></script>
 <script src="js/functions.js"></script>
+<script src="js/functions2.js"></script>
 <script src="js/jquery-2.0.0.min.js"></script>
 <script src="js/jquery.mockjax.js"></script>
 <script src="js/expand_retract.js"></script>

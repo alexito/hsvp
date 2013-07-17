@@ -1,14 +1,9 @@
 var sie10 = null;
 var pd = '';
 
-function filtrarReferencias(){
-  var est = _('cmbestadotipo').value;  
-  window.location.href = 'referencias.php?est=' + est;  
-}
 
-function changeOptionFilter(){
-  $('.opt-common').hide();
-  $('#t' + $('#cmbopcion').val()).fadeIn(200);
+function isNumber(n) {
+  return typeof n === 'number' && n % 1 == 0;
 }
 
 function checkDate(fecha){
