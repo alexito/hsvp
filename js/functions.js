@@ -85,8 +85,8 @@ function confirmarTramiteHospital(){
   var ajax = ajaxObj("POST", "ver_referencias_hos.php");
   ajax.onreadystatechange = function(){
     if(ajaxReturn(ajax) == true) {      
-      window.location.href = 'referencias.php';
-      alert('El trámite fue se guardo correctamente.');      
+      alert('El trámite ha sido Confirmado y Asignado correctamente.');      
+      window.close();
     }
   }  
   ajax.send("confirmar=true&cod=" + cod + "&cod_mes=" + cod_mes + "&fecha=" + fecha + "&sala=" + sala + "&cama=" + cama + "&observ=" + observ);
@@ -96,9 +96,9 @@ function cancelTramiteHospital(){
   var cod = _('cod_tramite').value;
   var ajax = ajaxObj("POST", "ver_referencias_hos.php");
   ajax.onreadystatechange = function(){
-    if(ajaxReturn(ajax) == true) {      
-      window.location.href = 'referencias.php';
-      alert('El trámite se CANCELÓ CORRECTAMENTE');      
+    if(ajaxReturn(ajax) == true) {            
+      alert('El trámite se CANCELÓ CORRECTAMENTE');    
+      window.close();
     }
   }  
   ajax.send("cancel=true&cod=" + cod);

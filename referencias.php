@@ -11,12 +11,8 @@ if ($user_ok == FALSE || $log_tipo != 'contrareferente') {
 }
 ?>
 <?php
-  if(isset($_POST['btn'])) {//Filtra los datos
-    if($_POST['op'] == "op1"){
-      filtrarReferenciasHospitalOp1($db_conx, $_POST['btn'], $_POST['rxp'], $_POST['pa'], $_POST['est']);
-    }
-  
-  
+if (isset($_POST['btn'])) {//Filtra los datos
+  filtrarReferenciasHospital($db_conx, $_POST['op'], $_POST['btn'], $_POST['rxp'], $_POST['pa'], $_POST['est'], $_POST['nro'], $_POST['fd'], $_POST['fh']);
   exit();
 }
 ?>
@@ -45,13 +41,13 @@ if ($user_ok == FALSE || $log_tipo != 'contrareferente') {
               <td style="width: 250px;">
                 <span id="top1" class="opt-common">
                   <label>Ver Trámite:</label>
-                  <select id="cmbestadotipo">
+                  <select style="width: 207px;" id="cmbestadotipo">
                     <option value="pendiente">Pendiente</option>
                     <option value="confirmado">Confirmado</option>
                     <option value="atendido">Atendido</option>
                     <option value="contrareferencia">Contrareferencia</option>                  
                   </select>
-                  <?php if (isset($_GET['est'])) {//PERMITE DEJAR SELECCIONADA LA OPCION LUEGO DE REFRESCAR LA PAGINA. ?>
+                  <?php if (isset($_GET['est'])) {//PERMITE DEJAR SELECCIONADA LA OPCION LUEGO DE REFRESCAR LA PAGINA.   ?>
                     <script>
                       $('#cmbestadotipo').val('<?php echo $_GET['est']; ?>');
                     </script>
@@ -69,7 +65,7 @@ if ($user_ok == FALSE || $log_tipo != 'contrareferente') {
                 </span>
               </td>              
               <td>
-                <a class="a-button" href="javascript:filtrarDatos('referencias', 'car');">Cargar...</a>
+                <a class="a-button" href="javascript:filtrarDatos('referencias', 'car');">Actualizar</a>
               </td>              
             </tr>
           </table>          
@@ -77,7 +73,7 @@ if ($user_ok == FALSE || $log_tipo != 'contrareferente') {
             <table id="table_data">
 
               <?php
-                SelectReferenciasHospital($db_conx);
+              SelectReferenciasHospital($db_conx);
               ?>
 
             </table>
@@ -86,7 +82,14 @@ if ($user_ok == FALSE || $log_tipo != 'contrareferente') {
             <tr style="height: 120px;">
               <td style="width: 350px;">
                 <span style="margin-left: 100px; width: 300px;">Resultados por página: </span>
-                <input style="width: 50px;" type="text" id="rxp" value="20"/><br/>
+                <select id="rxp">
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                  <option value="500">500</option>
+                </select>
               </td>
               <td>
                 <a href="javascript:filtrarDatos('referencias', 'ant');">Anterior</a>

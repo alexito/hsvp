@@ -30,7 +30,7 @@ function SelectReferenciasHospital($db_conx, $query = null) {
     $sql = "SELECT * FROM vreferencias_uni WHERE tra_estado = 'pendiente' ORDER BY tra_fecha ASC LIMIT 20";
     $query = mysqli_query($db_conx, $sql);
   }
-  
+
   $n_columnas = $query->field_count;
   $n_filas = $query->num_rows;
   $data = '<tr class="row_header">
@@ -44,8 +44,11 @@ function SelectReferenciasHospital($db_conx, $query = null) {
             <td>Accion</td>
         </tr>';
   $c = 0;
+  $ban = FALSE;
+  $resp = new stdClass();
+  $resp->abc = "hola";
   while ($row = mysqli_fetch_array($query)) {
-    //$row = mysqli_fetch_array($query)
+    $ban = TRUE;
     $data .= '<tr class="row_data">';
     for ($i = 1; $i < $n_columnas; $i++) {
       if ($i == 4) {
@@ -59,12 +62,14 @@ function SelectReferenciasHospital($db_conx, $query = null) {
         break;
       }
     }
-
     $data .= '<td><a target="_blank" href="ver_referencias_hos.php?cod_tramite=' . $row[1] . '">Ver<br>Editar</a></td></tr>';
-    //print( $data);
-    $c++;
   }
-  echo $data;
+  if ($ban) {
+    echo $data;
+  } else {
+    echo '<h3>No se encontraron resultados, por favor intente con otros datos.</h3>';
+  }
+  return $resp;
 }
 
 function isTramiteContrareferencia($db_conx, $tra_codigo) {

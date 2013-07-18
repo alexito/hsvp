@@ -1,16 +1,31 @@
 <?php
 
-function filtrarReferenciasHospitalOp1($db_conx, $btn, $rxp, $pa, $est) {
-  $sql = "SELECT COUNT(*) FROM vreferencias_uni WHERE tra_estado = '$est' OR tra_tipo = '$est'";
+function filtrarReferenciasHospital($db_conx, $op, $btn, $rxp, $pa, $est, $nro, $fd, $fh) {
+  if($op == 'op1'){
+    $sql = "SELECT COUNT(*) FROM vreferencias_uni WHERE tra_estado = '$est' OR tra_tipo = '$est'";
+  }elseif ($op == 'op2') {
+    $sql = "SELECT COUNT(*) FROM vreferencias_uni WHERE tra_codigo = $nro OR pac_cedula = '$nro'";
+  }elseif ($op == 'op3') {
+    $sql = "SELECT COUNT(*) FROM vreferencias_uni WHERE (tra_estado = '$est' OR tra_tipo = '$est') AND tra_fecha BETWEEN '$fd' AND '$fh'";
+  }
+  
   $query = mysqli_query($db_conx, $sql);
   $row = mysqli_fetch_array($query);
   $total = $row[0];
   $limit = limitarResultado($btn, $rxp, $pa, $total);
 
-  $sql = "SELECT * FROM vreferencias_uni WHERE tra_estado = '$est' OR tra_tipo = '$est' ORDER BY tra_fecha ASC LIMIT $limit";
+  if($op == 'op1'){
+    $sql = "SELECT * FROM vreferencias_uni WHERE tra_estado = '$est' OR tra_tipo = '$est' ORDER BY tra_fecha ASC LIMIT $limit";
+  }elseif ($op == 'op2') {
+    $sql = "SELECT * FROM vreferencias_uni WHERE tra_codigo = $nro OR pac_cedula = '$nro' ORDER BY tra_fecha ASC LIMIT $limit";
+  }elseif ($op == 'op3') {
+    $sql = "SELECT * FROM vreferencias_uni WHERE (tra_estado = '$est' OR tra_tipo = '$est') AND tra_fecha BETWEEN '$fd' AND '$fh' ORDER BY tra_fecha ASC LIMIT $limit";
+  }
+  
   $query = mysqli_query($db_conx, $sql);
-
-  $query = recortarResultado($query, $rxp, $pa, $limit);
+  if ($btn != 'car') {
+    $query = recortarResultado($query, $rxp, $pa, $limit, $total);
+  }
   SelectReferenciasHospital($db_conx, $query);
 }
 
@@ -27,16 +42,19 @@ function limitarResultado($btn, $rxp, $pa, $total) {
   return $limit;
 }
 
-function recortarResultado($query, $rxp, $pa, $limit) {
+function recortarResultado($query, $rxp, $pa, $limit, $total) {
   $tem = $rxp * $pa;
   $c = 0;
-  if ($limit > $tem) {
+  if ($limit > $tem) {//Siguiente
+    if ($total < $tem) {
+      $tem = $tem - $rxp;
+    }
     while ($c < $tem) {
       mysqli_fetch_array($query);
       $c++;
     }
-  } else {
-    $tem = $rxp * ($pa - 1);
+  } else {//Anterior
+    $tem = $rxp * ($pa - 2);
     while ($c < $tem) {
       mysqli_fetch_array($query);
       $c++;
