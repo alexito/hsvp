@@ -17,72 +17,58 @@ if ($numrows < 1) {
   echo "That user does not exist or is not yet activated, press back";
   exit();
 }
-
 ?>
 <!DOCTYPE html>
 <html>
   <head>
-<?php include_once("php_includes/head.php"); ?>
+    <?php include_once("php_includes/head.php"); ?>
   </head>
   <body>
     <div id="templatemo_wrapper">
       <?php include_once("php_includes/template_pageTop.php"); ?>
       <div id="templatemo_main">
+        <div class="col_w900" >
+          <p>Bienvenido <?php echo $log_username; ?></p>
+          <h3>Panel de Inicio.</h3>
+          <div id="table_content" class="tablestyle">
+            <table id="table_data">
+              <tr><td>Opción. </td><td>Descripción.</td></tr>
+              <?php
+              if ($user_ok == TRUE && $log_tipo == 'admin') {
+                ?>
 
-        <div class="col_w900">
-          <div class="col_allw280 fp_service_box">
-            <div class="con_tit_02">Web Design</div>
-            <img src="images/onebit_08.png" alt="Image 08" />
-            <p>Credit goes to <a href="http://www.icojoy.com" target="_blank">icojoy.com</a> for Onebit icons #2 used in this template. Etiam vel elit massa, sit amet.</p>
-            <a class="more" href="#">Detail</a>
-          </div>
-          <div class="col_allw280 fp_service_box">
-            <div class="con_tit_02">Advertising Media</div>
-            <img src="images/onebit_15.png" alt="Image 05" />
-            <p>Fusce quis felis in dolor tincidunt accumsan. Curabitur dignissim pharetra sollicitudin.</p>
-            <a class="more" href="#">Detail</a>
-          </div>
-          <div class="col_allw280 fp_service_box col_last">
-            <div class="con_tit_02">Online Marketing</div>
-            <img src="images/onebit_16.png" alt="Image 06" />
-            <p>Curabitur sed lectus id erat viverra consectetur nec in sapien. Morbi at justo justo, eu suscipit felis.</p>
-            <a class="more" href="#">Detail</a>
-          </div>
-          <div class="cleaner h60"></div>
-          <div class="col_allw280 fp_service_box">
-            <div class="con_tit_02">Customer Services</div>
-            <img src="images/onebit_17.png" alt="Image 01" />
-            <p>Quisque quis leo sit amet dui elementum. Lorem ipsum dolor sit amet, consectetur arcu elit.</p>
-            <a class="more" href="#">Detail</a>
-          </div>
-          <div class="col_allw280 fp_service_box">
-            <div class="con_tit_02">Java Training</div>
-            <img src="images/onebit_18.png" alt="Image 02" />
-            <p>Morbi pretium metus a tellus molestie id porttitor erat pulvinar. Nullam interdum ante felis.</p>
-            <a class="more" href="#">Detail</a>
-          </div>
-          <div class="col_allw280 fp_service_box col_last">
-            <div class="con_tit_02">Global Reaching</div>
-            <img src="images/onebit_19.png" alt="Image 03" />
-            <p>Suspendisse metus felis, varius at euismod eu, egestas eu elit ante ipsum primis in orci luctus.</p>
-            <a class="more" href="#">Detail</a>
-          </div>
+              <tr><td><a href="medico_referente.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Medico Referente</span></a> </td><td style="font-size: 14px;"> Ingrese o edite Médicos Referentes (Personal que atenderá en las Unidades Médicas).</td></tr>
+                <tr><td><a href="medico_referenciado.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Medico Referenciado</span></a> </td><td style="font-size: 14px;"> Ingrese o edite Médicos Referenciados (Personal que atenderá en la Unidad Central u Hospital).</td></tr>       
+                <tr><td><a href="servicios.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Servicio</span></a> </td><td style="font-size: 14px;"> Ingrese o edite los Servicios disponibles que ofrece en el Hospital.</td></tr>
+                <tr><td><a href="medicoxservicio.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Medico - Servicio</span></a> </td><td style="font-size: 14px;"> Relacione un Médico -> Servicios / Servicio -> Medicos correspondientes.</td></tr>
+                <tr><td><a href="localizacion.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Localizacion</span></a> </td><td style="font-size: 14px;"> Ingrese o edite Localizaciones que luego corresponderán a las Unidades.</td></tr>
+                <tr><td><a href="unidad.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Unidad</span></a> </td><td style="font-size: 14px;"> Ingrese o edite las Unidades Médicas.</td></tr>
+                <tr><td><a href="usuario.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Usuario</span></a> </td><td style="font-size: 14px;"> Ingrese o edite los Usuarios y sus Claves para el acceso al Sistema.</td></tr>
 
+              <?php } ?>
+              <?php
+              if ($user_ok == TRUE && $log_tipo == 'referente') {
+                ?>
+                <tr><td><a href="tramite_uni.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Crear Referencia</span></a> </td><td style="font-size: 14px;">Crea una nueva Referencia/Trámite detallando información que será revisada en el Hospital.</td></tr>
+                  <tr><td><a href="referencias_uni.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Ver Referencias</span></a> </td><td style="font-size: 14px;">Revise el estado de las Referencias/Trámites y/o edite su estado.</td></tr>
+                  <tr><td><a href="paciente.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Pacientes</span></a> </td><td style="font-size: 14px;">Ingrese o edite un Paciente con información detallada.</td></tr>
+              <?php } ?>
+              <?php
+              if ($user_ok == TRUE && $log_tipo == 'contrareferente') {
+                ?>
+                  <tr><td><a href="referencias.php"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Ver Referencias</span></a> </td><td style="font-size: 14px;">Revise el estado de las Referencias/Trámites y/o edite su estado.</td></tr>
+                <?php
+              }
+              if ($user_ok == TRUE) {
+                ?>
+                <tr><td><a href="logout.php"><img style="height: 25px; float: left;padding: 5px;" src="images/logout.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Salir</span></a> </td><td style="font-size: 14px;">Cierre su sesión.</td></tr>
+              <?php } ?>
+            </table>
+          </div>
           <div class="cleaner"></div>
-        </div>
-
-        <div class="col_w900  col_w900_last">
-          <div class="con_tit_01">Introducing Aquatic Theme</div>
-          <img src="images/templatemo_image_01.png" alt="Image 01" class="image_wrapper image_fl" />
-          <p><em>Curabitur vestibulum ultricies nibh, sed faucibus magna semper at. Ut eget justo dolor, id porta augue. Sed mollis orci eu justo sagittis at hendrerit erat tempus.</em></p>
-          <p><a href="http://www.templatemo.com/">Aquatic</a> is free css template provided by <a href="http://www.templatemo.com/">templatemo.com</a> for your personal or commercial websites. Credits go to <a href="http://www.photovaco.com/" target="_blank">Free Photos</a> for photos and <a href="http://www.brushking.eu/361/abstract-brush-pack-vol-7.html" target="_blank">Forty-winks</a> for brush. Quisque in diam a justo condimentum molestie. Vivamus leo velit, convallis id, ultrices sit amet, tempor a, libero. Quisque rhoncus nulla quis sem. Mauris quis nulla sed ipsum pretium sagittis. Suspendisse feugiat. Ut sodales libero ut odio. Maecenas venenatis metus eu est. In sed risus ac felis varius bibendum. Nulla imperdiet congue metus. Validate <a href="http://validator.w3.org/check?uri=referer" rel="nofollow"><strong>XHTML</strong></a> &amp; <a href="http://jigsaw.w3.org/css-validator/check/referer" rel="nofollow"><strong>CSS</strong></a>.</p>	
-          <div class="cleaner"></div>
-        </div>    
-
-        <div class="cleaner"></div>
-      </div> <!-- end of main -->
-
+        </div> <!-- end of main -->
+      </div>
     </div>
-     <?php include_once("php_includes/template_pageBottom.php"); ?>
+    <?php include_once("php_includes/template_pageBottom.php"); ?>
   </body>
 </html>
