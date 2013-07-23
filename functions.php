@@ -25,6 +25,50 @@ function SelectValuesMedicoServicio($db_conx, $tra_codigo) {
   echo $data;
 }
 
+function SelectReferenciasUnidad($db_conx, $codmed, $query = NULL) {
+  if ($query == NULL) {
+    $sql = "SELECT * FROM vreferencias_uni WHERE MED_CODIGO = $codmed";
+    $query = mysqli_query($db_conx, $sql);
+  }
+
+  $n_columnas = $query->field_count;
+  $n_filas = $query->num_rows;
+  $data = '<tr class="row_header">
+            <td>Nro. Trámite</td>
+            <td>Fecha</td>
+            <td>Cédula</td>
+            <td>Nombre Completo</td>            
+            <td>Motivo</td>
+            <td>Servicio</td>
+            <td>Estado / Tipo</td>
+            <td>Accion</td>
+        </tr>';
+  $ban = FALSE;
+  while ($row = mysqli_fetch_array($query)) {
+    $ban = TRUE;
+    $data .= '<tr class="row_data">';
+    for ($i = 1; $i < $n_columnas; $i++) {
+      if ($i == 4) {
+        $data .= "<td><span>$row[$i] $row[5]<br>$row[6] $row[7]</span></td>";
+        $data .= "<td><span>" . customSubstring($row[8], 50) . "</span></td>";
+        $i = 9;
+      }
+      $data .= "<td><span>$row[$i]</span></td>";
+      if ($i + 3 == $n_columnas) {
+        $data .= "<td><span>" . $row[$i + 1] . "<br/>" . $row[$i + 2] . "</span></td>";
+        break;
+      }
+    }
+
+    $data .= '<td><a target="_blank" href="ver_referencias_uni.php?cod_tramite=' . $row[1] . '">Ver<br>Editar</a></td></tr>';
+  }
+  if ($ban) {
+    echo $data;
+  } else {
+    echo '<h3>No se encontraron resultados, por favor intente con otros datos.</h3>';
+  }
+}
+
 function SelectReferenciasHospital($db_conx, $query = null) {
   if ($query == null) {
     $sql = "SELECT * FROM vreferencias_uni WHERE tra_estado = 'pendiente' ORDER BY tra_fecha ASC LIMIT 20";
@@ -45,8 +89,6 @@ function SelectReferenciasHospital($db_conx, $query = null) {
         </tr>';
   $c = 0;
   $ban = FALSE;
-  $resp = new stdClass();
-  $resp->abc = "hola";
   while ($row = mysqli_fetch_array($query)) {
     $ban = TRUE;
     $data .= '<tr class="row_data">';
@@ -69,7 +111,6 @@ function SelectReferenciasHospital($db_conx, $query = null) {
   } else {
     echo '<h3>No se encontraron resultados, por favor intente con otros datos.</h3>';
   }
-  return $resp;
 }
 
 function isTramiteContrareferencia($db_conx, $tra_codigo) {
@@ -92,6 +133,15 @@ function isTramiteConfirmado($db_conx, $tra_codigo) {
 
 function isTramitePendiente($db_conx, $tra_codigo) {
   $sql = "SELECT * FROM ttramite WHERE tra_codigo =  $tra_codigo AND tra_estado = 'pendiente'";
+  $query = mysqli_query($db_conx, $sql);
+  if ($query->num_rows > 0) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+function isTramiteAtendido($db_conx, $tra_codigo) {
+  $sql = "SELECT * FROM ttramite WHERE tra_codigo =  $tra_codigo AND tra_estado = 'atendido'";
   $query = mysqli_query($db_conx, $sql);
   if ($query->num_rows > 0) {
     return TRUE;
@@ -222,45 +272,6 @@ function selectTramiteServicio($db_conx, $cod_tra) {
   $query = mysqli_query($db_conx, $sql);
   $row = mysqli_fetch_array($query);
   echo $row[0];
-}
-
-function SelectReferenciasUnidad($db_conx, $codmed, $n_items = 10, $p_actual = 1) {
-  $sql = "SELECT * FROM vreferencias_uni WHERE MED_CODIGO = $codmed";
-  $query = mysqli_query($db_conx, $sql);
-  $n_columnas = $query->field_count;
-  $n_filas = $query->num_rows;
-  $data = '<tr class="row_header">
-            <td>Nro. Trámite</td>
-            <td>Fecha</td>
-            <td>Cédula</td>
-            <td>Nombre Completo</td>            
-            <td>Motivo</td>
-            <td>Servicio</td>
-            <td>Estado / Tipo</td>
-            <td>Accion</td>
-        </tr>';
-  $c = 0;
-  while ($c < $n_filas) {
-    $row = mysqli_fetch_array($query);
-    $data .= '<tr class="row_data">';
-    for ($i = 1; $i < $n_columnas; $i++) {
-      if ($i == 4) {
-        $data .= "<td><span>$row[$i] $row[5]<br>$row[6] $row[7]</span></td>";
-        $data .= "<td><span>" . customSubstring($row[8], 50) . "</span></td>";
-        $i = 9;
-      }
-      $data .= "<td><span>$row[$i]</span></td>";
-      if ($i + 3 == $n_columnas) {
-        $data .= "<td><span>" . $row[$i + 1] . "<br/>" . $row[$i + 2] . "</span></td>";
-        break;
-      }
-    }
-
-    $data .= '<td><a target="_blank" href="ver_referencias_uni.php?cod_tramite=' . $row[1] . '">Ver<br>Editar</a></td></tr>';
-    //print( $data);
-    $c++;
-  }
-  echo $data;
 }
 
 function getServicioData($db_conx, $cod) {

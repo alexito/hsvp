@@ -84,7 +84,6 @@ if (isset($_POST['confirmar'])) {//Cancela el tramite enviado desde la pagina ve
   <body>
     <div id="templatemo_wrapper">
       <?php include_once("php_includes/template_pageTop.php"); ?>
-
       <div id="templatemo_main">
         <div class="tramite-class" id="pageMiddle">
           <div id="genform_style" style="border-bottom: medium none;">

@@ -46,12 +46,7 @@ if (isset($_POST['btn'])) {//Filtra los datos
                     <option value="confirmado">Confirmado</option>
                     <option value="atendido">Atendido</option>
                     <option value="contrareferencia">Contrareferencia</option>                  
-                  </select>
-                  <?php if (isset($_GET['est'])) {//PERMITE DEJAR SELECCIONADA LA OPCION LUEGO DE REFRESCAR LA PAGINA.   ?>
-                    <script>
-                      $('#cmbestadotipo').val('<?php echo $_GET['est']; ?>');
-                    </script>
-                  <?php } ?>
+                  </select>                  
                 </span>
                 <span id="top2" class="hide opt-common">
                   <label style="width: 200px;">Nro. Trámite o Cédula: </label>

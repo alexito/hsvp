@@ -1,4 +1,33 @@
 <?php
+function filtrarReferenciasUnidad($db_conx, $codmed, $op, $btn, $rxp, $pa, $est,
+        $nro, $fd, $fh) {
+  if($op == 'op1'){
+    $sql = "SELECT COUNT(*) FROM vreferencias_uni WHERE (tra_estado = '$est' OR tra_tipo = '$est') AND MED_CODIGO = $codmed";
+  }elseif ($op == 'op2') {
+    $sql = "SELECT COUNT(*) FROM vreferencias_uni WHERE (tra_codigo = $nro OR pac_cedula = '$nro') AND MED_CODIGO = $codmed";
+  }elseif ($op == 'op3') {
+    $sql = "SELECT COUNT(*) FROM vreferencias_uni WHERE ((tra_estado = '$est' OR tra_tipo = '$est') AND tra_fecha BETWEEN '$fd' AND '$fh') AND MED_CODIGO = $codmed";
+  }
+  
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+  $total = $row[0];
+  $limit = limitarResultado($btn, $rxp, $pa, $total);
+
+  if($op == 'op1'){
+    $sql = "SELECT * FROM vreferencias_uni WHERE (tra_estado = '$est' OR tra_tipo = '$est') AND MED_CODIGO = $codmed LIMIT $limit";
+  }elseif ($op == 'op2') {
+    $sql = "SELECT * FROM vreferencias_uni WHERE (tra_codigo = $nro OR pac_cedula = '$nro') AND MED_CODIGO = $codmed LIMIT $limit";
+  }elseif ($op == 'op3') {
+    $sql = "SELECT * FROM vreferencias_uni WHERE ((tra_estado = '$est' OR tra_tipo = '$est') AND tra_fecha BETWEEN '$fd' AND '$fh') AND MED_CODIGO = $codmed LIMIT $limit";
+  }
+  
+  $query = mysqli_query($db_conx, $sql);
+  if ($btn != 'car') {
+    $query = recortarResultado($query, $rxp, $pa, $limit, $total);
+  }
+  SelectReferenciasUnidad($db_conx, $codmed, $query);
+}
 
 function filtrarReferenciasHospital($db_conx, $op, $btn, $rxp, $pa, $est, $nro, $fd, $fh) {
   if($op == 'op1'){
