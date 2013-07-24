@@ -512,10 +512,11 @@ function SelectUsuario($db_conx, $n_items = 10, $p_actual = 1) {
  * @param type $n_items
  * @param type $p_actual
  */
-function SelectLocalizacion($db_conx, $n_items = 10, $p_actual = 1) {
-
-  $sql = "SELECT * FROM tlocalizacion";
-  $query = mysqli_query($db_conx, $sql);
+function SelectLocalizacion($db_conx, $query = null) {
+  if($query == NULL){
+    $sql = "SELECT * FROM tlocalizacion LIMIT 20";
+    $query = mysqli_query($db_conx, $sql);
+  }
   $n_columnas = $query->field_count;
   $n_filas = $query->num_rows;
   $data = '<tr class="row_header">
@@ -526,16 +527,12 @@ function SelectLocalizacion($db_conx, $n_items = 10, $p_actual = 1) {
             <td>Provincia</td>
             <td></td>
         </tr>';
-  $c = 0;
-  while ($c < $n_filas) {
-    $row = mysqli_fetch_array($query);
+  while ($row = mysqli_fetch_array($query)) {
     $data .= '<tr class="row_data">';
     for ($i = 0; $i < $n_columnas; $i++) {
       $data .= '<td><span id="td_' . $row[0] . '_' . $i . '">' . $row[$i] . '</span></td>';
     }
     $data .= '<td><button id="editar" onclick="editarLocalizacion(' . $row[0] . ')">Editar</button></td></tr>';
-    //print( $data);
-    $c++;
   }
   echo $data;
 }

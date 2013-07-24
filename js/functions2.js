@@ -1,6 +1,10 @@
 
 function filtrarDatos(page, btn){
-  //Filtra datos de referencias
+  //Filtra la localizacion
+  if(page == 'localizacion'){
+    cargarLocalizacionesFiltradas(btn, $('#rxp').val(), $('#pa').val(), $('#cmbopcion').val(), $('#cmborden').val(), _('texto').value);    
+  }
+  //Filtra datos de referencias  
   if(page == 'referencias' || page == 'referencias_uni'){
     if($('#cmbopcion').val() == 'op2'){
       if($('#nro-tra-ced').val() == ""){
@@ -24,6 +28,23 @@ function filtrarDatos(page, btn){
         $('#nro-tra-ced').val(), $('#fecha-desde').val(), $('#fecha-hasta').val());
     }
   }    
+}
+
+function cargarLocalizacionesFiltradas(btn, rxp, pa, op, ord, tex){
+  var tem1 = $('#table_data tr:last-child > td:first-child > span').text();   
+  _("table_data").innerHTML = '<div style="float:left;"><br><img src="images/loading.gif"></div>';
+  var ajax = ajaxObj("POST", "localizacion.php");
+  ajax.onreadystatechange = function() {
+    if(ajaxReturn(ajax) == true) { 
+      $("#table_content").hide();
+         
+      _("table_data").innerHTML = ajax.responseText;  
+      var tem2 = $('#table_data tr:last-child > td:first-child > span').text();
+      actualizarPaginador(btn, tem1, tem2);
+      $("#table_content").fadeIn(800);
+    }
+  }
+  ajax.send("btn="+btn+"&rxp="+rxp+"&pa="+pa+"&op="+op+"&ord="+ord+"&tex="+tex);
 }
 
 function cargarReferenciasFiltradasHospital(btn, rxp, pa, lp1, op, est, nro, fd, fh){
@@ -84,6 +105,16 @@ function changeOptionFilter(){
   $('#t' + $('#cmbopcion').val()).fadeIn(200);
   $('#load-page1').val('1');
   if($('#cmbopcion').val() == 'op1' || $('#cmbopcion').val() == 'op3'){
+    $('#top1').fadeIn(200);
+  }
+}
+
+function changeOptionFilterLocalizacion(){
+  $('.opt-common').hide();
+  if($('#cmbopcion').val() == 'op5'){
+    $('#top2').fadeIn(200);
+  }
+  else{
     $('#top1').fadeIn(200);
   }
 }

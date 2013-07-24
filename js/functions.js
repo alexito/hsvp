@@ -415,16 +415,17 @@ function createLocalizacion(){
     _("signupbtn").style.display = "none";
     _("nueva_localizacion").style.display = "none";
     status.innerHTML = '<br><img src="images/loading.gif">';       
-    $("#table_content").hide(300);
+//    $("#table_content").hide(300);
     var ajax = ajaxObj("POST", "localizacion.php");
     ajax.onreadystatechange = function() {
       if(ajaxReturn(ajax) == true) {
         status.innerHTML = "Datos guardados correctamente.";
         _("signupbtn").style.display = "block";        
         _("nueva_localizacion").style.display = "block";
-        _("table_data").innerHTML = ajax.responseText;
-        $("#table_content").show(500);
+        //_("table_data").innerHTML = ajax.responseText;
+        //$("#table_content").show(500);
         $('#nueva_localizacion').click();
+        filtrarDatos('localizacion', 'car');
       }
     }
     if(cod == ""){//Code to INSERT

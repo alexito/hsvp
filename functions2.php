@@ -1,4 +1,29 @@
 <?php
+function filtrarLocalizacion($db_conx, $op, $btn, $rxp, $pa, $ord, $tex) {
+  if($op == 'op5'){
+    $sql = "SELECT COUNT(*) FROM tlocalizacion WHERE loc_descrip = '$tex' OR loc_cparr = '$tex' OR loc_ccan = '$tex' OR loc_cpro = '$tex'";
+  }else{
+    $sql = "SELECT COUNT(*) FROM tlocalizacion";
+  }
+  
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+  $total = $row[0];
+  $limit = limitarResultado($btn, $rxp, $pa, $total);
+
+  if($op == 'op5'){
+    $sql = "SELECT * FROM tlocalizacion WHERE loc_descrip = '$tex' OR loc_cparr = '$tex' OR loc_ccan = '$tex' OR loc_cpro = '$tex' LIMIT $limit";
+  }else{
+    $sql = "SELECT * FROM tlocalizacion ORDER BY $op $ord LIMIT $limit";
+  }
+  
+  $query = mysqli_query($db_conx, $sql);
+  if ($btn != 'car') {
+    $query = recortarResultado($query, $rxp, $pa, $limit, $total);
+  }
+  SelectLocalizacion($db_conx, $query);
+}
+
 function filtrarReferenciasUnidad($db_conx, $codmed, $op, $btn, $rxp, $pa, $est,
         $nro, $fd, $fh) {
   if($op == 'op1'){
@@ -66,6 +91,7 @@ function limitarResultado($btn, $rxp, $pa, $total) {
     $tem = ($rxp * ($pa + 1)) - ($rxp * $pa);
     $limit = ($tem > 0) ? ($rxp * $pa) + $tem : ($rxp * $pa);
   } else {
+    
     $limit = $rxp;
   }
   return $limit;
