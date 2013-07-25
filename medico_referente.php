@@ -1,11 +1,12 @@
 <?php
 include_once("php_includes/db_conx.php");
 include_once("functions.php");
+include_once("functions2.php");
 
 include_once("php_includes/check_login_status.php");
 
 if ($user_ok == FALSE || $log_tipo != 'admin') {
-  header("location: logout.php");
+  header("location: inicio.php");
   exit();
 }
 ?><?php
@@ -100,9 +101,7 @@ if (isset($_POST["codmed"])) {
       }
     }
   }
-
-  SelectMedicoReferente($db_conx, 10, 1);
-
+  SelectMedicoReferente($db_conx);
   exit();
 }
 ?>
@@ -177,7 +176,7 @@ if (isset($_POST["codmed"])) {
           <div id="table_content" class="tablestyle">
             <table id="table_data">
               <!--  table data / It happens only the first loading -->
-              <?php SelectMedicoReferente($db_conx, 10, 1); ?>
+              <?php SelectMedicoReferente($db_conx); ?>
             </table>
           </div>
         </div>

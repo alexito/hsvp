@@ -464,16 +464,17 @@ function createUnidad(){
     _("submitbtn").style.display = "none";
     _("nueva_unidad").style.display = "none";
     status.innerHTML = '<br><img src="images/loading.gif">';       
-    $("#table_content").hide(300);
+//    $("#table_content").hide(300);
     var ajax = ajaxObj("POST", "unidad.php");
     ajax.onreadystatechange = function() {
       if(ajaxReturn(ajax) == true) {
         status.innerHTML = "Datos guardados correctamente.";
         _("submitbtn").style.display = "block";        
         _("nueva_unidad").style.display = "block";
-        _("table_data").innerHTML = ajax.responseText;
-        $("#table_content").show(500);    
+//        _("table_data").innerHTML = ajax.responseText;
+//        $("#table_content").show(500);    
         $('#nueva_unidad').click();
+        filtrarDatos('unidad', 'car');
       }
     }
     if(cod == ""){//Code to INSERT
@@ -490,7 +491,7 @@ function editUnidad(id){
     scrollTop:$('#templatemo_main').offset().top
   }, 'slow', function(){
     $('#cod_unidad').val(id);
-    $('#cmblocalizacion').val($('span#td_' + id + '_1').text());
+    $('#cmblocalizacion').val($('#cod_loc_' + id).val());
     $('#descripcion').val($('span#td_' + id + '_2').text());
     $('#observacion').val($('span#td_' + id + '_3').text());
     $('#cmbactivo').val($('span#td_' + id + '_4').text());    
@@ -842,16 +843,17 @@ function createServicios(){
     _("submitbtn").style.display = "none";
     _("nuevo_servicios").style.display = "none";
     status.innerHTML = '<br><img src="images/loading.gif">';       
-    $("#table_content").hide(300);
+//    $("#table_content").hide(300);
     var ajax = ajaxObj("POST", "servicios.php");
     ajax.onreadystatechange = function() {
       if(ajaxReturn(ajax) == true) {
         status.innerHTML = "Datos guardados correctamente.";
         _("submitbtn").style.display = "block";        
         _("nuevo_servicios").style.display = "block";
-        _("table_data").innerHTML = ajax.responseText;
-        $("#table_content").show(500);
-        $('#nuevo_servicios').click();        
+//        _("table_data").innerHTML = ajax.responseText;
+//        $("#table_content").show(500);
+        $('#nuevo_servicios').click();   
+        filtrarDatos('servicios', 'car');
       }
     }
     var params = "d="+d+"&o="+o+"&r="+r;
@@ -870,7 +872,7 @@ function editServicios(id){
     $('#cod_servicios').val(id);
     $('#descripcion').val($('span#td_' + id + '_1').text());
     $('#observacion').val($('span#td_' + id + '_2').text());
-    $('#cmbreferenciado').val("");
+    $('#cmbreferenciado').val(1);
                 
     $('#descripcion').focus();
   });	  

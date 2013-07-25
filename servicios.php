@@ -1,14 +1,20 @@
 <?php
 include_once("php_includes/db_conx.php");
 include_once("functions.php");
+include_once("functions2.php");
 
 include_once("php_includes/check_login_status.php");
 
 if ($user_ok == FALSE || $log_tipo != 'admin') {
-  header("location: logout.php");
+  header("location: inicio.php");
   exit();
 }
 ?><?php
+if (isset($_POST['btn'])) {//Filtra los datos
+  filtrarServicios($db_conx, $_POST['btn'], $_POST['rxp'], $_POST['pa'], $_POST['ord'], $_POST['tex']);
+  exit();
+}
+
 if (isset($_POST["d"])) {
   $d = $_POST['d'];
   $o = $_POST['o'];
@@ -61,28 +67,28 @@ if (isset($_POST["d"])) {
                   </td>
                 </tr>
                 <div class="div-referenciado" style="float: right; margin-right: 560px;">
-                <label>Referenciado:</label>
-                    <div id="value_referenciado">                      
-                      <?php SelectValuesReferenciado($db_conx, 'seguros'); ?>
-                    </div>
-                    <div id="reflinks">
-                      <a id="refagregar" href="#">Agregar</a> - <a id="refeditar" href="#">Editar</a>
-                    </div>
-                <div id="frmref" style="display: none; margin-left: 190px; margin-top: -180px; position: absolute; border: #4db3af dashed thin; padding: 5px;">
-                      <h5>Referenciado:</h5>
-                      <input type="hidden" name="cod_referenciado" id="cod_referenciado" value="" />
-                      <label>Descripcion:</label>
-                      <input id="ref_descrip" type="text" maxlength="25">
-                      <label>Siglas:</label>
-                      <input id="ref_siglas" type="text" maxlength="6">
-                      <label>Observación:</label>
-                      <textarea id="ref_observ" style="width: 93%;" cols="10" rows="2"></textarea><br>
-                      <a id="refguardar" href="#">Guardar</a> - <a id="refcancelar" href="#">Cancelar</a>
-                    </div>
+                  <label>Referenciado:</label>
+                  <div id="value_referenciado">                      
+                    <?php SelectValuesReferenciado($db_conx, 'seguros'); ?>
+                  </div>
+                  <div class ="hide" id="reflinks">
+                    <a id="refagregar" href="#">Agregar</a> - <a id="refeditar" href="#">Editar</a>
+                  </div>
+                  <div id="frmref" style="display: none; margin-left: 190px; margin-top: -180px; position: absolute; border: #4db3af dashed thin; padding: 5px;">
+                    <h5>Referenciado:</h5>
+                    <input type="hidden" name="cod_referenciado" id="cod_referenciado" value="" />
+                    <label>Descripcion:</label>
+                    <input id="ref_descrip" type="text" maxlength="25">
+                    <label>Siglas:</label>
+                    <input id="ref_siglas" type="text" maxlength="6">
+                    <label>Observación:</label>
+                    <textarea id="ref_observ" style="width: 93%;" cols="10" rows="2"></textarea><br>
+                    <a id="refguardar" href="#">Guardar</a> - <a id="refcancelar" href="#">Cancelar</a>
+                  </div>
                 </div>
                 <tr><td>
-                  <label>Observación:</label>
-                  <textarea class="ref-observ" style="width: 150px;" id="observacion" cols="10" rows="2"></textarea>
+                    <label>Observación:</label>
+                    <textarea class="ref-observ" style="width: 150px;" id="observacion" cols="10" rows="2"></textarea>
                   </td>
                 </tr>
               </table>
@@ -95,12 +101,52 @@ if (isset($_POST["d"])) {
         </div>
         <div class="cleaner"></div>
         <div class="col_w900">
+          <table class="tr-data">
+              <td style="width: 250px;">
+                <span id="top1" class="opt-common">
+                  <label>Descripción:</label>
+                  <select style="width: 207px;" id="cmborden">
+                    <option value="ASC">Ascendente</option>
+                    <option value="DESC">Descendente</option>
+                  </select>                  
+                </span>
+                </td><td style="width: 250px;">
+                <span id="top2" class="opt-common">
+                  <label style="width: 200px;">Buscar: </label>
+                  <input style="width: 200px;" type="text" id="texto"/>
+                </span>               
+              </td>              
+              <td>
+                <a class="a-button" href="javascript:filtrarDatos('servicios', 'car');">Actualizar</a>
+              </td>              
+            </tr>
+          </table> 
           <div id="table_content" class="tablestyle">
             <table id="table_data">
               <!--  table data / It happens only the first loading -->
-              <?php SelectServicios($db_conx, 10, 1); ?>
+              <?php SelectServicios($db_conx); ?>
             </table>
           </div>
+          <table class="tr-data">
+            <tr style="height: 120px;">
+              <td style="width: 350px;">
+                <span style="margin-left: 100px; width: 300px;">Resultados por página: </span>
+                <select id="rxp">
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                  <option value="500">500</option>
+                </select>
+              </td>
+              <td>
+                <a href="javascript:filtrarDatos('servicios', 'ant');">Anterior</a>
+                <input disabled="Disabled" style="margin-left: 10px; margin-right: 10px; text-align: center; width: 50px;" type="text" id="pa" value="1"/>
+                <a href="javascript:filtrarDatos('servicios', 'sig');">Siguiente</a>
+              </td>
+            </tr>
+          </table>
         </div>
         <div class="cleaner"></div>
       </div>

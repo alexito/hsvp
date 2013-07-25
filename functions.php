@@ -421,9 +421,11 @@ function getServicioxMedico($db_conx, $get, $cod) {
   echo $data;
 }
 
-function SelectServicios($db_conx, $n_items = 10, $p_actual = 1) {
-  $sql = "SELECT * FROM tservicios";
-  $query = mysqli_query($db_conx, $sql);
+function SelectServicios($db_conx, $query = NULL) {
+  if($query == NULL){
+    $sql = "SELECT * FROM tservicios LIMIT 20";  
+    $query = mysqli_query($db_conx, $sql);
+  }
   $n_columnas = $query->field_count;
   $n_filas = $query->num_rows;
   $data = '<tr class="row_header">
@@ -434,8 +436,7 @@ function SelectServicios($db_conx, $n_items = 10, $p_actual = 1) {
             <td></td>
         </tr>';
   $c = 0;
-  while ($c < $n_filas) {
-    $row = mysqli_fetch_array($query);
+  while ($row = mysqli_fetch_array($query)) {
     $data .= '<tr class="row_data">';
     for ($i = 0; $i < $n_columnas; $i++) {
       $data .= '<td><span id="td_' . $row[0] . '_' . $i . '">' . $row[$i] . '</span></td>';
@@ -513,7 +514,7 @@ function SelectUsuario($db_conx, $n_items = 10, $p_actual = 1) {
  * @param type $p_actual
  */
 function SelectLocalizacion($db_conx, $query = null) {
-  if($query == NULL){
+  if ($query == NULL) {
     $sql = "SELECT * FROM tlocalizacion LIMIT 20";
     $query = mysqli_query($db_conx, $sql);
   }
@@ -582,14 +583,14 @@ function SelectValuesLocalizacionArray($db_conx) {
  * @param type $n_items
  * @param type $p_actual
  */
-function SelectUnidad($db_conx, $n_items = 10, $p_actual = 1) {
+function SelectUnidad($db_conx, $query = null) {
 
-  $data_loc = SelectValuesLocalizacionArray($db_conx);
-
-  $sql = "SELECT * FROM tunidad";
-  $query = mysqli_query($db_conx, $sql);
+  if ($query == NULL) {
+    $sql = "SELECT * FROM vlocalizacionxunidad LIMIT 20";
+    $query = mysqli_query($db_conx, $sql);
+  }
+  
   $n_columnas = $query->field_count;
-  $n_filas = $query->num_rows;
   $data = '<tr class="row_header">
             <td>COD</td>
             <td>Localizacion</td>
@@ -598,21 +599,17 @@ function SelectUnidad($db_conx, $n_items = 10, $p_actual = 1) {
             <td>Activo</td>
             <td></td>
         </tr>';
-  $c = 0;
-  while ($c < $n_filas) {
-    $row = mysqli_fetch_array($query);
+  while ($row = mysqli_fetch_array($query)) {
     $data .= '<tr class="row_data">';
-    for ($i = 0; $i < $n_columnas; $i++) {
+    for ($i = 0; $i < $n_columnas - 1; $i++) {
       if ($i == 1) {
-        $data .= '<td><span style="display:none;" id="td_' . $row[0] . '_' . $i . '">' . $row[$i] . '</span>
-          <span>' . $data_loc[$row[$i]] . '</span></td>';
+        $data .= '<td><input type="hidden" id="cod_loc_' . $row[0] . '" value="' . $row[$n_columnas - 1] . '" /><span style="display:none;" id="td_' . $row[0] . '_' . $i . '">' . $row[$i] . '</span>
+          <span>' . $row[$i] . '</span></td>';
       } else {
         $data .= '<td><span id="td_' . $row[0] . '_' . $i . '">' . $row[$i] . '</span></td>';
       }
     }
     $data .= '<td><button id="editar" onclick="editUnidad(' . $row[0] . ')">Editar</button></td></tr>';
-    //print( $data);
-    $c++;
   }
   echo $data;
 }
@@ -643,10 +640,12 @@ function SelectValuesUnidad($db_conx) {
  * @param type $n_items
  * @param type $p_actual
  */
-function SelectMedicoReferente($db_conx, $n_items = 10, $p_actual = 1) {
-
-  $sql = "SELECT * FROM tmedicoreferente";
-  $query = mysqli_query($db_conx, $sql);
+function SelectMedicoReferente($db_conx, $query = NULL) {
+  
+  if($query == NULL){
+    $sql = "SELECT * FROM tmedicoreferente";
+    $query = mysqli_query($db_conx, $sql);
+  }
   $n_columnas = $query->field_count;
   $n_filas = $query->num_rows;
   $data = '<tr class="row_header">
@@ -660,8 +659,7 @@ function SelectMedicoReferente($db_conx, $n_items = 10, $p_actual = 1) {
             <td></td>
         </tr>';
   $c = 0;
-  while ($c < $n_filas) {
-    $row = mysqli_fetch_array($query);
+  while ($row = mysqli_fetch_array($query)) {
     $data .= '<tr class="row_data">';
     $data .= '<td><span id="td_' . $row[0] . '_0">' . $row[0] . '</span></td>';
     $data .= '<td><span id="td_' . $row[0] . '_7">' . $row[7] . '</span> ';
@@ -691,8 +689,6 @@ function SelectMedicoReferente($db_conx, $n_items = 10, $p_actual = 1) {
     $data .= '<td><span id="td_' . $row[0] . '_3">' . $row[3] . '</span></td>';
 
     $data .= '<td><button id="editar" onclick="editMedicoReferente(' . $row[0] . ')">Editar</button></td></tr>';
-    //print( $data);
-    $c++;
   }
   echo $data;
 }

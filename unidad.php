@@ -10,6 +10,12 @@ if ($user_ok == FALSE || $log_tipo != 'admin') {
   exit();
 }
 ?><?php
+
+if (isset($_POST['btn'])) {//Filtra los datos
+  filtrarUnidad($db_conx, $_POST['op'], $_POST['btn'], $_POST['rxp'], $_POST['pa'], $_POST['ord'], $_POST['est'], $_POST['tex']);
+  exit();
+}
+
 if (isset($_POST["loc"])) {
   $loc = $_POST['loc'];
   $des = $_POST['des'];
@@ -97,10 +103,10 @@ if (isset($_POST["loc"])) {
             <tr>
               <td style="width: 250px;">
                 <label>Filtrar por:</label>
-                <select style="width: 200px;" id="cmbopcion" onchange="changeOptionFilterLocalizacion();">
+                <select style="width: 200px;" id="cmbopcion" onchange="changeOptionFilterUnidad();">
                   <option value="op1">Código</option>              
-                  <option value="op3">Activo</option>
-                  <option value="op4">Especificar</option>
+                  <option value="op2">Activo</option>
+                  <option value="op3">Especificar</option>
                 </select>
               </td>
               <td style="width: 250px;">
@@ -111,27 +117,28 @@ if (isset($_POST["loc"])) {
                     <option value="DESC">Descendente</option>
                   </select>                  
                 </span>
-                <span id="top1" class="opt-common">
+                <span id="top2" class="opt-common">
                   <label>Estado:</label>
-                  <select style="width: 207px;" id="cmborden">
+                  <select style="width: 207px;" id="cmbact">
+                    <option value="op0">Ambos</option>
                     <option value="activo">Activo</option>
                     <option value="inactivo">Inactivo</option>
                   </select>                  
                 </span>
-                <span id="top2" class="hide opt-common">
+                <span id="top3" class="hide opt-common">
                   <label style="width: 200px;">Descripción / Localización: </label>
-                  <input style="width: 200px;" type="text" id="descrip"/>
+                  <input style="width: 200px;" type="text" id="texto"/>
                 </span>               
               </td>              
               <td>
-                <a class="a-button" href="javascript:filtrarDatos('localizacion', 'car');">Actualizar</a>
+                <a class="a-button" href="javascript:filtrarDatos('unidad', 'car');">Actualizar</a>
               </td>              
             </tr>
           </table>
           <div id="table_content" class="tablestyle">
             <table id="table_data">
               <!--  table data / It happens only the first loading -->
-              <?php SelectUnidad($db_conx, 10, 1); ?>
+              <?php SelectUnidad($db_conx); ?>
             </table>
           </div>
           <table class="tr-data">
@@ -148,9 +155,9 @@ if (isset($_POST["loc"])) {
                 </select>
               </td>
               <td>
-                <a href="javascript:filtrarDatos('localizacion', 'ant');">Anterior</a>
+                <a href="javascript:filtrarDatos('unidad', 'ant');">Anterior</a>
                 <input disabled="Disabled" style="margin-left: 10px; margin-right: 10px; text-align: center; width: 50px;" type="text" id="pa" value="1"/>
-                <a href="javascript:filtrarDatos('localizacion', 'sig');">Siguiente</a>
+                <a href="javascript:filtrarDatos('unidad', 'sig');">Siguiente</a>
               </td>
             </tr>
           </table>

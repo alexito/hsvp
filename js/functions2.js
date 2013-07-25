@@ -1,5 +1,21 @@
 
 function filtrarDatos(page, btn){
+  //Filtra los Servicios
+  if(page == 'servicios'){
+    cargarServiciosFiltrados(btn, $('#rxp').val(), $('#pa').val(), $('#cmborden').val(), _('texto').value);
+  }
+  
+  //Filtra las unidades
+  if(page == 'unidad'){
+    if($('#cmbopcion').val() == 'op2'){
+      if($('#cmbact').val() == 'op0'){
+        alert('Por favor, seleccione el Estado (Activo o Inactivo) para filtrar los datos.');
+        return;
+      }
+    }
+    cargarUnidadesFiltradas(btn, $('#rxp').val(), $('#pa').val(), $('#cmbopcion').val(), $('#cmborden').val(), $('#cmbact').val(), _('texto').value);    
+  }
+  
   //Filtra la localizacion
   if(page == 'localizacion'){
     cargarLocalizacionesFiltradas(btn, $('#rxp').val(), $('#pa').val(), $('#cmbopcion').val(), $('#cmborden').val(), _('texto').value);    
@@ -30,14 +46,45 @@ function filtrarDatos(page, btn){
   }    
 }
 
+function cargarUnidadesFiltradas(btn, rxp, pa, op, ord, est, tex){
+  var tem1 = $('#table_data tr:last-child > td:first-child > span').text();   
+  _("table_data").innerHTML = '<div style="float:left;"><br><img src="images/loading.gif"></div>';
+  var ajax = ajaxObj("POST", "unidad.php");
+  ajax.onreadystatechange = function() {
+    if(ajaxReturn(ajax) == true) { 
+      $("#table_content").hide();         
+      _("table_data").innerHTML = ajax.responseText;  
+      var tem2 = $('#table_data tr:last-child > td:first-child > span').text();
+      actualizarPaginador(btn, tem1, tem2);
+      $("#table_content").fadeIn(800);
+    }
+  }
+  ajax.send("btn="+btn+"&rxp="+rxp+"&pa="+pa+"&op="+op+"&ord="+ord+"&est="+est+"&tex="+tex);
+}
+
+function cargarServiciosFiltrados(btn, rxp, pa, ord, tex){
+  var tem1 = $('#table_data tr:last-child > td:first-child > span').text();   
+  _("table_data").innerHTML = '<div style="float:left;"><br><img src="images/loading.gif"></div>';
+  var ajax = ajaxObj("POST", "servicios.php");
+  ajax.onreadystatechange = function() {
+    if(ajaxReturn(ajax) == true) { 
+      $("#table_content").hide();         
+      _("table_data").innerHTML = ajax.responseText;  
+      var tem2 = $('#table_data tr:last-child > td:first-child > span').text();
+      actualizarPaginador(btn, tem1, tem2);
+      $("#table_content").fadeIn(800);
+    }
+  }
+  ajax.send("btn="+btn+"&rxp="+rxp+"&pa="+pa+"&ord="+ord+"&tex="+tex);
+}
+
 function cargarLocalizacionesFiltradas(btn, rxp, pa, op, ord, tex){
   var tem1 = $('#table_data tr:last-child > td:first-child > span').text();   
   _("table_data").innerHTML = '<div style="float:left;"><br><img src="images/loading.gif"></div>';
   var ajax = ajaxObj("POST", "localizacion.php");
   ajax.onreadystatechange = function() {
     if(ajaxReturn(ajax) == true) { 
-      $("#table_content").hide();
-         
+      $("#table_content").hide();         
       _("table_data").innerHTML = ajax.responseText;  
       var tem2 = $('#table_data tr:last-child > td:first-child > span').text();
       actualizarPaginador(btn, tem1, tem2);
@@ -116,5 +163,14 @@ function changeOptionFilterLocalizacion(){
   }
   else{
     $('#top1').fadeIn(200);
+  }
+}
+
+function changeOptionFilterUnidad(){
+  if($('#cmbopcion').val() == 'op3'){
+    $('#top3').fadeIn(200);
+  }
+  else{
+    $('#top3').fadeOut(200);
   }
 }
