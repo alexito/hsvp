@@ -1,5 +1,16 @@
 
 function filtrarDatos(page, btn){
+  //Filtra los Medicos Referentes
+  if(page == 'med-ref'){
+    if($('#cmbopcion').val() == 'op4'){
+      if($('#texto').val() == ''){
+        alert('Por favor, ingrese al menos una palabra para filtrar.');
+        return;
+      }
+    }
+    cargarMedRefFiltradas(btn, $('#rxp').val(), $('#pa').val(), $('#cmbopcion').val(), $('#cmborden').val(), $('#cmbact').val(), $('#cmbuni').val(), _('texto').value);    
+  }
+  
   //Filtra los Servicios
   if(page == 'servicios'){
     cargarServiciosFiltrados(btn, $('#rxp').val(), $('#pa').val(), $('#cmborden').val(), _('texto').value);
@@ -44,6 +55,22 @@ function filtrarDatos(page, btn){
         $('#nro-tra-ced').val(), $('#fecha-desde').val(), $('#fecha-hasta').val());
     }
   }    
+}
+
+function cargarMedRefFiltradas(btn, rxp, pa, op, ord, est, uni, tex){
+  var tem1 = $('#table_data tr:last-child > td:first-child > span').text();   
+  _("table_data").innerHTML = '<div style="float:left;"><br><img src="images/loading.gif"></div>';
+  var ajax = ajaxObj("POST", "medico_referente.php");
+  ajax.onreadystatechange = function() {
+    if(ajaxReturn(ajax) == true) { 
+      $("#table_content").hide();         
+      _("table_data").innerHTML = ajax.responseText;  
+      var tem2 = $('#table_data tr:last-child > td:first-child > span').text();
+      actualizarPaginador(btn, tem1, tem2);
+      $("#table_content").fadeIn(800);
+    }
+  }
+  ajax.send("btn="+btn+"&rxp="+rxp+"&pa="+pa+"&op="+op+"&ord="+ord+"&est="+est+"&uni="+uni+"&tex="+tex);
 }
 
 function cargarUnidadesFiltradas(btn, rxp, pa, op, ord, est, tex){
@@ -172,5 +199,14 @@ function changeOptionFilterUnidad(){
   }
   else{
     $('#top3').fadeOut(200);
+  }
+}
+
+function changeOptionFilterMedRef(){
+  if($('#cmbopcion').val() == 'op4'){
+    $('#top4').fadeIn(200);
+  }
+  else{
+    $('#top4').fadeOut(200);
   }
 }

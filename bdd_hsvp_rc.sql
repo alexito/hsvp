@@ -54,7 +54,7 @@ CREATE TABLE `treferenciado` (
   `REF_SIGLAS` varchar(6) NOT NULL,
   `REF_OBSERV` varchar(40) DEFAULT 'Ninguna',
   PRIMARY KEY (`REF_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='LISTA DE ESTABLECIMIENTO QUE RECIBEN REFERENCIA';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COMMENT='LISTA DE ESTABLECIMIENTO QUE RECIBEN REFERENCIA';
 
 #
 # Structure for the `tservicios` table : 
@@ -174,7 +174,7 @@ CREATE TABLE `tlocalizacion` (
   `LOC_CCAN` varchar(50) NOT NULL,
   `LOC_CPRO` varchar(50) NOT NULL,
   PRIMARY KEY (`LOC_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1 COMMENT='CODIGOS DE LOCALIZACION';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 COMMENT='CODIGOS DE LOCALIZACION';
 
 #
 # Structure for the `tunidad` table : 
@@ -255,7 +255,7 @@ CREATE TABLE `tasignacion` (
   KEY `FK_RTRAMITEASIGNACION2` (`TRA_CODIGO`),
   CONSTRAINT `FK_RMEDICOASIGNACION` FOREIGN KEY (`MES_CODIGO`) REFERENCES `tmedicoxservicio` (`MES_CODIGO`),
   CONSTRAINT `FK_RTRAMITEASIGNACION2` FOREIGN KEY (`TRA_CODIGO`) REFERENCES `ttramite` (`TRA_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COMMENT='ASIGNACION DE FECHAS Y MEDICO POR ESPECIALIDAD PARA ATENCION';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 COMMENT='ASIGNACION DE FECHAS Y MEDICO POR ESPECIALIDAD PARA ATENCION';
 
 #
 # Structure for the `tsie10` table : 
@@ -302,6 +302,21 @@ CREATE TABLE `tusuario` (
   UNIQUE KEY `USU_USUARIO_3` (`USU_USUARIO`),
   UNIQUE KEY `MED_CODIGO` (`MED_CODIGO`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+#
+# Definition for the `vlocalizacionxunidad` view : 
+#
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW vlocalizacionxunidad AS 
+  select 
+    `tunidad`.`UNI_CODIGO` AS `UNI_CODIGO`,
+    `tlocalizacion`.`LOC_DESCRIP` AS `LOC_DESCRIP`,
+    `tunidad`.`UNI_DESCRIP` AS `UNI_DESCRIP`,
+    `tunidad`.`UNI_OBSERV` AS `UNI_OBSERV`,
+    `tunidad`.`UNI_ACTIVO` AS `UNI_ACTIVO`,
+    `tunidad`.`LOC_CODIGO` AS `LOC_CODIGO` 
+  from 
+    (`tlocalizacion` join `tunidad` on((`tlocalizacion`.`LOC_CODIGO` = `tunidad`.`LOC_CODIGO`)));
 
 #
 # Definition for the `vlocalunidad` view : 
@@ -457,8 +472,7 @@ COMMIT;
 #
 
 INSERT INTO `treferenciado` (`REF_CODIGO`, `REF_DESCRIP`, `REF_SIGLAS`, `REF_OBSERV`) VALUES 
-  (1,'ref1','hsvp','hsvp'),
-  (2,'ref2','abc','xyz');
+  (1,'HSVP','hsvp','hsvp');
 COMMIT;
 
 #
@@ -467,9 +481,9 @@ COMMIT;
 
 INSERT INTO `tservicios` (`SER_CODIGO`, `SER_DESCRIP`, `SER_OBSERV`) VALUES 
   (1,'serv1','obs1'),
-  (2,'serv2','obs2'),
-  (3,'serv3','obs3'),
-  (4,'serv4','obse4');
+  (2,'serv2','obser2'),
+  (3,'serv3','obse3'),
+  (4,'serv4','observacion4');
 COMMIT;
 
 #
@@ -481,7 +495,7 @@ INSERT INTO `trefservicios` (`RES_CODIGO`, `SER_CODIGO`, `REF_CODIGO`) VALUES
   (2,2,1),
   (3,3,1),
   (4,4,1),
-  (5,3,2);
+  (5,3,1);
 COMMIT;
 
 #
@@ -489,8 +503,8 @@ COMMIT;
 #
 
 INSERT INTO `tmedicoxservicio` (`MES_CODIGO`, `MER_CODIGO`, `RES_CODIGO`, `MES_ACTIVO`) VALUES 
-  (1,1,3,'activo'),
-  (2,1,4,'inactivo'),
+  (1,1,3,'inactivo'),
+  (2,1,4,'activo'),
   (3,1,2,'activo'),
   (4,3,1,'activo'),
   (5,3,4,'activo'),
@@ -544,11 +558,11 @@ COMMIT;
 
 INSERT INTO `tmedicoreferente` (`MED_CODIGO`, `MED_CODMED`, `MED_ESPECIAL`, `MED_OBSERV`, `MED_ESTADO`, `MED_PNOM`, `MED_SNOM`, `MED_PAPE`, `MED_SAPE`) VALUES 
   (1,'codmedi','espec','Obs','activo','nom','snom','bleble ','2ape    '),
-  (2,'med1','esp2','observ2','activo','al','fe','sa','ch'),
-  (3,'med1','esp2','observ2','activo','al ','fe','sa ','ch '),
-  (4,'med1','esp2','observ2','activo','al ','fe','sa ','ch '),
-  (5,'med1','esp2','observ2sssssssss','activo','al ','fe','sa ','ch '),
-  (6,'med1','esp2','observ2444444444','activo','al  ','fe','sa  ','ch  ');
+  (2,'med1','espec2','observ2222','activo','al','fe','efefsa','ch'),
+  (3,'med12','esp2','observ2','inactivo','alwq','fe','sa ','ch '),
+  (4,'med3','esp2','observ2','inactivo','al ','fe','hbrtsa ','ch '),
+  (5,'med1','esp2e3ew2','observ2sssssssss','activo','rfseal ','fe','xxvsa ','ch '),
+  (6,'med14445','esp2','observ2444444444','activo','al  ','fe','grtgsa  ','ch  ');
 COMMIT;
 
 #
@@ -556,12 +570,14 @@ COMMIT;
 #
 
 INSERT INTO `tlocalizacion` (`LOC_CODIGO`, `LOC_DESCRIP`, `LOC_CPARR`, `LOC_CCAN`, `LOC_CPRO`) VALUES 
-  (1,'local1','pa1','ca1','pr1'),
-  (2,'local2','pa2modificado','ca2modificado','pr2modificado'),
-  (3,'local3','pa3','ca3','pr3'),
-  (4,'local4','pa4','ca4','pr4'),
+  (1,'local1','diferente','ca1','pr1'),
+  (2,'local2','ra2modificado','c2modific','p2mo'),
+  (3,'local3','diferente','difcan','dif pro'),
+  (4,'local4','dif4','ca4','pr4'),
   (5,'local5','pa5','ca5','pr5'),
-  (6,'local6','pa6','ca6','pr6');
+  (6,'local6','pa6','ca6','pr6'),
+  (7,'local7','parroki','sqwsqswq','acascdac'),
+  (8,'local88','par8','elcanton8','prov8');
 COMMIT;
 
 #
@@ -570,8 +586,8 @@ COMMIT;
 
 INSERT INTO `tunidad` (`UNI_CODIGO`, `LOC_CODIGO`, `UNI_DESCRIP`, `UNI_OBSERV`, `UNI_ACTIVO`) VALUES 
   (1,1,'Unidad1','Observacion','activo'),
-  (2,4,'Unidad2','obs','activo'),
-  (3,2,'Unidad3','obsd','inactivo'),
+  (2,4,'Unidad2-dif','obs','activo'),
+  (3,8,'Unidad3','obsd','inactivo'),
   (4,3,'Unidad4','Obs4','activo'),
   (5,2,'Unidad5','Observacion','activo');
 COMMIT;
@@ -590,7 +606,7 @@ INSERT INTO `tunidadmedico` (`UNM_CODIGO`, `MED_CODIGO`, `UNI_CODIGO`, `UNM_ACTI
   (7,4,2,'activo'),
   (8,4,3,'activo'),
   (9,5,2,'activo'),
-  (10,5,3,'activo'),
+  (10,5,3,'inactivo'),
   (11,6,2,'activo'),
   (12,6,3,'activo'),
   (27,1,3,'activo'),
@@ -606,15 +622,15 @@ COMMIT;
 INSERT INTO `ttramite` (`TRA_CODIGO`, `TRA_ESTADO`, `PAC_CODIGO`, `RES_CODIGO`, `UNM_CODIGO`, `TRA_SISTEMA`, `TRA_FECHA`, `TRA_MOTIVO`, `TRA_RESUM_CUAD_CLIN`, `TRA_HALL_EXM_PROC_DIAG`, `TRA_PLAN_TRAT`, `TRA_SALA`, `TRA_CAMA`, `TRA_TIPO`, `TRA_ACTIVO`, `TRA_JUSTIF`, `TRA_OBSERV`) VALUES 
   (1,'confirmado',2,2,27,'publico','2013-06-15 14:28:15','motivo1','resumen1','hall1','plan1','sala1','cama1','contrareferencia','activo','si','\n                        observacion del tramite 1\n* esta es la verdadera contrareferencia :)'),
   (2,'atendido',1,1,2,'publico','2013-06-15 14:29:27','motivo2','res2','hall2','plan2','','','referencia','activo','si','\n                        El paciente puede demorarse 10 minutos porque tiene dificultades.\n* El paciente necesita que le retiren las bendas de la mano izquierda en 2 semanas.'),
-  (3,'pendiente',2,3,4,'publico','2013-06-15 14:30:34','mot3','res3','hall3','plan3',NULL,NULL,'referencia','activo','no','Ninguna'),
-  (4,'pendiente',5,3,1,'publico','2013-07-11 22:09:26','motivo cualkiera lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','resumen cualkiera','hallazgo cualkiera lorem ipsum',' lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum',NULL,NULL,'referencia','activo','no',NULL),
-  (5,'pendiente',4,3,1,'publico','2013-07-11 22:11:08','motivo lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','resumen  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','hallazgo  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','plan  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum',NULL,NULL,'referencia','activo','no',NULL),
-  (6,'pendiente',7,4,1,'publico','2013-07-11 22:12:23','motivo  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','resumen  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','halazgo  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','plan  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum',NULL,NULL,'referencia','activo','no',NULL),
-  (7,'pendiente',6,1,1,'publico','2013-07-11 22:30:13','motivo IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','resumen IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','hallazgo IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','plan IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS',NULL,NULL,'referencia','activo','no',NULL),
-  (8,'pendiente',6,1,1,'publico','2013-07-11 22:31:08','motivo IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','resumen IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','hallazgo IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','plan IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS',NULL,NULL,'referencia','activo','no',NULL),
-  (9,'pendiente',5,2,27,'publico','2013-07-11 22:32:56','motivo IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','resumen IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','hallazgo IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','plan IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE',NULL,NULL,'referencia','activo','no',NULL),
-  (10,'pendiente',4,2,28,'publico','2013-07-11 22:35:00','motivo IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','resumen IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','hallazgo IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','Plan IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE',NULL,NULL,'referencia','activo','no',NULL),
-  (11,'pendiente',3,3,1,'publico','2013-07-11 22:40:33','motivo NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS ','resumen NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS ','Hallazgo NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS ','plan NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS ',NULL,NULL,'referencia','activo','no',NULL);
+  (3,'confirmado',2,3,4,'publico','2013-06-15 14:30:34','mot3','res3','hall3','plan3','','','referencia','activo','no','sin ovservacion'),
+  (4,'confirmado',5,3,1,'publico','2013-07-11 22:09:26','motivo cualkiera lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','resumen cualkiera','hallazgo cualkiera lorem ipsum',' lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','','','referencia','activo','no','ninguna'),
+  (5,'confirmado',4,3,1,'publico','2013-07-12 00:00:00','motivo lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','resumen  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','hallazgo  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','plan  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','','','referencia','activo','no',''),
+  (6,'confirmado',7,4,1,'publico','2013-07-12 00:00:00','motivo  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','resumen  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','halazgo  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','plan  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','','','referencia','activo','no',''),
+  (7,'confirmado',6,1,1,'publico','2013-07-13 00:00:00','motivo IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','resumen IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','hallazgo IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','plan IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','','','referencia','activo','no',''),
+  (8,'confirmado',6,1,1,'publico','2013-07-14 00:00:00','motivo IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','resumen IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','hallazgo IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','plan IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','','','referencia','activo','no',''),
+  (9,'pendiente',5,2,27,'publico','2013-07-15 00:00:00','motivo IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','resumen IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','hallazgo IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','plan IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE',NULL,NULL,'referencia','activo','no',NULL),
+  (10,'cancelado',4,2,28,'publico','2013-07-16 00:00:00','motivo IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','resumen IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','hallazgo IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','Plan IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE',NULL,NULL,'referencia','activo','no',NULL),
+  (11,'pendiente',3,3,1,'publico','2013-07-17 00:00:00','motivo NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS ','resumen NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS ','Hallazgo NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS ','plan NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS ',NULL,NULL,'referencia','activo','no',NULL);
 COMMIT;
 
 #
@@ -623,7 +639,13 @@ COMMIT;
 
 INSERT INTO `tasignacion` (`ASI_CODIGO`, `MES_CODIGO`, `TRA_CODIGO`, `ASI_FECHA`, `ASI_ACTIVO`) VALUES 
   (1,3,1,'2013-06-29 14:00:00','activo'),
-  (2,12,2,'2013-07-03 14:30:00','activo');
+  (2,12,2,'2013-07-03 14:30:00','activo'),
+  (3,1,3,'2013-07-18 08:00:00','activo'),
+  (4,13,4,'2013-07-18 13:34:00','activo'),
+  (5,1,5,'2013-07-23 10:00:00','activo'),
+  (6,8,6,'2013-07-31 13:00:00','activo'),
+  (7,12,7,'2013-07-23 09:00:00','activo'),
+  (8,4,8,'2013-07-28 08:21:00','activo');
 COMMIT;
 
 #
@@ -18013,10 +18035,10 @@ COMMIT;
 #
 
 INSERT INTO `tusuario` (`USU_CODIGO`, `USU_USUARIO`, `USU_CLAVE`, `USU_TIPO`, `USU_ACTIVO`, `USU_FECHA`, `MED_CODIGO`) VALUES 
-  (1,'usuario1','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-07-11 22:03:06',1),
-  (2,'usuario2','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-07-02 09:15:59',2),
-  (3,'usuario3','a8f5f167f44f4964e6c998dee827110c','contrareferente','activo','2013-07-11 22:42:36',3),
-  (4,'usuario4','a8f5f167f44f4964e6c998dee827110c','admin','activo','2013-07-10 22:48:26',4);
+  (1,'usuario1','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-07-23 21:40:48',1),
+  (2,'usuario2','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-07-22 21:47:07',2),
+  (3,'usuario3','a8f5f167f44f4964e6c998dee827110c','contrareferente','activo','2013-07-23 09:08:15',3),
+  (4,'usuario4','a8f5f167f44f4964e6c998dee827110c','admin','activo','2013-07-23 21:41:37',4);
 COMMIT;
 
 

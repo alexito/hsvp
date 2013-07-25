@@ -10,6 +10,11 @@ if ($user_ok == FALSE || $log_tipo != 'admin') {
   exit();
 }
 ?><?php
+if (isset($_POST['btn'])) {//Filtra los datos
+  filtrarMedicoReferente($db_conx, $_POST['op'], $_POST['btn'], $_POST['rxp'], $_POST['pa'], $_POST['ord'], $_POST['est'], $_POST['uni'], $_POST['tex']);
+  exit();
+}
+
 if (isset($_POST["codmed"])) {
   $set_user = FALSE;
   if ($_POST['usu'] != "0" && $_POST['cla'] != "0") {
@@ -83,7 +88,7 @@ if (isset($_POST["codmed"])) {
       VALUES('$u','$c','referente','activo', $uid)";
       $query = mysqli_query($db_conx, $sql);
     }
-    
+
     $sql = "UPDATE  tunidadmedico SET unm_activo = 'inactivo' WHERE med_codigo = $uid";
     $query = mysqli_query($db_conx, $sql);
 
@@ -173,12 +178,75 @@ if (isset($_POST["codmed"])) {
         </div>
         <div class="cleaner"></div>
         <div class="col_w900">
+          <table class="tr-data">
+            <tr>
+              <td style="width: 250px;">
+                <label>Filtrar por:</label>
+                <select style="width: 200px;" id="cmbopcion" onchange="changeOptionFilterMedRef();">
+                  <option value="op1">Código</option>              
+                  <option value="op2">Nombre</option>
+                  <option value="op3">Especialidad</option>
+                  <option value="op4">Especificar</option>
+                </select>
+              </td>
+              <td style="width: 250px;">
+                <span id="top1" class="opt-common">
+                  <label>Ordenar:</label>
+                  <select style="width: 207px;" id="cmborden">
+                    <option value="ASC">Ascendente</option>
+                    <option value="DESC">Descendente</option>
+                  </select>
+                </span>
+                <span id="top2" class="opt-common">
+                  <label>Estado:</label>
+                  <select style="width: 207px;" id="cmbact">
+                    <option value="op0">Ambos</option>
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                  </select>                  
+                </span>                              
+              </td>
+              <td style="width: 250px;">
+                <span id="top3" class="opt-common">
+                  <label style="width: 200px;">Unidad: </label>
+                  <?php SelectValuesUnidadFiltro($db_conx); ?>
+                </span>
+                <span id="top4" class="hide opt-common">
+                  <label style="width: 200px;">Buscar: </label>
+                  <input style="width: 200px;" type="text" id="texto"/>
+                </span> 
+              </td>                
+              <td>
+                <a class="a-button" href="javascript:filtrarDatos('med-ref', 'car');">Actualizar</a>
+              </td>              
+            </tr>
+          </table>
           <div id="table_content" class="tablestyle">
             <table id="table_data">
               <!--  table data / It happens only the first loading -->
               <?php SelectMedicoReferente($db_conx); ?>
             </table>
           </div>
+          <table class="tr-data">
+            <tr style="height: 120px;">
+              <td style="width: 350px;">
+                <span style="margin-left: 100px; width: 300px;">Resultados por página: </span>
+                <select id="rxp">
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                  <option value="500">500</option>
+                </select>
+              </td>
+              <td>
+                <a href="javascript:filtrarDatos('med-ref', 'ant');">Anterior</a>
+                <input disabled="Disabled" style="margin-left: 10px; margin-right: 10px; text-align: center; width: 50px;" type="text" id="pa" value="1"/>
+                <a href="javascript:filtrarDatos('med-ref', 'sig');">Siguiente</a>
+              </td>
+            </tr>
+          </table>
         </div>
         <div class="cleaner"></div>
       </div>

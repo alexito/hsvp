@@ -359,6 +359,27 @@ function getPacienteAutocomplete($db_conx) {
   echo $data;
 }
 
+function SelectMedicoxUnidadSQL($db_conx, $cod_uni) {
+  $sql = "SELECT med_codigo FROM tunidadmedico WHERE uni_codigo = $cod_uni AND unm_activo = 'activo'";
+  $query = mysqli_query($db_conx, $sql);
+  $n_filas = $query->num_rows;
+  $data = '';
+  if ($n_filas == 1) {
+    $row = mysqli_fetch_array($query);
+    $data .= "med_codigo = $row[0]";
+  } elseif ($n_filas > 1) {
+    $row = mysqli_fetch_array($query);
+    $data .= "med_codigo = $row[0]";
+    $c = 1;
+    while ($c < $n_filas) {
+      $row = mysqli_fetch_array($query);
+      $data .= " OR med_codigo = $row[0]";
+      $c++;
+    }
+  }
+  return $data;
+}
+
 /**
  * Select data to display in combobox, specify the table name without the character t
  * @param type $db_conx
@@ -422,8 +443,8 @@ function getServicioxMedico($db_conx, $get, $cod) {
 }
 
 function SelectServicios($db_conx, $query = NULL) {
-  if($query == NULL){
-    $sql = "SELECT * FROM tservicios LIMIT 20";  
+  if ($query == NULL) {
+    $sql = "SELECT * FROM tservicios LIMIT 20";
     $query = mysqli_query($db_conx, $sql);
   }
   $n_columnas = $query->field_count;
@@ -589,7 +610,7 @@ function SelectUnidad($db_conx, $query = null) {
     $sql = "SELECT * FROM vlocalizacionxunidad LIMIT 20";
     $query = mysqli_query($db_conx, $sql);
   }
-  
+
   $n_columnas = $query->field_count;
   $data = '<tr class="row_header">
             <td>COD</td>
@@ -635,15 +656,36 @@ function SelectValuesUnidad($db_conx) {
 }
 
 /**
+ * Select Values to combobox Unidad displayed in MedicoReferente
+ * @param type $db_conx
+ */
+function SelectValuesUnidadFiltro($db_conx) {
+  $sql = "SELECT uni_codigo, uni_descrip FROM tunidad ORDER BY uni_descrip ASC";
+  $query = mysqli_query($db_conx, $sql);
+
+  $n_filas = $query->num_rows;
+  $data = '<select style="width:207px;" id="cmbuni">';
+  $data .= '<option value="0">Todos</option>';
+  $c = 0;
+  while ($c < $n_filas) {
+    $row = mysqli_fetch_array($query);
+    $data .= '<option value="' . $row[0] . '">' . $row[1] . '</option>';
+    $c++;
+  }
+  $data .= '</select>';
+  echo $data;
+}
+
+/**
  * Select from Medico Referente
  * @param type $db_conx
  * @param type $n_items
  * @param type $p_actual
  */
 function SelectMedicoReferente($db_conx, $query = NULL) {
-  
-  if($query == NULL){
-    $sql = "SELECT * FROM tmedicoreferente";
+
+  if ($query == NULL) {
+    $sql = "SELECT * FROM tmedicoreferente LIMIT 20";
     $query = mysqli_query($db_conx, $sql);
   }
   $n_columnas = $query->field_count;

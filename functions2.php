@@ -1,5 +1,78 @@
 <?php
 
+function filtrarMedicoReferente($db_conx, $op, $btn, $rxp, $pa, $ord, $est, $uni, $tex) {
+  $funi = $ftex = $fest = "";
+
+  if ($uni != 0) {
+    $funi = SelectMedicoxUnidadSQL($db_conx, $uni);
+  }
+  if ($tex != '' && $op == 'op4') {
+    $ftex = "WHERE (med_codmed = '$tex' OR med_pape = '$tex' OR med_sape = '$tex' OR med_pnom = '$tex' OR med_snom = '$tex' OR med_especial = '$tex')";
+  }
+  if ($est != 'op0') {
+    $fest = "AND med_estado = '$est'";
+  }
+
+  if ($ftex != '') {
+    $sql = "SELECT COUNT(*) FROM tmedicoreferente $ftex $fest"; //Si tiene texto
+    if ($funi != '') {
+      if($ftex != ''){
+        $sql = "SELECT COUNT(*) FROM tmedicoreferente $ftex AND ($funi) $fest"; // Si tiene texto y unidad seleccionada
+      }else{
+        $sql = "SELECT COUNT(*) FROM tmedicoreferente WHERE ($funi) $fest"; // Si tiene texto y unidad seleccionada
+      }
+    }
+  } elseif ($uni != 0) {
+    $sql = "SELECT COUNT(*) FROM tmedicoreferente WHERE ($funi) $fest "; //Si tiene unidad seleccionada
+  } else {
+    if ($est != 'op0') {
+      $sql = "SELECT COUNT(*) FROM tmedicoreferente WHERE med_estado = '$est' "; //hay un estado
+    } else {
+      $sql = "SELECT COUNT(*) FROM tmedicoreferente"; //No hay estado
+    }
+  }
+
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+  $total = $row[0];
+  $limit = limitarResultado($btn, $rxp, $pa, $total);
+
+  if ($tex != '') {
+    $sql = "SELECT * FROM tmedicoreferente $ftex $fest"; //Si tiene texto
+    if ($funi != '') {
+      if($ftex != ''){
+        $sql = "SELECT * FROM tmedicoreferente $ftex AND ($funi) $fest"; // Si tiene texto y unidad seleccionada
+      }else{
+        $sql = "SELECT * FROM tmedicoreferente WHERE ($funi) $fest"; // Si tiene texto y unidad seleccionada
+      }
+    }
+  } elseif ($uni != 0) {
+    $sql = "SELECT * FROM tmedicoreferente WHERE ($funi) $fest "; //Si tiene unidad seleccionada
+  } else {
+    if ($est != 'op0') {
+      $sql = "SELECT * FROM tmedicoreferente WHERE med_estado = '$est' "; //hay un estado
+    } else {
+      $sql = "SELECT * FROM tmedicoreferente"; //No hay estado
+    }
+  }
+  
+  if($op == 'op1'){
+    $sql .= " ORDER BY med_codigo $ord";
+  }elseif($op == 'op2' || $op == 'op4'){
+    $sql .= " ORDER BY med_pape $ord";
+  }elseif($op == 'op3'){
+    $sql .= " ORDER BY med_especial $ord";
+  }
+  
+  $sql .= " LIMIT $limit";
+  
+  $query = mysqli_query($db_conx, $sql);
+  if ($btn != 'car') {
+    $query = recortarResultado($query, $rxp, $pa, $limit, $total);
+  }
+  SelectMedicoReferente($db_conx, $query);
+}
+
 function filtrarServicios($db_conx, $btn, $rxp, $pa, $ord, $tex) {
   if ($tex != '') {
     $sql = "SELECT COUNT(*) FROM tservicios WHERE ser_descrip = '$tex'";
