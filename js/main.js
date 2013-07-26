@@ -159,8 +159,15 @@ window.onload = function init() {
     });    
   }
   
-  
+  //Funcion para agregar el UI datepicker
   $(function() {
+    $("#fn").datepicker({
+      minDate: new Date(1900, 10 - 1, 25),
+      maxDate: '+30Y',
+      yearRange: '1900:c',
+      changeMonth: true,
+      changeYear: true
+    });
     $("#fnac").datepicker({
       minDate: new Date(1900, 10 - 1, 25),
       maxDate: '+30Y',

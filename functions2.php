@@ -1,5 +1,261 @@
 <?php
 
+function filtrarPaciente($db_conx, $op, $btn, $rxp, $pa, $ord, $fn, $gen, $ec, $tex) {
+  $ftex = $ffn = "";
+
+  if ($tex != '' && $op == 'op5') {
+    $ftex = "WHERE (pac_pape = '$tex' OR pac_sape = '$tex' OR pac_pnom = '$tex' OR pac_snom = '$tex' OR pac_cedula = '$tex' OR pac_hc = '$tex' OR pac_instruc = '$tex')";
+  }
+  if ($fn != '' && $op != 'op5') {
+    $ffn = "pac_fch_nac = '$fn'";
+  }
+
+  if ($op == 'op1' || $op == 'op2') {
+    $ban = false;
+    $sql = "SELECT COUNT(*) FROM tpaciente";
+    if ($fn != '') {
+      $sql .= " WHERE $ffn";
+      $ban = true;
+    }
+    if ($ec != 'op0') {
+      $sql .= ($ban) ? " AND pac_est_civ = '$ec'" : " WHERE pac_est_civ = '$ec'";
+      $ban = true;
+    }
+    if ($gen != 'op0') {
+      $sql .= ($ban) ? " AND pac_genero = '$gen'" : " WHERE pac_genero = '$gen'";
+    }
+  }
+
+  if ($op == 'op3') {
+    $sql = "SELECT COUNT(*) FROM tpaciente WHERE pac_genero = '$gen'";
+    if ($fn != '') {
+      $sql .= " AND $ffn";
+    }
+    if ($ec != 'op0') {
+      $sql .= " AND pac_est_civ = '$ec'";
+    }
+  }
+
+  if ($op == 'op4') {
+    $sql = "SELECT COUNT(*) FROM tpaciente WHERE pac_est_civ = '$ec'";
+    if ($fn != '') {
+      $sql .= " AND $ffn";
+    }
+    if ($gen != 'op0') {
+      $sql .= " AND pac_genero = '$gen'";
+    }
+  }
+
+  if ($op == 'op5') {
+    $sql = "SELECT COUNT(*) FROM tpaciente $ftex";
+    if ($ec != 'op0') {
+      $sql .= " AND pac_est_civ = '$ec'";
+    }
+    if ($gen != 'op0') {
+      $sql .= " AND pac_genero = '$gen'";
+    }
+  }
+
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+  $total = $row[0];
+  $limit = limitarResultado($btn, $rxp, $pa, $total);
+
+  if ($op == 'op1' || $op == 'op2') {
+    $ban = false;
+    $sql = "SELECT * FROM tpaciente";
+    if ($fn != '') {
+      $sql .= " WHERE $ffn";
+      $ban = true;
+    }
+    if ($ec != 'op0') {
+      $sql .= ($ban) ? " AND pac_est_civ = '$ec'" : " WHERE pac_est_civ = '$ec'";
+      $ban = true;
+    }
+    if ($gen != 'op0') {
+      $sql .= ($ban) ? " AND pac_genero = '$gen'" : " WHERE pac_genero = '$gen'";
+    }
+  }
+
+  if ($op == 'op3') {
+    $sql = "SELECT * FROM tpaciente WHERE pac_genero = '$gen'";
+    if ($fn != '') {
+      $sql .= " AND $ffn";
+    }
+    if ($ec != 'op0') {
+      $sql .= " AND pac_est_civ = '$ec'";
+    }
+  }
+
+  if ($op == 'op4') {
+    $sql = "SELECT * FROM tpaciente WHERE pac_est_civ = '$ec'";
+    if ($fn != '') {
+      $sql .= " AND $ffn";
+    }
+    if ($gen != 'op0') {
+      $sql .= " AND pac_genero = '$gen'";
+    }
+  }
+
+  if ($op == 'op5') {
+    $sql = "SELECT * FROM tpaciente $ftex";
+    if ($ec != 'op0') {
+      $sql .= " AND pac_est_civ = '$ec'";
+    }
+    if ($gen != 'op0') {
+      $sql .= " AND pac_genero = '$gen'";
+    }
+  }
+
+  if ($op == 'op1') {
+    $sql .= " ORDER BY pac_codigo $ord";
+  } elseif ($op == 'op2' || $op == 'op5') {
+    $sql .= " ORDER BY pac_pape $ord";
+  } elseif ($op == 'op3') {
+    $sql .= " ORDER BY pac_genero $ord";
+  } elseif ($op == 'op4') {
+    $sql .= " ORDER BY pac_est_civ $ord";
+  }
+
+  $sql .= " LIMIT $limit";
+
+  $query = mysqli_query($db_conx, $sql);
+  if ($btn != 'car') {
+    $query = recortarResultado($query, $rxp, $pa, $limit, $total);
+  }
+  SelectPaciente($db_conx, $query);
+}
+
+function filtrarUsuario($db_conx, $op, $btn, $rxp, $pa, $ord, $tip, $est, $tex) {
+  if ($op == "op1" || $op == "op2") {
+    $ban = false;
+    $sql = "SELECT COUNT(*) FROM tusuario";
+    if($est != "op0"){
+      $sql .= " WHERE usu_activo = '$est'";
+      $ban = true;
+    }
+    if($tip != "op0"){
+      $sql .= (!$ban)?" WHERE usu_tipo = '$tip'":" AND usu_tipo = '$tip'";  
+    }
+  }
+  if ($op == "op3") {    
+    $sql = "SELECT COUNT(*) FROM tusuario WHERE usu_tipo = '$tip'";
+    if($est != "op0"){
+      $sql .= " AND usu_activo = '$est'";
+    }
+  }
+  if ($op == "op4") {
+    $sql = "SELECT COUNT(*) FROM tusuario WHERE usu_usuario = '$tex'";
+    if($est != "op0"){
+      $sql .= " AND usu_activo = '$est'";
+    }
+    if($tip != "op0"){
+      $sql .= " AND usu_tipo = '$tip'";  
+    }
+  }
+  
+
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+  $total = $row[0];
+  $limit = limitarResultado($btn, $rxp, $pa, $total);
+  
+  $sel = "usu_codigo, usu_usuario, usu_tipo, usu_activo, usu_fecha";
+
+  if ($op == "op1" || $op == "op2") {
+    $ban = false;
+    $sql = "SELECT $sel FROM tusuario";
+    if($est != "op0"){
+      $sql .= " WHERE usu_activo = '$est'";
+      $ban = true;
+    }
+    if($tip != "op0"){
+      $sql .= (!$ban)?" WHERE usu_tipo = '$tip'":" AND usu_tipo = '$tip'";  
+    }
+  }
+  if ($op == "op3") {    
+    $sql = "SELECT $sel FROM tusuario WHERE usu_tipo = '$tip'";
+    if($est != "op0"){
+      $sql .= " AND usu_activo = '$est'";
+    }
+  }
+  if ($op == "op4") {
+    $sql = "SELECT $sel FROM tusuario WHERE usu_usuario = '$tex'";
+    if($est != "op0"){
+      $sql .= " AND usu_activo = '$est'";
+    }
+    if($tip != "op0"){
+      $sql .= " AND usu_tipo = '$tip'";  
+    }
+  }
+
+  if ($op == 'op1') {
+    $sql .= " ORDER BY usu_codigo $ord";
+  } else{
+    $sql .= " ORDER BY usu_usuario $ord";
+  }
+
+  $sql .= " LIMIT $limit";
+
+  $query = mysqli_query($db_conx, $sql);
+  if ($btn != 'car') {
+    $query = recortarResultado($query, $rxp, $pa, $limit, $total);
+  }
+  SelectUsuario($db_conx, $query);
+}
+
+function filtrarMedicoReferenciado($db_conx, $op, $btn, $rxp, $pa, $ord, $est, $tex) {
+  $ftex = $fest = "";
+
+  if ($tex != '' && $op == 'op4') {
+    $ftex = "WHERE (mer_codmed = '$tex' OR mer_pape = '$tex' OR mer_sape = '$tex' OR mer_pnom = '$tex' OR mer_snom = '$tex' OR mer_especial = '$tex')";
+  }
+  if ($est != 'op0') {
+    $fest = "AND mer_estado = '$est'";
+  }
+
+  if ($ftex != '') {
+    $sql = "SELECT COUNT(*) FROM tmedicoreferenciado $ftex $fest"; //Si tiene texto    
+  } else {
+    if ($est != 'op0') {
+      $sql = "SELECT COUNT(*) FROM tmedicoreferenciado WHERE mer_estado = '$est' "; //hay un estado
+    } else {
+      $sql = "SELECT COUNT(*) FROM tmedicoreferenciado"; //No hay estado
+    }
+  }
+
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+  $total = $row[0];
+  $limit = limitarResultado($btn, $rxp, $pa, $total);
+
+  if ($ftex != '') {
+    $sql = "SELECT * FROM tmedicoreferenciado $ftex $fest"; //Si tiene texto    
+  } else {
+    if ($est != 'op0') {
+      $sql = "SELECT * FROM tmedicoreferenciado WHERE mer_estado = '$est' "; //hay un estado
+    } else {
+      $sql = "SELECT * FROM tmedicoreferenciado"; //No hay estado
+    }
+  }
+
+  if ($op == 'op1') {
+    $sql .= " ORDER BY mer_codigo $ord";
+  } elseif ($op == 'op2' || $op == 'op4') {
+    $sql .= " ORDER BY mer_pape $ord";
+  } elseif ($op == 'op3') {
+    $sql .= " ORDER BY mer_especial $ord";
+  }
+
+  $sql .= " LIMIT $limit";
+
+  $query = mysqli_query($db_conx, $sql);
+  if ($btn != 'car') {
+    $query = recortarResultado($query, $rxp, $pa, $limit, $total);
+  }
+  SelectMedicoReferenciado($db_conx, $query);
+}
+
 function filtrarMedicoReferente($db_conx, $op, $btn, $rxp, $pa, $ord, $est, $uni, $tex) {
   $funi = $ftex = $fest = "";
 
@@ -16,9 +272,9 @@ function filtrarMedicoReferente($db_conx, $op, $btn, $rxp, $pa, $ord, $est, $uni
   if ($ftex != '') {
     $sql = "SELECT COUNT(*) FROM tmedicoreferente $ftex $fest"; //Si tiene texto
     if ($funi != '') {
-      if($ftex != ''){
+      if ($ftex != '') {
         $sql = "SELECT COUNT(*) FROM tmedicoreferente $ftex AND ($funi) $fest"; // Si tiene texto y unidad seleccionada
-      }else{
+      } else {
         $sql = "SELECT COUNT(*) FROM tmedicoreferente WHERE ($funi) $fest"; // Si tiene texto y unidad seleccionada
       }
     }
@@ -40,9 +296,9 @@ function filtrarMedicoReferente($db_conx, $op, $btn, $rxp, $pa, $ord, $est, $uni
   if ($tex != '') {
     $sql = "SELECT * FROM tmedicoreferente $ftex $fest"; //Si tiene texto
     if ($funi != '') {
-      if($ftex != ''){
+      if ($ftex != '') {
         $sql = "SELECT * FROM tmedicoreferente $ftex AND ($funi) $fest"; // Si tiene texto y unidad seleccionada
-      }else{
+      } else {
         $sql = "SELECT * FROM tmedicoreferente WHERE ($funi) $fest"; // Si tiene texto y unidad seleccionada
       }
     }
@@ -55,17 +311,17 @@ function filtrarMedicoReferente($db_conx, $op, $btn, $rxp, $pa, $ord, $est, $uni
       $sql = "SELECT * FROM tmedicoreferente"; //No hay estado
     }
   }
-  
-  if($op == 'op1'){
+
+  if ($op == 'op1') {
     $sql .= " ORDER BY med_codigo $ord";
-  }elseif($op == 'op2' || $op == 'op4'){
+  } elseif ($op == 'op2' || $op == 'op4') {
     $sql .= " ORDER BY med_pape $ord";
-  }elseif($op == 'op3'){
+  } elseif ($op == 'op3') {
     $sql .= " ORDER BY med_especial $ord";
   }
-  
+
   $sql .= " LIMIT $limit";
-  
+
   $query = mysqli_query($db_conx, $sql);
   if ($btn != 'car') {
     $query = recortarResultado($query, $rxp, $pa, $limit, $total);

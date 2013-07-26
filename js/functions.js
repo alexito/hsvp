@@ -590,16 +590,17 @@ function createMedicoReferenciado(){
     _("submitbtn").style.display = "none";
     _("nuevo_medicoreferenciado").style.display = "none";
     status.innerHTML = '<br><img src="images/loading.gif">';       
-    $("#table_content").hide(300);
+    //$("#table_content").hide(300);
     var ajax = ajaxObj("POST", "medico_referenciado.php");
     ajax.onreadystatechange = function() {
       if(ajaxReturn(ajax) == true) {
         status.innerHTML = "Datos guardados correctamente.";
         _("submitbtn").style.display = "block";        
         _("nuevo_medicoreferenciado").style.display = "block";
-        _("table_data").innerHTML = ajax.responseText;
-        $("#table_content").show(500); 
+//        _("table_data").innerHTML = ajax.responseText;
+//        $("#table_content").show(500); 
         $('#nuevo_medicoreferenciado').click();
+        filtrarDatos('med-referenciado', 'car');
       }
     }
     if(cod == ""){//Code to INSERT
@@ -657,16 +658,17 @@ function createPaciente(){
     _("submitbtn").style.display = "none";
     _("nuevo_paciente").style.display = "none";
     status.innerHTML = '<br><img src="images/loading.gif">';       
-    $("#table_content").hide(300);
+//    $("#table_content").hide(300);
     var ajax = ajaxObj("POST", "paciente.php");
     ajax.onreadystatechange = function() {
       if(ajaxReturn(ajax) == true) {
         status.innerHTML = "Datos guardados correctamente.";
         _("submitbtn").style.display = "block";        
         _("nuevo_paciente").style.display = "block";
-        _("table_data").innerHTML = ajax.responseText;
-        $("#table_content").show(500);
+//        _("table_data").innerHTML = ajax.responseText;
+//        $("#table_content").show(500);
         $('#nuevo_paciente').click();
+        filtrarDatos('paciente', 'car');
       }
     }
     var params = "ced="+ced+"&fnac="+fnac+"&cmbgenero="+cmbgenero+"&cmbestciv="+cmbestciv+

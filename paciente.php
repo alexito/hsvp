@@ -1,14 +1,20 @@
 <?php
 include_once("php_includes/db_conx.php");
 include_once("functions.php");
+include_once("functions2.php");
 
 include_once("php_includes/check_login_status.php");
 
 if ($user_ok == FALSE || $log_tipo != 'referente') {
-  header("location: logout.php");
+  header("location: inicio.php");
   exit();
 }
 ?><?php
+if (isset($_POST['btn'])) {//Filtra los datos
+  filtrarPaciente($db_conx, $_POST['op'], $_POST['btn'], $_POST['rxp'], $_POST['pa'], $_POST['ord'], $_POST['fn'], $_POST['gen'], $_POST['ec'], $_POST['tex']);
+  exit();
+}
+
 if (isset($_POST["pnom"])) {
   $pnom = $_POST['pnom'];
   $snom = $_POST['snom'];
@@ -29,12 +35,12 @@ if (isset($_POST["pnom"])) {
     $seg[2] = "seg_codigo = " . $_POST['seg'] . ",";
   }
   $emp[0] = $emp[1] = "";
-  $emp[2] = "emp_codigo = null,";  
+  $emp[2] = "emp_codigo = null,";
   if ($_POST['emp'] != null || $_POST['emp'] != "") {
     $emp[0] = "emp_codigo,";
     $emp[1] = $_POST['emp'] . ",";
     $emp[2] = "emp_codigo = " . $_POST['emp'] . ",";
-  }  
+  }
   if ($pnom == "" || $snom == "" || $pape == "" || $sape == "" || $ced == "" || $fnac == "" ||
           $cmbgenero == "" || $cmbestciv == "" || $ins == "" || $hc == "" || $tel == "") {
     echo "The form submission is missing values.";
@@ -44,7 +50,7 @@ if (isset($_POST["pnom"])) {
     $sql = "UPDATE tpaciente SET " .
             $seg[2] .
             $emp[2] .
-             "pac_pnom = '$pnom',
+            "pac_pnom = '$pnom',
              pac_snom = '$snom',
              pac_pape = '$pape',
              pac_sape = '$sape',
@@ -148,7 +154,7 @@ if (isset($_POST["pnom"])) {
                   </td>
                   <td>
                     <div id="msgseg" style="max-width: 150px; margin-top: -90px; display: none; border: #4db3af dashed thin; padding: 5px;">
-                      
+
                     </div>
                     <div id="frmseg" style="display: none; border: #4db3af dashed thin; padding: 5px;">
                       <h5>Seguro:</h5>
@@ -172,7 +178,7 @@ if (isset($_POST["pnom"])) {
                   </td>
                   <td>
                     <div id="msgemp" style="max-width: 150px; margin-top: -90px; display: none; border: #4db3af dashed thin; padding: 5px;">
-                      
+
                     </div>
                     <div id="frmemp" style="display: none; border: #4db3af dashed thin; padding: 5px;">
                       <h4>Empresa:</h4>
@@ -197,12 +203,87 @@ if (isset($_POST["pnom"])) {
         </div>
         <div class="cleaner"></div>
         <div class="col_w900">
+          <table class="tr-data">
+            <tr>
+              <td style="width: 250px;">
+                <label>Filtrar por:</label>
+                <select style="width: 200px;" id="cmbopcion" onchange="changeOptionFilterPaciente();">
+                  <option value="op1">Código</option>              
+                  <option value="op2">Nombre</option>
+                  <option value="op3">Género</option>
+                  <option value="op4">Estado Civil</option>
+                  <option value="op5">Especificar</option>
+                </select>
+              </td>
+              <td style="width: 250px;">
+                <span id="top1" class="opt-common">
+                  <label>Ordenar:</label>
+                  <select style="width: 207px;" id="cmborden">
+                    <option value="ASC">Ascendente</option>
+                    <option value="DESC">Descendente</option>
+                  </select>
+                </span>
+                <span  class="opt-common">
+                  <label>Genero:</label>
+                  <select style="width: 207px;" id="cmbgen">     
+                    <option value="op0">Todos...</option>
+                    <option value="masculino">Masculino</option>
+                    <option value="femenino">Femenino</option>
+                    <option value="indefinido">Indefinido</option>
+                  </select>
+                </span>
+              </td><td>
+                <span class="tx hide opt-common">
+                  <label style="width: 200px;">Buscar: </label>
+                  <input style="width: 200px;" type="text" id="texto"/>
+                </span>
+                <span class="fn">
+                  <label>F. Nacimiento:</label>
+                  <input style="width: 207px;" id="fn" type="text" maxlength="10">
+                </span>
+                <span class="opt-common">
+                  <label>Est. Civil:</label>
+                  <select style="width: 207px;" id="cmbec">
+                    <option value="op0">Todos...</option>
+                    <option value="soltero">Soltero</option>
+                    <option value="casado">Casado</option>
+                    <option value="divorciado">Divorciado</option>
+                    <option value="viudo">Viudo</option>
+                    <option value="unionlibre">Union libre</option>
+                  </select>           
+                </span>                
+              </td>              
+              <td>
+                <a class="a-button" href="javascript:filtrarDatos('paciente', 'car');">Actualizar</a>
+              </td>              
+            </tr>
+          </table>
           <div id="table_content" class="tablestyle">
             <table id="table_data">
               <!--  table data / It happens only the first loading -->
-              <?php SelectPaciente($db_conx, 10, 1); ?>
+              <?php SelectPaciente($db_conx); ?>
             </table>
           </div>
+          <table class="tr-data">
+            <tr style="height: 120px;">
+              <td style="width: 350px;">
+                <span style="margin-left: 100px; width: 300px;">Resultados por página: </span>
+                <select id="rxp">
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                  <option value="500">500</option>
+                </select>
+              </td>
+              <td>
+                <a href="javascript:filtrarDatos('paciente', 'ant');">Anterior</a>
+                <input disabled="Disabled" style="margin-left: 10px; margin-right: 10px; text-align: center; width: 50px;" type="text" id="pa" value="1"/>
+                <a href="javascript:filtrarDatos('paciente', 'sig');">Siguiente</a>
+              </td>
+            </tr>
+          </table>
         </div>
         <div class="cleaner"></div>
       </div>
