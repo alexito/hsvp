@@ -13,7 +13,7 @@ if (isset($_POST["des"])) {
   $des = $_POST['des'];
   $obs = $_POST['obs'];
   $sig = $_POST['sig'];
-  if($des == "" || $obs == "" || $sig == "") {
+  if($des == "" || $sig == "") {
     echo "The form submission is missing values.";
     exit();
   } else if (isset($_POST["cod"])) { //This is for UPDATE

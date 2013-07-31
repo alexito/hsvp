@@ -20,7 +20,7 @@ if (isset($_POST["d"])) {
   $o = $_POST['o'];
   $r = $_POST['r'];
 
-  if ($d == "" || $o == "") {
+  if ($d == "") {
     echo "The form submission is missing values.";
     exit();
   } else if (isset($_POST["cod"])) { //This is for UPDATE

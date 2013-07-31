@@ -5,7 +5,7 @@ include_once("php_includes/check_login_status.php");
 if (isset($_GET["usu"])) {
   $u = preg_replace('#[^a-z0-9]#i', '', $_GET['usu']);
 } else {
-  header("location: http://www.google.com");
+  header("location: index.php");
   exit();
 }
 // Select the member from the users table
@@ -36,27 +36,25 @@ if ($numrows < 1) {
               <?php
               if ($user_ok == TRUE && $log_tipo == 'admin') {
                 ?>
-
-              <tr><td><a href="medico_referente.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Medico Referente</span></a> </td><td style="font-size: 14px;"> Ingrese o edite Médicos Referentes (Personal que atenderá en las Unidades Médicas).</td></tr>
-                <tr><td><a href="medico_referenciado.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Medico Referenciado</span></a> </td><td style="font-size: 14px;"> Ingrese o edite Médicos Referenciados (Personal que atenderá en la Unidad Central u Hospital).</td></tr>       
-                <tr><td><a href="servicios.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Servicio</span></a> </td><td style="font-size: 14px;"> Ingrese o edite los Servicios disponibles que ofrece en el Hospital.</td></tr>
-                <tr><td><a href="medicoxservicio.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Medico - Servicio</span></a> </td><td style="font-size: 14px;"> Relacione un Médico -> Servicios / Servicio -> Medicos correspondientes.</td></tr>
                 <tr><td><a href="localizacion.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Localizacion</span></a> </td><td style="font-size: 14px;"> Ingrese o edite Localizaciones que luego corresponderán a las Unidades.</td></tr>
                 <tr><td><a href="unidad.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Unidad</span></a> </td><td style="font-size: 14px;"> Ingrese o edite las Unidades Médicas.</td></tr>
-                <tr><td><a href="usuario.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Usuario</span></a> </td><td style="font-size: 14px;"> Ingrese o edite los Usuarios y sus Claves para el acceso al Sistema.</td></tr>
-
+                <tr><td><a href="medico_referente.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Medico Referente</span></a> </td><td style="font-size: 14px;"> Ingrese o edite Médicos Referentes (Personal que atenderá en las Unidades Médicas).</td></tr>
+                <tr><td><a href="servicios.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Servicio</span></a> </td><td style="font-size: 14px;"> Ingrese o edite los Servicios disponibles que ofrece en el Hospital.</td></tr>
+                <tr><td><a href="medico_referenciado.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Medico Referenciado</span></a> </td><td style="font-size: 14px;"> Ingrese o edite Médicos Referenciados (Personal que atenderá en la Unidad Central u Hospital).</td></tr>       
+                <tr><td><a href="medicoxservicio.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Medico - Servicio</span></a> </td><td style="font-size: 14px;"> Relacione un Médico -> Servicios / Servicio -> Medicos correspondientes.</td></tr>
+                <tr><td><a href="usuario.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Creación de Usuario</span></a> </td><td style="font-size: 14px;"> Ingrese o edite los Usuarios y sus Claves para el acceso al Sistema.</td></tr>
               <?php } ?>
               <?php
               if ($user_ok == TRUE && $log_tipo == 'referente') {
                 ?>
                 <tr><td><a href="tramite_uni.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Crear Referencia</span></a> </td><td style="font-size: 14px;">Crea una nueva Referencia/Trámite detallando información que será revisada en el Hospital.</td></tr>
-                  <tr><td><a href="referencias_uni.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Ver Referencias</span></a> </td><td style="font-size: 14px;">Revise el estado de las Referencias/Trámites y/o edite su estado.</td></tr>
-                  <tr><td><a href="paciente.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Pacientes</span></a> </td><td style="font-size: 14px;">Ingrese o edite un Paciente con información detallada.</td></tr>
+                <tr><td><a href="referencias_uni.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Ver Referencias</span></a> </td><td style="font-size: 14px;">Revise el estado de las Referencias/Trámites y/o edite su estado.</td></tr>
+                <tr><td><a href="paciente.php" target="_blanket"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Pacientes</span></a> </td><td style="font-size: 14px;">Ingrese o edite un Paciente con información detallada.</td></tr>
               <?php } ?>
               <?php
               if ($user_ok == TRUE && $log_tipo == 'contrareferente') {
                 ?>
-                  <tr><td><a href="referencias.php"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Ver Referencias</span></a> </td><td style="font-size: 14px;">Revise el estado de las Referencias/Trámites y/o edite su estado.</td></tr>
+                <tr><td><a href="referencias.php"><img style="height: 25px; float: left;padding: 5px;" src="images/option.png"/><span style="margin-top: 7px; float: left;font-size: 14px;">Ver Referencias</span></a> </td><td style="font-size: 14px;">Revise el estado de las Referencias/Trámites y/o edite su estado.</td></tr>
                 <?php
               }
               if ($user_ok == TRUE) {

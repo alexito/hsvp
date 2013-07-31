@@ -21,7 +21,7 @@ if (isset($_POST["loc"])) {
   $des = $_POST['des'];
   $act = $_POST['act'];
   $obs = $_POST['obs'];
-  if ($loc == "" || $des == "" || $act == "" || $obs == "") {
+  if ($loc == "" || $des == "" || $act == "") {
     echo "The form submission is missing values.";
     exit();
   } else if (isset($_POST["cod"])) { //This is for UPDATE

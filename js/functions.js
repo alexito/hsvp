@@ -840,7 +840,7 @@ function createServicios(){
   var status = _("status");
   if (r == ""){
     alert('Debe seleccionar un referenciado de la lista.');
-  }else if(d == "" || o == ""){
+  }else if(d == ""){
     status.innerHTML = "Todos los campos son requeridos";
   } else {    
     _("submitbtn").style.display = "none";

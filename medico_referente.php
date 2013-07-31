@@ -31,7 +31,7 @@ if (isset($_POST["codmed"])) {
   $pape = $_POST['pape'];
   $sape = $_POST['sape'];
   $unid = $_POST['unid'];
-  if ($codmed == "" || $esp == "" || $obs == "" || $est == "" || $pnom == "" || $snom == "" || $pape == "" || $sape == "") {
+  if ($codmed == "" || $esp == "" || $est == "" || $pnom == "" || $snom == "" || $pape == "" || $sape == "") {
     echo "The form submission is missing values.";
     exit();
   } else if (isset($_POST["cod"])) { //This is for UPDATE

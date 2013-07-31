@@ -8,14 +8,14 @@
       if ($user_ok == TRUE && $log_tipo == 'admin') {        
       ?>
       <li><a href="#">Administrar</a>
-        <ul>          
-          <li><a href="medico_referente.php">Medico Referente</a></li>
-          <li><a href="medico_referenciado.php">Medico Referenciado</a></li>          
-          <li><a href="servicios.php">Servicio</a></li>
-          <li><a href="medicoxservicio.php">Medico - Servicio</a></li>
+        <ul>
           <li><a href="localizacion.php">Localizacion</a></li>
           <li><a href="unidad.php">Unidad</a></li>
-          <li><a href="usuario.php">Usuario</a></li>
+          <li><a href="medico_referente.php">Medico Referente</a></li>
+          <li><a href="servicios.php">Servicio</a></li>
+          <li><a href="medico_referenciado.php">Medico Referenciado</a></li>          
+          <li><a href="medicoxservicio.php">Medico - Servicio</a></li>          
+          <li><a href="usuario.php">Creación de Usuario</a></li>
         </ul>
       </li>
       <?php }?>
