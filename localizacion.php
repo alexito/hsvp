@@ -117,6 +117,7 @@ if (isset($_POST["d"])) {
               </td>              
               <td>
                 <a class="a-button" href="javascript:filtrarDatos('localizacion', 'car');">Actualizar</a>
+                <a href="http://localhost/HSVP/reports/localizacion.php?btn=car&rxp=5&pa=1&op=loc_codigo&ord=ASC&tex=" target="_blank">Imprimir</a>
               </td>              
             </tr>
           </table> 

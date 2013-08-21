@@ -549,14 +549,14 @@ function SelectLocalizacion($db_conx, $query = null) {
             <td>Parroquia</td>
             <td>Canton</td>
             <td>Provincia</td>
-            <td></td>
+            <td id="custom-action"></td>
         </tr>';
   while ($row = mysqli_fetch_array($query)) {
     $data .= '<tr class="row_data">';
     for ($i = 0; $i < $n_columnas; $i++) {
       $data .= '<td><span id="td_' . $row[0] . '_' . $i . '">' . $row[$i] . '</span></td>';
     }
-    $data .= '<td><button id="editar" onclick="editarLocalizacion(' . $row[0] . ')">Editar</button></td></tr>';
+    $data .= '<td id="custom-action"><button id="editar" onclick="editarLocalizacion(' . $row[0] . ')">Editar</button></td></tr>';
   }
   echo $data;
 }
