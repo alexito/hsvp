@@ -1,3 +1,6 @@
+function changeReportLink(parametros){
+  $("a#print-url").attr("href", "reports/report-page.php?" +parametros);
+}
 
 function filtrarDatos(page, btn){
   //Filtra los medicos referenciados
@@ -123,7 +126,9 @@ function cargarPacientesFiltrados(btn, rxp, pa, op, ord, fn, gen, ec, tex){
       $("#table_content").fadeIn(800);
     }
   }
-  ajax.send("btn="+btn+"&rxp="+rxp+"&pa="+pa+"&op="+op+"&ord="+ord+"&fn="+fn+"&gen="+gen+"&ec="+ec+"&tex="+tex);  
+  var parametros = "btn="+btn+"&rxp="+rxp+"&pa="+pa+"&op="+op+"&ord="+ord+"&fn="+fn+"&gen="+gen+"&ec="+ec+"&tex="+tex;
+  changeReportLink('page=pacientes&' + parametros);
+  ajax.send(parametros);  
 }
 
 function cargarUsuariosFiltrados(btn, rxp, pa, op, ord, tip, est, tex){
@@ -187,7 +192,9 @@ function cargarUnidadesFiltradas(btn, rxp, pa, op, ord, est, tex){
       $("#table_content").fadeIn(800);
     }
   }
-  ajax.send("btn="+btn+"&rxp="+rxp+"&pa="+pa+"&op="+op+"&ord="+ord+"&est="+est+"&tex="+tex);
+  var parametros = "btn="+btn+"&rxp="+rxp+"&pa="+pa+"&op="+op+"&ord="+ord+"&est="+est+"&tex="+tex;
+  changeReportLink('page=unidades&' + parametros);
+  ajax.send(parametros);
 }
 
 function cargarServiciosFiltrados(btn, rxp, pa, ord, tex){
@@ -219,7 +226,9 @@ function cargarLocalizacionesFiltradas(btn, rxp, pa, op, ord, tex){
       $("#table_content").fadeIn(800);
     }
   }
-  ajax.send("btn="+btn+"&rxp="+rxp+"&pa="+pa+"&op="+op+"&ord="+ord+"&tex="+tex);
+  var parametros = "btn="+btn+"&rxp="+rxp+"&pa="+pa+"&op="+op+"&ord="+ord+"&tex="+tex;
+  changeReportLink('page=localizaciones&' + parametros);
+  ajax.send(parametros);
 }
 
 function cargarReferenciasFiltradasHospital(btn, rxp, pa, lp1, op, est, nro, fd, fh){

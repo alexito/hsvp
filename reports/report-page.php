@@ -5,7 +5,7 @@ include_once("../functions2.php");
 
 include_once("../php_includes/check_login_status.php");
 
-if ($user_ok == FALSE || $log_tipo != 'admin') {
+if ($user_ok == FALSE) {
   header("location: ../inicio.php");
   exit();
 }
@@ -38,16 +38,31 @@ if ($user_ok == FALSE || $log_tipo != 'admin') {
                 <h3>Sistema de Referencia y Contrareferencia.</h3>
               </div>
               <div>
-                <p>Reporte de Localizaciones.  -   <?php echo gmdate("j/m/Y, g:i a", time() + (3600 * -5));?></p> 
+                <p>REPORTE DE 
+                  <?php
+                  echo strtoupper($_GET['page']) . '   -   ';
+                  echo gmdate("j/m/Y, g:i a", time() + (3600 * -5));
+                  ?>
+                </p> 
               </div>
             </td>
           </tr>
         </table>
-        <div class="table-report-style">        
+        <div class="table-report-style"> 
           <table>
             <?php
-            if (isset($_GET['btn'])) {//Filtra los datos
-              filtrarLocalizacion($db_conx, $_GET['op'], $_GET['btn'], $_GET['rxp'], $_GET['pa'], $_GET['ord'], $_GET['tex']);
+            if (isset($_GET['btn'])) {//Filtra los datos  
+              switch ($_GET['page']) {
+                case 'localizaciones':
+                  filtrarLocalizacion($db_conx, $_GET['op'], $_GET['btn'], $_GET['rxp'], $_GET['pa'], $_GET['ord'], $_GET['tex']);
+                  break;
+                case 'pacientes':
+                  filtrarPaciente($db_conx, $_GET['op'], $_GET['btn'], $_GET['rxp'], $_GET['pa'], $_GET['ord'], $_GET['fn'], $_GET['gen'], $_GET['ec'], $_GET['tex']);
+                  break;
+                case 'unidades':
+                  filtrarUnidad($db_conx, $_GET['op'], $_GET['btn'], $_GET['rxp'], $_GET['pa'], $_GET['ord'], $_GET['est'], $_GET['tex']);
+                  break;
+              }
             }
             ?>
           </table>

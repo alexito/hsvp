@@ -432,7 +432,7 @@ function createLocalizacion(){
       ajax.send("d="+d+"&p="+p+"&c="+c+"&pr="+pr);      
     }else{//Code to UPDATE
       ajax.send("d="+d+"&p="+p+"&c="+c+"&pr="+pr+"&cod="+cod); 
-    }      
+    }
   }
 }
 

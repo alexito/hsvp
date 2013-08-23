@@ -60,7 +60,7 @@ function SelectReferenciasUnidad($db_conx, $codmed, $query = NULL) {
       }
     }
 
-    $data .= '<td><a target="_blank" href="ver_referencias_uni.php?cod_tramite=' . $row[1] . '">Ver<br>Editar</a></td></tr>';
+    $data .= '<td><a target="_blank" href="ver_referencias_uni.php?cod_tramite=' . $row[1] . '">Ver trámite</a></td></tr>';
   }
   if ($ban) {
     echo $data;
@@ -104,7 +104,7 @@ function SelectReferenciasHospital($db_conx, $query = null) {
         break;
       }
     }
-    $data .= '<td><a target="_blank" href="ver_referencias_hos.php?cod_tramite=' . $row[1] . '">Ver<br>Editar</a></td></tr>';
+    $data .= '<td><a target="_blank" href="ver_referencias_hos.php?cod_tramite=' . $row[1] . '">Ver trámite</a></td></tr>';
   }
   if ($ban) {
     echo $data;
@@ -458,7 +458,7 @@ function SelectServicios($db_conx, $query = NULL) {
             <td>Descripcion</td>
             <td>Observacion</td>
             <td>Referenciado</td>            
-            <td></td>
+            <td id="custom-action"></td>
         </tr>';
   $c = 0;
   while ($row = mysqli_fetch_array($query)) {
@@ -475,7 +475,7 @@ function SelectServicios($db_conx, $query = NULL) {
     $temrow = mysqli_fetch_array($temquery);
 
     $data .= "<td>$temrow[0]</td>";
-    $data .= '<td><button id="editar" onclick="editServicios(' . $row[0] . ')">Editar</button></td></tr>';
+    $data .= '<td id="custom-action"><button id="editar" onclick="editServicios(' . $row[0] . ')">Editar</button></td></tr>';
     //print( $data);
     $c++;
   }
@@ -515,7 +515,7 @@ function SelectUsuario($db_conx, $query = NULL) {
             <td>Tipo</td>
             <td>Activo</td>
             <td>Ultimo Ingreso</td>
-            <td></td>
+            <td id="custom-action"></td>
         </tr>';
   $c = 0;
   while ($row = mysqli_fetch_array($query)) {
@@ -525,7 +525,7 @@ function SelectUsuario($db_conx, $query = NULL) {
     $data .= '<td><span id="tip_' . $row[0] . '">' . $row[2] . '</span></td>';
     $data .= '<td><span id="act_' . $row[0] . '">' . $row[3] . '</span></td>';
     $data .= '<td><span id="td_fecha">' . $row[4] . '</span></td>';
-    $data .= '<td><button id="editar" onclick="editUsuario(' . $row[0] . ')">Editar</button></td></tr>';
+    $data .= '<td id="custom-action"><button id="editar" onclick="editUsuario(' . $row[0] . ')">Editar</button></td></tr>';
   }
   echo $data;
 }
@@ -620,7 +620,7 @@ function SelectUnidad($db_conx, $query = null) {
             <td>Descripcion</td>
             <td>Observacion</td>
             <td>Activo</td>
-            <td></td>
+            <td id="custom-action"></td>
         </tr>';
   while ($row = mysqli_fetch_array($query)) {
     $data .= '<tr class="row_data">';
@@ -632,7 +632,7 @@ function SelectUnidad($db_conx, $query = null) {
         $data .= '<td><span id="td_' . $row[0] . '_' . $i . '">' . $row[$i] . '</span></td>';
       }
     }
-    $data .= '<td><button id="editar" onclick="editUnidad(' . $row[0] . ')">Editar</button></td></tr>';
+    $data .= '<td id="custom-action"><button id="editar" onclick="editUnidad(' . $row[0] . ')">Editar</button></td></tr>';
   }
   echo $data;
 }
@@ -700,7 +700,7 @@ function SelectMedicoReferente($db_conx, $query = NULL) {
             <td>Unidad(es)</td>
             <td>Estado</td>
             <td>Observacion</td>
-            <td></td>
+            <td id="custom-action"></td>
         </tr>';
   $c = 0;
   while ($row = mysqli_fetch_array($query)) {
@@ -732,7 +732,7 @@ function SelectMedicoReferente($db_conx, $query = NULL) {
     $data .= '<td><span id="td_' . $row[0] . '_4">' . $row[4] . '</span></td>';
     $data .= '<td><span id="td_' . $row[0] . '_3">' . $row[3] . '</span></td>';
 
-    $data .= '<td><button id="editar" onclick="editMedicoReferente(' . $row[0] . ')">Editar</button></td></tr>';
+    $data .= '<td id="custom-action"><button id="editar" onclick="editMedicoReferente(' . $row[0] . ')">Editar</button></td></tr>';
   }
   echo $data;
 }
@@ -752,7 +752,7 @@ function SelectMedicoReferenciado($db_conx, $query = NULL) {
             <td>Especialidad</td>
             <td>Estado</td>
             <td>Observacion</td>
-            <td></td>
+            <td id="custom-action"></td>
         </tr>';
   
   while ($row = mysqli_fetch_array($query)) {
@@ -767,7 +767,7 @@ function SelectMedicoReferenciado($db_conx, $query = NULL) {
     $data .= '<td><span id="td_' . $row[0] . '_4">' . $row[4] . '</span></td>';
     $data .= '<td><span id="td_' . $row[0] . '_3">' . $row[3] . '</span></td>';
 
-    $data .= '<td><button id="editar" onclick="editMedicoReferenciado(' . $row[0] . ')">Editar</button></td></tr>';
+    $data .= '<td id="custom-action"><button id="editar" onclick="editMedicoReferenciado(' . $row[0] . ')">Editar</button></td></tr>';
   }
   echo $data;
 }
@@ -816,7 +816,7 @@ function SelectPaciente($db_conx, $query = NULL) {
             <td>Hist. Clinica</td>
             <td>Telefono</td>
             <td>Seguro / Empresa</td>
-            <td></td>
+            <td id="custom-action"></td>
         </tr>';
   while ($row = mysqli_fetch_array($query)) {
     $data .= '<tr class="row_data">';
@@ -852,7 +852,7 @@ function SelectPaciente($db_conx, $query = NULL) {
     $data .= '<span style="display:none;" id="emp_' . $row[0] . '">' . $row[2] . '</span>
       <span>' . $temprow[1] . '</span></td>'; //Empresa
 
-    $data .= '<td><button id="editar" onclick="editPaciente(' . $row[0] . ')">Editar</button></td></tr>';
+    $data .= '<td id="custom-action"><button id="editar" onclick="editPaciente(' . $row[0] . ')">Editar</button></td></tr>';
   }
   echo $data;
 }

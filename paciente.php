@@ -254,7 +254,8 @@ if (isset($_POST["pnom"])) {
                 </span>                
               </td>              
               <td>
-                <a class="a-button" href="javascript:filtrarDatos('paciente', 'car');">Actualizar</a>
+                <a style="display: block;" class="a-button" href="javascript:filtrarDatos('paciente', 'car');">Actualizar</a>
+                <a style="display: block;" id="print-url" class="a-button" href="http://localhost/HSVP/reports/report-page.php?page=pacientes&btn=car&rxp=5&pa=1&op=op1&ord=ASC&fn=&gen=op0&ec=op0&tex=" target="_blank">Ver Reporte</a>
               </td>              
             </tr>
           </table>
