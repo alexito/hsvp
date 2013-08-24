@@ -19,15 +19,6 @@ CREATE DATABASE `bdd_hsvp_rc`
 USE `bdd_hsvp_rc`;
 
 #
-# Structure for the `table1` table : 
-#
-
-CREATE TABLE `table1` (
-  `ID` int(11) DEFAULT NULL,
-  `FECHA` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-#
 # Structure for the `tmedicoreferenciado` table : 
 #
 
@@ -42,7 +33,7 @@ CREATE TABLE `tmedicoreferenciado` (
   `MER_PAPE` varchar(25) NOT NULL,
   `MER_SAPE` varchar(25) NOT NULL,
   PRIMARY KEY (`MER_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COMMENT='LISTADO DE MEDICOS DEL ESTABLECIMIENTO REFERENCIADO';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='LISTADO DE MEDICOS DEL ESTABLECIMIENTO REFERENCIADO';
 
 #
 # Structure for the `treferenciado` table : 
@@ -65,7 +56,7 @@ CREATE TABLE `tservicios` (
   `SER_DESCRIP` varchar(15) NOT NULL,
   `SER_OBSERV` varchar(40) NOT NULL,
   PRIMARY KEY (`SER_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COMMENT='SERVICIOS DE HOSPITALES REFERENCIADOS';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 COMMENT='SERVICIOS DE HOSPITALES REFERENCIADOS';
 
 #
 # Structure for the `trefservicios` table : 
@@ -80,7 +71,7 @@ CREATE TABLE `trefservicios` (
   KEY `FK_RSXR` (`SER_CODIGO`),
   CONSTRAINT `FK_RRXS` FOREIGN KEY (`REF_CODIGO`) REFERENCES `treferenciado` (`REF_CODIGO`),
   CONSTRAINT `FK_RSXR` FOREIGN KEY (`SER_CODIGO`) REFERENCES `tservicios` (`SER_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='SERVICIOS IDENTIFICADOS EN UN HOSPITAL REFERENCIADO';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1 COMMENT='SERVICIOS IDENTIFICADOS EN UN HOSPITAL REFERENCIADO';
 
 #
 # Structure for the `tmedicoxservicio` table : 
@@ -96,7 +87,7 @@ CREATE TABLE `tmedicoxservicio` (
   KEY `FK_RMSXRS` (`RES_CODIGO`),
   CONSTRAINT `FK_RMSXMR` FOREIGN KEY (`MER_CODIGO`) REFERENCES `tmedicoreferenciado` (`MER_CODIGO`),
   CONSTRAINT `FK_RMSXRS` FOREIGN KEY (`RES_CODIGO`) REFERENCES `trefservicios` (`RES_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1 COMMENT='CADA MEDICO ASIGNADO A UN SERVICIO EN EL ESTABLECIMIENTO REF';
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1 COMMENT='CADA MEDICO ASIGNADO A UN SERVICIO EN EL ESTABLECIMIENTO REF';
 
 #
 # Structure for the `tempresas` table : 
@@ -393,6 +384,29 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
     ((`treferenciado` join `trefservicios` on((`treferenciado`.`REF_CODIGO` = `trefservicios`.`REF_CODIGO`))) join `tservicios` on((`trefservicios`.`SER_CODIGO` = `tservicios`.`SER_CODIGO`)));
 
 #
+# Definition for the `vreport_med_ser` view : 
+#
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW vreport_med_ser AS 
+  select 
+    `tmedicoreferenciado`.`MER_CODIGO` AS `MER_CODIGO`,
+    `tmedicoreferenciado`.`MER_PAPE` AS `MER_PAPE`,
+    `tmedicoreferenciado`.`MER_SAPE` AS `MER_SAPE`,
+    `tmedicoreferenciado`.`MER_PNOM` AS `MER_PNOM`,
+    `tmedicoreferenciado`.`MER_SNOM` AS `MER_SNOM`,
+    `tmedicoreferenciado`.`MER_CODMED` AS `MER_CODMED`,
+    `tmedicoreferenciado`.`MER_ESPECIAL` AS `MER_ESPECIAL`,
+    `trefservicios`.`RES_CODIGO` AS `RES_CODIGO`,
+    `tservicios`.`SER_CODIGO` AS `SER_CODIGO`,
+    `tservicios`.`SER_DESCRIP` AS `SER_DESCRIP` 
+  from 
+    (((`tmedicoxservicio` left join `tmedicoreferenciado` on((`tmedicoreferenciado`.`MER_CODIGO` = `tmedicoxservicio`.`MER_CODIGO`))) left join `trefservicios` on((`tmedicoxservicio`.`RES_CODIGO` = `trefservicios`.`RES_CODIGO`))) left join `tservicios` on((`trefservicios`.`SER_CODIGO` = `tservicios`.`SER_CODIGO`))) 
+  where 
+    ((`tmedicoreferenciado`.`MER_ESTADO` = 'activo') and (`tmedicoxservicio`.`MES_ACTIVO` = 'activo')) 
+  group by 
+    `tmedicoreferenciado`.`MER_CODIGO`,`tmedicoreferenciado`.`MER_CODMED`,`tmedicoreferenciado`.`MER_ESPECIAL`,`tmedicoreferenciado`.`MER_PAPE`,`tmedicoreferenciado`.`MER_SAPE`,`tmedicoreferenciado`.`MER_PNOM`,`tmedicoreferenciado`.`MER_SNOM`,`trefservicios`.`RES_CODIGO`,`tservicios`.`SER_CODIGO`,`tservicios`.`SER_DESCRIP`;
+
+#
 # Definition for the `vtramitesie10` view : 
 #
 
@@ -449,22 +463,15 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
     (`tunidadmedico`.`UNM_ACTIVO` = 'activo');
 
 #
-# Data for the `table1` table  (LIMIT 0,500)
-#
-
-INSERT INTO `table1` (`ID`, `FECHA`) VALUES 
-  (9999,'2013-06-13 21:18:10');
-COMMIT;
-
-#
 # Data for the `tmedicoreferenciado` table  (LIMIT 0,500)
 #
 
 INSERT INTO `tmedicoreferenciado` (`MER_CODIGO`, `MER_CODMED`, `MER_ESPECIAL`, `MER_OBSERV`, `MER_ESTADO`, `MER_PNOM`, `MER_SNOM`, `MER_PAPE`, `MER_SAPE`) VALUES 
   (1,'codmed1','espe','aobser','activo','carlos','segnom','Ariape','segape'),
   (2,'codme','esp','observacion','activo','pnom','snom','Bape','sape'),
-  (3,'cod3','esp3','cobser','activo','paul','vicente','Capellido','sapellido'),
-  (4,'cod4','esp4','dobservacion4','activo','nombre4','segno4','Dap4','seg4');
+  (3,'cod3','esp3','cobser','inactivo','paul','vicente','Capellido','sapellido'),
+  (4,'cod4','esp4','dobservacion4','activo','nombre4','segno4','Dap4','seg4'),
+  (5,'jj','kk','','activo','uu','ii','oo','pp');
 COMMIT;
 
 #
@@ -483,7 +490,11 @@ INSERT INTO `tservicios` (`SER_CODIGO`, `SER_DESCRIP`, `SER_OBSERV`) VALUES
   (1,'serv1','obs1'),
   (2,'serv2','obser2'),
   (3,'serv3','obse3'),
-  (4,'serv4','observacion4');
+  (4,'serv4','observacion4'),
+  (5,'ServicioX','des'),
+  (6,'servicioY',''),
+  (7,'ServicioZ','obs'),
+  (8,'servPO','ddd');
 COMMIT;
 
 #
@@ -495,7 +506,10 @@ INSERT INTO `trefservicios` (`RES_CODIGO`, `SER_CODIGO`, `REF_CODIGO`) VALUES
   (2,2,1),
   (3,3,1),
   (4,4,1),
-  (5,3,1);
+  (5,5,1),
+  (6,6,1),
+  (7,7,1),
+  (8,8,1);
 COMMIT;
 
 #
@@ -504,18 +518,28 @@ COMMIT;
 
 INSERT INTO `tmedicoxservicio` (`MES_CODIGO`, `MER_CODIGO`, `RES_CODIGO`, `MES_ACTIVO`) VALUES 
   (1,1,3,'inactivo'),
-  (2,1,4,'activo'),
-  (3,1,2,'activo'),
-  (4,3,1,'activo'),
-  (5,3,4,'activo'),
-  (6,3,2,'activo'),
+  (2,1,4,'inactivo'),
+  (3,1,2,'inactivo'),
+  (4,3,1,'inactivo'),
+  (5,3,4,'inactivo'),
+  (6,3,2,'inactivo'),
   (7,3,3,'inactivo'),
-  (8,4,4,'activo'),
+  (8,4,4,'inactivo'),
   (9,2,4,'inactivo'),
-  (10,1,1,'activo'),
-  (11,4,1,'inactivo'),
+  (10,1,1,'inactivo'),
+  (11,4,1,'activo'),
   (12,2,1,'activo'),
-  (13,2,3,'activo');
+  (13,2,3,'activo'),
+  (14,3,6,'inactivo'),
+  (15,3,7,'inactivo'),
+  (16,4,3,'inactivo'),
+  (17,5,7,'inactivo'),
+  (18,4,8,'inactivo'),
+  (19,5,5,'activo'),
+  (20,3,8,'activo'),
+  (21,1,8,'inactivo'),
+  (22,1,7,'activo'),
+  (23,1,8,'activo');
 COMMIT;
 
 #
@@ -548,7 +572,7 @@ INSERT INTO `tpaciente` (`PAC_CODIGO`, `SEG_CODIGO`, `EMP_CODIGO`, `PAC_CEDULA`,
   (3,2,1,'200103000','Fucken','xyz','asd','qwe','1988-09-05','masculino','casado','Primaria','hc3','098884774747'),
   (4,NULL,NULL,'20000','pac4','nom4','ape4','sape4','2013-07-01','masculino','soltero','pri','hc4','09090909'),
   (5,3,1,'3000000','pac5','nom5','pae5','sape5','2013-07-01','femenino','viudo','sec','hc5','telef'),
-  (6,NULL,3,'9898989899','pac6','nom6','pape6','sape6','2013-07-05','masculino','unionlibre','prim','hc6','0988899'),
+  (6,NULL,3,'9898989899','usuarioxpac6','nocsdcsdcm6','pape6','sape6','2013-07-05','masculino','unionlibre','primar','hc6','0988899'),
   (7,1,NULL,'8777777777','pac7','nom7','ape7','sape7','2013-07-03','femenino','casado','pri','hc7','77880909090');
 COMMIT;
 
@@ -570,7 +594,7 @@ COMMIT;
 #
 
 INSERT INTO `tlocalizacion` (`LOC_CODIGO`, `LOC_DESCRIP`, `LOC_CPARR`, `LOC_CCAN`, `LOC_CPRO`) VALUES 
-  (1,'local1','diferente','ca1','pr1'),
+  (1,'local1','diferente','can1','pr1'),
   (2,'local2','ra2modificado','c2modific','p2mo'),
   (3,'local3','diferente','difcan','dif pro'),
   (4,'local4','dif4','ca4','pr4'),
@@ -18035,10 +18059,10 @@ COMMIT;
 #
 
 INSERT INTO `tusuario` (`USU_CODIGO`, `USU_USUARIO`, `USU_CLAVE`, `USU_TIPO`, `USU_ACTIVO`, `USU_FECHA`, `MED_CODIGO`) VALUES 
-  (1,'usuario1','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-07-23 21:40:48',1),
+  (1,'usuario1','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-08-24 12:13:41',1),
   (2,'usuario2','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-07-22 21:47:07',2),
   (3,'usuario3','a8f5f167f44f4964e6c998dee827110c','contrareferente','activo','2013-07-23 09:08:15',3),
-  (4,'usuario4','a8f5f167f44f4964e6c998dee827110c','admin','activo','2013-07-23 21:41:37',4);
+  (4,'usuario4','a8f5f167f44f4964e6c998dee827110c','admin','activo','2013-08-23 00:13:09',4);
 COMMIT;
 
 
