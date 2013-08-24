@@ -460,7 +460,6 @@ function SelectServicios($db_conx, $query = NULL) {
             <td>Referenciado</td>            
             <td id="custom-action"></td>
         </tr>';
-  $c = 0;
   while ($row = mysqli_fetch_array($query)) {
     $data .= '<tr class="row_data">';
     for ($i = 0; $i < $n_columnas; $i++) {
@@ -476,8 +475,6 @@ function SelectServicios($db_conx, $query = NULL) {
 
     $data .= "<td>$temrow[0]</td>";
     $data .= '<td id="custom-action"><button id="editar" onclick="editServicios(' . $row[0] . ')">Editar</button></td></tr>';
-    //print( $data);
-    $c++;
   }
   echo $data;
 }
@@ -503,9 +500,9 @@ function SelectValuesReferenciado($db_conx) {
 }
 
 function SelectUsuario($db_conx, $query = NULL) {
-  if($query == NULL){
-  $sql = "SELECT usu_codigo, usu_usuario, usu_tipo, usu_activo, usu_fecha FROM tusuario";
-  $query = mysqli_query($db_conx, $sql);
+  if ($query == NULL) {
+    $sql = "SELECT usu_codigo, usu_usuario, usu_tipo, usu_activo, usu_fecha FROM tusuario";
+    $query = mysqli_query($db_conx, $sql);
   }
   $n_columnas = $query->field_count;
   $n_filas = $query->num_rows;
@@ -754,7 +751,7 @@ function SelectMedicoReferenciado($db_conx, $query = NULL) {
             <td>Observacion</td>
             <td id="custom-action"></td>
         </tr>';
-  
+
   while ($row = mysqli_fetch_array($query)) {
     $data .= '<tr class="row_data">';
     $data .= '<td><span id="td_' . $row[0] . '_0">' . $row[0] . '</span></td>';
@@ -801,7 +798,7 @@ function SelectValuesUnidadMedicoArray($db_conx, $uid) {
  */
 function SelectPaciente($db_conx, $query = NULL) {
 
-  if($query == NULL){
+  if ($query == NULL) {
     $sql = "SELECT * FROM tpaciente";
     $query = mysqli_query($db_conx, $sql);
   }
@@ -897,7 +894,7 @@ function SelectValuesServicios_MReferenciado($db_conx, $table, $multiple = NULL)
     $sql = "SELECT * FROM tservicios ORDER BY ser_descrip ASC";
     $script = 'onchange="getMedicoxServicios(\'medicos\');"';
   } else {
-    $sql = "SELECT * FROM tmedicoreferenciado ORDER BY mer_sape ASC";
+    $sql = "SELECT * FROM tmedicoreferenciado WHERE mer_estado = 'activo' ORDER BY mer_sape ASC";
     $script = 'onchange="getMedicoxServicios(\'servicios\');"';
   }
 
@@ -945,6 +942,79 @@ function customSubstring($text, $nc) {
     $res .= '...';
   }
   return $res;
+}
+
+function SelectReportMedSer($db_conx) {
+
+  $sql = "SELECT * FROM vreport_med_ser";
+  $query = mysqli_query($db_conx, $sql);
+
+  $n_columnas = $query->field_count;
+  $data = '<tr class="row_header">
+            <td>COD</td>
+            <td>Nombre</td>
+            <td>CodMed</td>
+            <td>Especialidad</td>
+            <td>Servicio(s)</td>            
+        </tr>';
+  $temcod = -1;
+  $ban = FALSE;
+  while ($row = mysqli_fetch_array($query)) {
+
+    if ($row['MER_CODIGO'] != $temcod) {
+      if ($ban == TRUE) {
+        $data .= '</ul></td></tr>';
+      }
+
+      $data .= '<tr class="row_data">';
+      $data .= '<td><span>' . $row['MER_CODIGO'] . '</span></td>';
+      $data .= '<td><span>' . $row['MER_PAPE'] . ' ' . $row['MER_SAPE'] . ' ' . $row['MER_PNOM'] . ' ' . $row['MER_SNOM'] . '</span></td>';
+      $data .= '<td><span>' . $row['MER_CODMED'] . '</span></td>';
+      $data .= '<td><span>' . $row['MER_ESPECIAL'] . '</span></td>';
+      $data .= '<td><ul>';
+    }
+    $data .= '<li>' . $row['SER_DESCRIP'] . '</li>';
+
+    $temcod = $row['MER_CODIGO'];
+    $ban = TRUE;
+  }
+  $data .= '</ul></td></tr>';
+  echo $data;
+}
+
+function SelectReportSerMed($db_conx) {
+
+  $sql = "SELECT * FROM vreport_med_ser ORDER BY ser_descrip ASC";
+  $query = mysqli_query($db_conx, $sql);
+
+  $n_columnas = $query->field_count;
+  $data = '<tr class="row_header">
+            <td>COD</td>
+            <td>Servicio</td>             
+            <td>Médico(s)</td>            
+        </tr>';
+  $temcod = -1;
+  $ban = FALSE;
+  while ($row = mysqli_fetch_array($query)) {
+
+    if ($row['SER_CODIGO'] != $temcod) {
+      if ($ban == TRUE) {
+        $data .= '</ul></td></tr>';
+      }
+
+      $data .= '<tr class="row_data">';
+      $data .= '<td><span>' . $row['SER_CODIGO'] . '</span></td>';
+      $data .= '<td><span>' . $row['SER_DESCRIP'] . '</span></td>';
+      $data .= '<td><ul>';
+    }
+
+    $data .= '<li>' . $row['MER_PAPE'] . ' ' . $row['MER_SAPE'] . ' ' . $row['MER_PNOM'] . ' ' . $row['MER_SNOM'] . '</li>';
+
+    $temcod = $row['SER_CODIGO'];
+    $ban = TRUE;
+  }
+  $data .= '</ul></td></tr>';
+  echo $data;
 }
 
 ?>

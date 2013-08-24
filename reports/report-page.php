@@ -62,6 +62,18 @@ if ($user_ok == FALSE) {
                 case 'unidades':
                   filtrarUnidad($db_conx, $_GET['op'], $_GET['btn'], $_GET['rxp'], $_GET['pa'], $_GET['ord'], $_GET['est'], $_GET['tex']);
                   break;
+                case 'medico-referente':
+                  filtrarMedicoReferente($db_conx, $_GET['op'], $_GET['btn'], $_GET['rxp'], $_GET['pa'], $_GET['ord'], $_GET['est'], $_GET['uni'], $_GET['tex']);
+                  break;
+                case 'servicios':
+                  filtrarServicios($db_conx, $_GET['btn'], $_GET['rxp'], $_GET['pa'], $_GET['ord'], $_GET['tex']);
+                  break;
+                case 'medico-referenciado':
+                  filtrarMedicoReferenciado($db_conx, $_GET['op'], $_GET['btn'], $_GET['rxp'], $_GET['pa'], $_GET['ord'], $_GET['est'], $_GET['tex']);
+                  break;
+                case 'usuarios':
+                  filtrarUsuario($db_conx, $_GET['op'], $_GET['btn'], $_GET['rxp'], $_GET['pa'], $_GET['ord'], $_GET['tip'], $_GET['est'], $_GET['tex']);
+                  break;
               }
             }
             ?>

@@ -14,8 +14,6 @@ if (isset($_POST['btn'])) {//Filtra los datos
   filtrarUsuario($db_conx, $_POST['op'], $_POST['btn'], $_POST['rxp'], $_POST['pa'], $_POST['ord'], $_POST['tip'], $_POST['est'], $_POST['tex']);
   exit();
 }
-
-
 if (isset($_POST["u"])) {
   $u = $_POST['u'];
   $c = md5($_POST['c']);
@@ -137,7 +135,8 @@ if (isset($_POST["u"])) {
                 </span>
               </td>              
               <td>
-                <a class="a-button" href="javascript:filtrarDatos('usuario', 'car');">Actualizar</a>
+                <a style="display: block;" class="a-button" href="javascript:filtrarDatos('usuario', 'car');">Actualizar</a>
+                <a style="display: block;" id="print-url" class="a-button" href="http://localhost/HSVP/reports/report-page.php?page=usuarios&btn=car&rxp=2&pa=1&op=op1&ord=ASC&tip=op0&est=op0&tex=" target="_blank">Ver Reporte</a>
               </td>              
             </tr>
           </table>
@@ -152,7 +151,7 @@ if (isset($_POST["u"])) {
               <td style="width: 350px;">
                 <span style="margin-left: 100px; width: 300px;">Resultados por página: </span>
                 <select id="rxp">
-                  <option value="2">2</option>
+                  <option value="5">5</option>
                   <option value="10">10</option>
                   <option value="20">20</option>
                   <option value="50">50</option>

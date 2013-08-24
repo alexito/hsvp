@@ -20,7 +20,7 @@ function filtrarDatos(page, btn){
     cargarUsuariosFiltrados(btn, $('#rxp').val(), $('#pa').val(), $('#cmbopcion').val(), $('#cmborden').val(), $('#cmbtip').val(), $('#cmbest').val(), _('texto').value);    
   }
   
-  //Filtra los medicos referenciados
+  //Filtra los PACIENTES
   if(page == 'paciente'){
     if($('#cmbopcion').val() == 'op3'){
       if($('#cmbgen').val() == 'op0'){
@@ -144,7 +144,9 @@ function cargarUsuariosFiltrados(btn, rxp, pa, op, ord, tip, est, tex){
       $("#table_content").fadeIn(800);
     }
   }
-  ajax.send("btn="+btn+"&rxp="+rxp+"&pa="+pa+"&op="+op+"&ord="+ord+"&tip="+tip+"&est="+est+"&tex="+tex);
+  var parametros = "btn="+btn+"&rxp="+rxp+"&pa="+pa+"&op="+op+"&ord="+ord+"&tip="+tip+"&est="+est+"&tex="+tex;
+  changeReportLink('page=usuarios&' + parametros);
+  ajax.send(parametros);
 }
 
 function cargarMedReferenciadoFiltradas(btn, rxp, pa, op, ord, est, tex){
@@ -160,7 +162,9 @@ function cargarMedReferenciadoFiltradas(btn, rxp, pa, op, ord, est, tex){
       $("#table_content").fadeIn(800);
     }
   }
-  ajax.send("btn="+btn+"&rxp="+rxp+"&pa="+pa+"&op="+op+"&ord="+ord+"&est="+est+"&tex="+tex);
+  var parametros = "btn="+btn+"&rxp="+rxp+"&pa="+pa+"&op="+op+"&ord="+ord+"&est="+est+"&tex="+tex;
+  changeReportLink('page=medico-referenciado&' + parametros);
+  ajax.send(parametros);
 }
 
 function cargarMedRefFiltradas(btn, rxp, pa, op, ord, est, uni, tex){
@@ -176,7 +180,9 @@ function cargarMedRefFiltradas(btn, rxp, pa, op, ord, est, uni, tex){
       $("#table_content").fadeIn(800);
     }
   }
-  ajax.send("btn="+btn+"&rxp="+rxp+"&pa="+pa+"&op="+op+"&ord="+ord+"&est="+est+"&uni="+uni+"&tex="+tex);
+  var parametros = "btn="+btn+"&rxp="+rxp+"&pa="+pa+"&op="+op+"&ord="+ord+"&est="+est+"&uni="+uni+"&tex="+tex;
+  changeReportLink('page=medico-referente&' + parametros);
+  ajax.send(parametros);
 }
 
 function cargarUnidadesFiltradas(btn, rxp, pa, op, ord, est, tex){
@@ -210,7 +216,9 @@ function cargarServiciosFiltrados(btn, rxp, pa, ord, tex){
       $("#table_content").fadeIn(800);
     }
   }
-  ajax.send("btn="+btn+"&rxp="+rxp+"&pa="+pa+"&ord="+ord+"&tex="+tex);
+  var parametros = "btn="+btn+"&rxp="+rxp+"&pa="+pa+"&ord="+ord+"&tex="+tex;
+  changeReportLink('page=servicios&' + parametros);
+  ajax.send(parametros);
 }
 
 function cargarLocalizacionesFiltradas(btn, rxp, pa, op, ord, tex){

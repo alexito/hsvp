@@ -217,7 +217,8 @@ if (isset($_POST["codmed"])) {
                 </span> 
               </td>                
               <td>
-                <a class="a-button" href="javascript:filtrarDatos('med-ref', 'car');">Actualizar</a>
+                <a style="display: block;" class="a-button" href="javascript:filtrarDatos('med-ref', 'car');">Actualizar</a>
+                <a style="display: block;" id="print-url" class="a-button" href="http://localhost/HSVP/reports/report-page.php?page=medico-referente&btn=car&rxp=5&pa=1&op=op1&ord=ASC&est=op0&uni=0&tex=" target="_blank">Ver Reporte</a>
               </td>              
             </tr>
           </table>

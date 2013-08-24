@@ -30,7 +30,11 @@ if (isset($_POST['save'])) {
     $query = mysqli_query($db_conx, $sql);
 
     for ($i = 0; $i < count($se); $i++) {
-      $sqltem = "SELECT * FROM tmedicoxservicio WHERE mer_codigo = $mr[0] AND res_codigo = $se[$i]";
+      $sqltem = "SELECT res_codigo FROM tservicios WHERE ref_codigo = 1 AND res_codigo = $se[$i]";
+      $querytem = mysqli_query($db_conx, $sqltem);
+      $row = mysqli_fetch_array($querytem);
+      
+      $sqltem = "SELECT * FROM tmedicoxservicio WHERE mer_codigo = $mr[0] AND res_codigo = $row[0]";
       $querytem = mysqli_query($db_conx, $sqltem);
       $n_filas = $querytem->num_rows;
       if ($n_filas > 0) {
@@ -91,6 +95,7 @@ if (isset($_POST['save'])) {
                   </table>
                   <div style="width: 50%;">
                     <button id="btnrel" onclick="saveMedicoServicio('ms')">Guardar</button>
+                    <a style="float: right; margin: 40px -480px;" id="print-url" class="a-button" href="http://localhost/HSVP/reports/medico-servicio.php" target="_blank">Ver Reporte</a>
                     <span id="status" class="status-rel">Seleccione un Medico y los Servicios.</span>
                   </div>
                 </div>
@@ -108,6 +113,7 @@ if (isset($_POST['save'])) {
                   </table>    
                   <div style="width: 50%;">
                     <button id="btnrelx" onclick="saveMedicoServicio('sm')">Guardar</button>
+                    <a style="float: right; margin: 40px -480px;" id="print-url" class="a-button" href="http://localhost/HSVP/reports/servicio-medico.php" target="_blank">Ver Reporte</a>
                     <span id="statusx" class="status-rel">Seleccione un Servicio y los Medicos.</span>
                   </div>
                 </div>
