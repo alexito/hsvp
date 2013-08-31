@@ -74,6 +74,16 @@ if ($user_ok == FALSE) {
                 case 'usuarios':
                   filtrarUsuario($db_conx, $_GET['op'], $_GET['btn'], $_GET['rxp'], $_GET['pa'], $_GET['ord'], $_GET['tip'], $_GET['est'], $_GET['tex']);
                   break;
+                case 'uni-tramite':
+                  filtrarReferenciasUnidad($db_conx, $log_id, $_GET['op'], $_GET['btn'], $_GET['rxp'], $_GET['pa'], $_GET['est'], $_GET['nro'], $_GET['fd'], $_GET['fh']);
+                  break;
+                case 'hos-tramite':
+                  filtrarReferenciasHospital($db_conx, $_GET['op'], $_GET['btn'], $_GET['rxp'], $_GET['pa'], $_GET['est'], $_GET['nro'], $_GET['fd'], $_GET['fh']);
+                  break;
+                default :
+                  header("location: ../inicio.php");
+                  exit();
+                  break;
               }
             }
             ?>

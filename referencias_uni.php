@@ -62,6 +62,7 @@ if (isset($_POST['btn'])) {//Filtra los datos
               </td>              
               <td>
                 <a class="a-button" href="javascript:filtrarDatos('referencias_uni', 'car');">Actualizar</a>
+                <a id="print-url" class="a-button" href="http://localhost/HSVP/reports/report-page.php?page=uni-tramite&btn=car&rxp=5&pa=1&lp1=1&op=op1&est=pendiente&nro=&fd=&fh=" target="_blank">Ver Reporte</a>
               </td>              
             </tr>
           </table>          

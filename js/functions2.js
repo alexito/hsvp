@@ -253,8 +253,10 @@ function cargarReferenciasFiltradasHospital(btn, rxp, pa, lp1, op, est, nro, fd,
       $("#table_content").fadeIn(800);
     }
   }
-  ajax.send("btn="+btn+"&rxp="+rxp+"&pa="+pa+"&lp1="+lp1+"&op="+op+"&est="+est+
-    "&nro="+nro+"&fd="+fd+"&fh="+fh);
+  var parametros = "btn="+btn+"&rxp="+rxp+"&pa="+pa+"&lp1="+lp1+"&op="+op+"&est="+est+
+    "&nro="+nro+"&fd="+fd+"&fh="+fh;
+  changeReportLink('page=hos-tramite&' + parametros);
+  ajax.send(parametros);
 }
 
 function cargarReferenciasFiltradasUnidad(btn, rxp, pa, lp1, op, est, nro, fd, fh){
@@ -270,8 +272,10 @@ function cargarReferenciasFiltradasUnidad(btn, rxp, pa, lp1, op, est, nro, fd, f
       $("#table_content").fadeIn(800);
     }
   }
-  ajax.send("btn="+btn+"&rxp="+rxp+"&pa="+pa+"&lp1="+lp1+"&op="+op+"&est="+est+
-    "&nro="+nro+"&fd="+fd+"&fh="+fh);
+  var parametros = "btn="+btn+"&rxp="+rxp+"&pa="+pa+"&lp1="+lp1+"&op="+op+"&est="+est+
+    "&nro="+nro+"&fd="+fd+"&fh="+fh;
+  changeReportLink('page=uni-tramite&' + parametros);
+  ajax.send(parametros);
 }
 
 //Funcion principal para controlar los paginadores

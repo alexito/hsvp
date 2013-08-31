@@ -1,5 +1,154 @@
 <?php
 
+function tramite_get_full_info($db_conx, $cod) {
+  $info = new stdClass();
+
+  //datos del tramite
+  $sql = "SELECT * FROM ttramite WHERE TRA_CODIGO = $cod";
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+
+  $info->codigo = $row['TRA_CODIGO'];
+  $info->estado = $row['TRA_ESTADO'];
+  $info->pac_codigo = $row['PAC_CODIGO'];
+  $info->unm_codigo = $row['UNM_CODIGO'];
+  $info->fecha = explode(' ', $row['TRA_FECHA'])[0];
+  $info->hora = explode(' ', $row['TRA_FECHA'])[1];
+  $info->motivo = $row['TRA_MOTIVO'];
+  $info->resumen = $row['TRA_RESUM_CUAD_CLIN'];
+  $info->hallazgo = $row['TRA_HALL_EXM_PROC_DIAG'];
+  $info->tratamiento = $row['TRA_PLAN_TRAT'];
+  $info->sala = $row['TRA_SALA'];
+  $info->cama = $row['TRA_CAMA'];
+  $info->tipo = $row['TRA_TIPO'];
+  $info->activo = $row['TRA_ACTIVO'];
+  $info->justificado = $row['TRA_JUSTIF'];
+  $info->observacion = $row['TRA_OBSERV'];
+  $info->res_codigo = $row['RES_CODIGO'];
+
+  $sql = "SELECT uni_codigo FROM tunidadmedico WHERE unm_codigo = $info->unm_codigo";
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+
+  $sql = "SELECT * FROM tunidad WHERE uni_codigo = " . $row['uni_codigo'];
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+
+  $info->unidad = $row['UNI_DESCRIP'];
+
+  $sql = "SELECT * FROM tlocalizacion WHERE loc_codigo = " . $row['LOC_CODIGO'];
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+
+  $info->parroquia = $row['LOC_CPARR'];
+  $info->canton = $row['LOC_CCAN'];
+  $info->provincia = $row['LOC_CPRO'];
+
+  $sql = "SELECT * FROM tpaciente WHERE pac_codigo = " . $info->pac_codigo;
+  $query = mysqli_query($db_conx, $sql);
+  $row = mysqli_fetch_array($query);
+
+  $info->cedula = $row['PAC_CEDULA'];
+  $info->pape = $row['PAC_PAPE'];
+  $info->sape = $row['PAC_SAPE'];
+  $info->pnom = $row['PAC_PNOM'];
+  $info->snom = $row['PAC_SNOM'];
+  $info->genero = $row['PAC_GENERO'];
+  $info->est_civil = $row['PAC_EST_CIV'];
+  $info->instruccion = $row['PAC_INSTRUC'];
+  $info->hc = $row['PAC_HC'];
+  $info->edad = CalculaEdad($row['PAC_FCH_NAC']);
+  $info->emp_codigo = (isset($row['EMP_CODIGO'])) ? $row['EMP_CODIGO'] : 0;
+  $info->seg_codigo = (isset($row['SEG_CODIGO'])) ? $row['SEG_CODIGO'] : 0;
+
+  if ($info->seg_codigo != 0) {
+    $sql = "SELECT * FROM tseguros WHERE seg_codigo = " . $row['SEG_CODIGO'];
+    $query = mysqli_query($db_conx, $sql);
+    $row = mysqli_fetch_array($query);
+    if ($row) {
+      $info->seguro = $row['SEG_DESCRIP'];
+    }
+  } else {
+    $info->seguro = '-';
+  }
+
+  if ($info->emp_codigo != 0) {
+    $sql = "SELECT * FROM tempresas WHERE emp_codigo = " . $info->emp_codigo;
+    $query = mysqli_query($db_conx, $sql);
+    $row = mysqli_fetch_array($query);
+    if ($row) {
+      $info->empresa = $row['EMP_DESCRIP'];
+    }
+  } else {
+    $info->empresa = '-';
+  }
+
+  $sql = "SELECT * FROM tasignacion WHERE tra_codigo = " . $cod;
+  $query = mysqli_query($db_conx, $sql);
+
+  if ($query) {
+    $row = mysqli_fetch_array($query);
+
+    $sql = "SELECT * FROM tmedicoxservicio WHERE mes_codigo = " . $row['MES_CODIGO'];
+    $query = mysqli_query($db_conx, $sql);
+    if ($query) {
+      $row = mysqli_fetch_array($query);
+
+      $sql = "SELECT * FROM tmedicoreferenciado WHERE mer_codigo = " . $row['MER_CODIGO'];
+      $query = mysqli_query($db_conx, $sql);
+      $row = mysqli_fetch_array($query);
+
+      $info->medref = $row['MER_PAPE'] . ' ' . $row['MER_SAPE'] . ' ' . $row['MER_PNOM'] . ' ' . $row['MER_SNOM'];
+    } else {
+      $info->medref = '-';
+    }
+    $sql = "SELECT * FROM trefservicios WHERE res_codigo = " . $info->res_codigo;
+    $query = mysqli_query($db_conx, $sql);
+    if ($query) {
+      $row = mysqli_fetch_array($query);
+
+      $sql = "SELECT * FROM tservicios WHERE ser_codigo = " . $row['SER_CODIGO'];
+      $query = mysqli_query($db_conx, $sql);
+      $row = mysqli_fetch_array($query);
+
+      $info->servicio = $row['SER_DESCRIP'];
+    } else {
+      $info->servicio = '-';
+    }
+  }
+
+  //Diagnostico SIE10
+
+  $sql = "SELECT * FROM tdiagsie10 WHERE tra_codigo = " . $cod;
+  $query = mysqli_query($db_conx, $sql);
+  
+  $c = 1;
+  $info->diagnostico = '<table><tr>
+    <td>No.</td>
+    <td>Diagnostico</td>
+    <td>SIE10</td>
+    <td>Estado</td>
+    </tr>';
+  while ($row = mysqli_fetch_array($query)) {
+    $temsql = "SELECT * FROM tsie10 WHERE sie_codigo = " . $row['SIE_CODIGO'];
+    $temquery = mysqli_query($db_conx, $temsql);
+    $temrow = mysqli_fetch_array($temquery);
+    
+    $info->diagnostico .= '<tr><td>' . $c++ . '</td><td><span class="info">' . $temrow['SIE_DESCRIP'] . '</span></td>';
+    $info->diagnostico .= '<td><span class="info">' . $temrow['SIE_CODIF'] . '</span></td>';
+    $info->diagnostico .= '<td><span class="info">' . $row['DIA_DIAGNOS'] . '</span></td></tr>';
+        
+  }
+  $info->diagnostico .= '</table>';
+
+  return $info;
+}
+
+function CalculaEdad($fecha) {
+  list($Y, $m, $d) = explode("-", $fecha);
+  return( date("md") < $m . $d ? date("Y") - $Y - 1 : date("Y") - $Y );
+}
+
 function SelectValuesMedicoServicio($db_conx, $tra_codigo) {
   $data = '<select style="width:400px;" size="10" class="cmbmedicoservicio" id="cmbmedicoservicio">';
 
@@ -41,7 +190,7 @@ function SelectReferenciasUnidad($db_conx, $codmed, $query = NULL) {
             <td>Motivo</td>
             <td>Servicio</td>
             <td>Estado / Tipo</td>
-            <td>Accion</td>
+            <td id="custom-action">Accion</td>
         </tr>';
   $ban = FALSE;
   while ($row = mysqli_fetch_array($query)) {
@@ -59,8 +208,8 @@ function SelectReferenciasUnidad($db_conx, $codmed, $query = NULL) {
         break;
       }
     }
-
-    $data .= '<td><a target="_blank" href="ver_referencias_uni.php?cod_tramite=' . $row[1] . '">Ver trámite</a></td></tr>';
+    $data .= '<td id="custom-action"><a target="_blank" href="ver_referencias_uni.php?cod_tramite=' . $row[1] . '"><img class="tra-icons" src="images/edit-tra.png"/></a></br>';
+    $data .= '<a target="_blank" href="reports/tramite.php?cod=' . $row[1] . '"><img class="tra-icons" src="images/view-tra.png"/></a></td></tr>';
   }
   if ($ban) {
     echo $data;
@@ -85,7 +234,7 @@ function SelectReferenciasHospital($db_conx, $query = null) {
             <td>Motivo</td>
             <td>Servicio</td>
             <td>Estado / Tipo</td>
-            <td>Accion</td>
+            <td id="custom-action">Accion</td>
         </tr>';
   $c = 0;
   $ban = FALSE;
@@ -104,7 +253,8 @@ function SelectReferenciasHospital($db_conx, $query = null) {
         break;
       }
     }
-    $data .= '<td><a target="_blank" href="ver_referencias_hos.php?cod_tramite=' . $row[1] . '">Ver trámite</a></td></tr>';
+    $data .= '<td id="custom-action"><a target="_blank" href="ver_referencias_hos.php?cod_tramite=' . $row[1] . '"><img class="tra-icons" src="images/edit-tra.png"/></a>';
+    $data .= '<a target="_blank" href="reports/tramite.php?cod=' . $row[1] . '"><img class="tra-icons" src="images/view-tra.png"/></a></td></tr>';
   }
   if ($ban) {
     echo $data;

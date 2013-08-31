@@ -19,7 +19,10 @@ function checkDate(fecha){
   var t = tem[1].split(':');
   
   if(f[0] >= y){
-    if(f[1] >= m){
+    if(f[1] > m){
+      return true;
+    }
+    if(f[1] == m){
       if(f[2] > d){
         return true;
       }else if(f[2] == d){

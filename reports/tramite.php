@@ -9,6 +9,15 @@ if ($user_ok == FALSE) {
   header("location: ../inicio.php");
   exit();
 }
+
+$a = 0;
+if(isset($_GET['cod'])){
+  $info = tramite_get_full_info($db_conx, $_GET['cod']);
+} else {
+  header("location: ../inicio.php");
+  exit();
+}
+$a = 0;
 ?>
 <!DOCTYPE html>
 <html>
@@ -31,7 +40,7 @@ if ($user_ok == FALSE) {
               <td>
                 <table>
                   <tr>
-                    <td>
+                    <td class="custom_header">
                       <span>REFERENCIA</span>
                     </td>
                   </tr>
@@ -55,15 +64,15 @@ if ($user_ok == FALSE) {
                             <span>COD. UO.</span>                      
                           </td>
                           <td>
-                            <span>COD. LOC.</span>
+                            <span>COD. LOCALIZACION</span>
                           </td>
                         </tr>
                         <tr>
                           <td>
-                            X
+                            <span class="info institucion">Hospital San Vicente de Paúl.</span>
                           </td>
                           <td>
-                            X
+                            <span class="info institucion"><?php print $info->unidad;?></span>                            
                           </td>
                           <td>
                             X
@@ -83,13 +92,13 @@ if ($user_ok == FALSE) {
                               </tr>
                               <tr>
                                 <td>
-                                  X
+                                  <span class="info institucion"><?php print $info->parroquia;?></span>
                                 </td>
                                 <td>
-                                  X
+                                  <span class="info institucion"><?php print $info->canton;?></span>
                                 </td>
                                 <td>
-                                  X
+                                  <span class="info institucion"><?php print $info->provincia;?></span>
                                 </td>
                               </tr>
                             </table>
@@ -98,7 +107,7 @@ if ($user_ok == FALSE) {
                       </table>
                     </td>
                     <td>
-                      <table>
+                      <table style="margin-bottom: -8px;">
                         <tr>
                           <td>
                             <span>NUMERO DE HISTORIA CLINICA</span>
@@ -106,7 +115,7 @@ if ($user_ok == FALSE) {
                         </tr>
                         <tr>
                           <td>
-                            X
+                            <span class="info institucion"><?php print $info->hc;?></span>
                           </td>
                         </tr>
                       </table>
@@ -137,19 +146,19 @@ if ($user_ok == FALSE) {
                   </tr>
                   <tr>
                     <td>
-                      X
+                      <span class="info institucion"><?php print $info->pape;?></span>
                     </td>           
                     <td>
-                      X
+                      <span class="info institucion"><?php print $info->sape;?></span>
                     </td>           
                     <td>
-                      X
+                      <span class="info institucion"><?php print $info->pnom;?></span>
                     </td>           
                     <td>
-                      X
+                      <span class="info institucion"><?php print $info->snom;?></span>
                     </td>           
                     <td>
-                      X
+                      <span class="info institucion"><?php print $info->cedula;?></span>
                     </td>
                   </tr>
                 </table>
@@ -160,7 +169,7 @@ if ($user_ok == FALSE) {
                 <table>
                   <tr>
                     <td>
-                      <table>
+                      <table style="margin-bottom: -8px;">
                         <tr>
                           <td>
                             <span>FECHA DE REFERENCIA</span>
@@ -174,13 +183,13 @@ if ($user_ok == FALSE) {
                         </tr>
                         <tr>
                           <td>
-                            X
+                            <span class="info institucion"><?php print $info->fecha;?></span>
                           </td>
                           <td>
-                            X
+                            <span class="info institucion"><?php print $info->hora;?></span>
                           </td>
                           <td>
-                            X
+                            <span class="info institucion"><?php print $info->edad;?></span>
                           </td>
                         </tr>                  
                       </table>                  
@@ -207,11 +216,11 @@ if ($user_ok == FALSE) {
                                 </td>
                               </tr>
                               <tr>
-                                <td>
-                                  <span>X</span>
+                                <td>                                  
+                                  <span><?php if ($info->genero == 'masculino'){ print 'X';}?></span>                                  
                                 </td>
                                 <td>
-                                  <span>X</span>
+                                  <span><?php if ($info->genero == 'femenino'){ print 'X';}?></span>
                                 </td>
                               </tr>
                             </table>
@@ -237,19 +246,19 @@ if ($user_ok == FALSE) {
                               </tr>
                               <tr>
                                 <td>
-                                  <span>X</span>
+                                  <span><?php if ($info->est_civil == 'soltero'){ print 'X';}?></span>
                                 </td>
                                 <td>
-                                  <span>X</span>
+                                  <span><?php if ($info->est_civil == 'casado'){ print 'X';}?></span>
                                 </td>
                                 <td>
-                                  <span>X</span>
+                                  <span><?php if ($info->est_civil == 'divorciado'){ print 'X';}?></span>
                                 </td>
                                 <td>
-                                  <span>X</span>
+                                  <span><?php if ($info->est_civil == 'viudo'){ print 'X';}?></span>
                                 </td>
                                 <td>
-                                  <span>X</span>
+                                  <span><?php if ($info->est_civil == 'unionlibre'){ print 'X';}?></span>
                                 </td>
                               </tr>
                             </table>
@@ -258,7 +267,7 @@ if ($user_ok == FALSE) {
                       </table>
                     </td>
                     <td>
-                      <table>
+                      <table style="margin-bottom: -8px;">
                         <tr>
                           <td>
                             <span>INSTRUCCION</span>
@@ -272,13 +281,13 @@ if ($user_ok == FALSE) {
                         </tr>
                         <tr>
                           <td>
-                            X
+                            <span class="info"><?php print $info->instruccion;?></span>
                           </td>
                           <td>
-                            X
+                            <span class="info"><?php print $info->empresa;?></span>
                           </td>
                           <td>
-                            X
+                            <span class="info"><?php print $info->seguro;?></span>
                           </td>
                         </tr>
                       </table>
@@ -296,13 +305,13 @@ if ($user_ok == FALSE) {
                 <span>ESTABLECIMIENTO AL QUE SE ENVIA LA REFERENCIA</span>
               </td>
               <td>
-                X
+                <span class="info">HSVP</span>
               </td>
               <td>
                 <span>SERVICIO AL QUE SE REFIERE</span>
               </td>
               <td>
-                X
+                <span class="info"><?php print $info->servicio;?></span>
               </td>
             </tr>            
           </table>
@@ -316,7 +325,7 @@ if ($user_ok == FALSE) {
             </tr>
             <tr>
               <td>
-                X
+                <span class="info"><?php print $info->motivo;?></span>
               </td>
             </tr>
             <tr>
@@ -326,7 +335,7 @@ if ($user_ok == FALSE) {
             </tr>
             <tr>
               <td>
-                X
+                <span class="info institucion"><?php print $info->resumen;?></span>
               </td>
             </tr>
             <tr>
@@ -336,7 +345,7 @@ if ($user_ok == FALSE) {
             </tr>
             <tr>
               <td>
-                X
+                <span class="info institucion"><?php print $info->hallazgo;?></span>
               </td>
             </tr>
           </table>
@@ -345,14 +354,12 @@ if ($user_ok == FALSE) {
           <table>
             <tr>
               <td>
-                <span>4 DIAGNOSTICO</span><span>pre = presuntivo - def = definitivo.</span>
+                <span>4 DIAGNOSTICO</span><span>   pre = presuntivo - def = definitivo.</span>
               </td>
             </tr>
             <tr>
               <td>
-                <table>
-                  <!-- AQUI SE DESPLIEGA EL CUADRO DE DIAGNOSTICO -->
-                </table>
+                <?php print $info->diagnostico;?>
               </td>
             </tr>
           </table>
@@ -366,7 +373,7 @@ if ($user_ok == FALSE) {
             </tr>
             <tr>
               <td>
-                X
+                <span class="info institucion"><?php print $info->tratamiento;?></span>
               </td>
             </tr>
           </table>
@@ -375,33 +382,45 @@ if ($user_ok == FALSE) {
           <table>
             <tr>
               <td>
-                <span>SALA</span>
-              </td>
-              <td>
-                X
-              </td>
-              <td>
-                <span>CAMA</span>
-              </td>
-              <td>
-                X
-              </td>
-              <td>
-                <span>MEDICO</span>
-              </td>
-              <td>
-                X
-              </td>
-              <td>
-                <span>FIRMA</span>
-              </td>
-              <td>
-                X
+                <table>
+                  <tr>
+                    <td>
+                      <span>SALA</span>
+                    </td>
+                    <td>
+                      <span class="info"><?php print $info->sala;?></span>
+                    </td>
+                    <td>
+                      <span>CAMA</span>
+                    </td>
+                    <td>
+                      <span class="info"><?php print $info->cama;?></span>
+                    </td>
+                    <td>
+                      <span>MEDICO</span>
+                    </td>
+                    <td>
+                      <span class="info"><?php print $info->medref;?></span>
+                    </td>
+                    <td>
+                      <span>FIRMA</span>
+                    </td>
+                    <td>
+                      _____
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
             <tr>
               <td>
-                <span>SNS MSP / HCU - form 053 / 2008</span>
+                <table>
+                  <tr>
+                    <td>
+                      <span>SNS MSP / HCU - form 053 / 2008</span>
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
           </table>          
@@ -418,7 +437,7 @@ if ($user_ok == FALSE) {
               <td>
                 <table>
                   <tr>
-                    <td>
+                    <td class="custom_header">
                       <span>CONTRAREFERENCIA</span>
                     </td>
                   </tr>
@@ -430,7 +449,7 @@ if ($user_ok == FALSE) {
                 <table>
                   <tr>
                     <td>
-                      <table>
+                      <table>                        
                         <tr>
                           <td>
                             <span>INSTITUCION DEL SISTEMA</span>                      
@@ -442,15 +461,15 @@ if ($user_ok == FALSE) {
                             <span>COD. UO.</span>                      
                           </td>
                           <td>
-                            <span>COD. LOC.</span>
+                            <span>COD. LOCALIZACION</span>
                           </td>
                         </tr>
                         <tr>
                           <td>
-                            X
+                            <span class="info institucion">Hospital San Vicente de Paúl.</span>
                           </td>
                           <td>
-                            X
+                            <span class="info institucion"><?php print $info->unidad;?></span>                            
                           </td>
                           <td>
                             X
@@ -470,13 +489,13 @@ if ($user_ok == FALSE) {
                               </tr>
                               <tr>
                                 <td>
-                                  X
+                                  <span class="info institucion"><?php print $info->parroquia;?></span>
                                 </td>
                                 <td>
-                                  X
+                                  <span class="info institucion"><?php print $info->canton;?></span>
                                 </td>
                                 <td>
-                                  X
+                                  <span class="info institucion"><?php print $info->provincia;?></span>
                                 </td>
                               </tr>
                             </table>
@@ -485,7 +504,7 @@ if ($user_ok == FALSE) {
                       </table>
                     </td>
                     <td>
-                      <table>
+                      <table style="margin-bottom: -8px;">
                         <tr>
                           <td>
                             <span>NUMERO DE HISTORIA CLINICA</span>
@@ -493,7 +512,7 @@ if ($user_ok == FALSE) {
                         </tr>
                         <tr>
                           <td>
-                            X
+                            <span class="info institucion"><?php print $info->hc;?></span>
                           </td>
                         </tr>
                       </table>
@@ -524,19 +543,19 @@ if ($user_ok == FALSE) {
                   </tr>
                   <tr>
                     <td>
-                      X
+                      <span class="info institucion"><?php print $info->pape;?></span>
                     </td>           
                     <td>
-                      X
+                      <span class="info institucion"><?php print $info->sape;?></span>
                     </td>           
                     <td>
-                      X
+                      <span class="info institucion"><?php print $info->pnom;?></span>
                     </td>           
                     <td>
-                      X
+                      <span class="info institucion"><?php print $info->snom;?></span>
                     </td>           
                     <td>
-                      X
+                      <span class="info institucion"><?php print $info->cedula;?></span>
                     </td>
                   </tr>
                 </table>
@@ -547,7 +566,7 @@ if ($user_ok == FALSE) {
                 <table>
                   <tr>
                     <td>
-                      <table>
+                      <table style="margin-bottom: -8px;">
                         <tr>
                           <td>
                             <span>FECHA DE REFERENCIA</span>
@@ -561,13 +580,13 @@ if ($user_ok == FALSE) {
                         </tr>
                         <tr>
                           <td>
-                            X
+                            <span class="info institucion"><?php print $info->fecha;?></span>
                           </td>
                           <td>
-                            X
+                            <span class="info institucion"><?php print $info->hora;?></span>
                           </td>
                           <td>
-                            X
+                            <span class="info institucion"><?php print $info->edad;?></span>
                           </td>
                         </tr>                  
                       </table>                  
@@ -594,11 +613,11 @@ if ($user_ok == FALSE) {
                                 </td>
                               </tr>
                               <tr>
-                                <td>
-                                  <span>X</span>
+                                <td>                                  
+                                  <span><?php if ($info->genero == 'masculino'){ print 'X';}?></span>                                  
                                 </td>
                                 <td>
-                                  <span>X</span>
+                                  <span><?php if ($info->genero == 'femenino'){ print 'X';}?></span>
                                 </td>
                               </tr>
                             </table>
@@ -624,19 +643,19 @@ if ($user_ok == FALSE) {
                               </tr>
                               <tr>
                                 <td>
-                                  <span>X</span>
+                                  <span><?php if ($info->est_civil == 'soltero'){ print 'X';}?></span>
                                 </td>
                                 <td>
-                                  <span>X</span>
+                                  <span><?php if ($info->est_civil == 'casado'){ print 'X';}?></span>
                                 </td>
                                 <td>
-                                  <span>X</span>
+                                  <span><?php if ($info->est_civil == 'divorciado'){ print 'X';}?></span>
                                 </td>
                                 <td>
-                                  <span>X</span>
+                                  <span><?php if ($info->est_civil == 'viudo'){ print 'X';}?></span>
                                 </td>
                                 <td>
-                                  <span>X</span>
+                                  <span><?php if ($info->est_civil == 'unionlibre'){ print 'X';}?></span>
                                 </td>
                               </tr>
                             </table>
@@ -645,7 +664,7 @@ if ($user_ok == FALSE) {
                       </table>
                     </td>
                     <td>
-                      <table>
+                      <table style="margin-bottom: -8px;">
                         <tr>
                           <td>
                             <span>INSTRUCCION</span>
@@ -659,13 +678,13 @@ if ($user_ok == FALSE) {
                         </tr>
                         <tr>
                           <td>
-                            X
+                            <span class="info"><?php print $info->instruccion;?></span>
                           </td>
                           <td>
-                            X
+                            <span class="info"><?php print $info->empresa;?></span>
                           </td>
                           <td>
-                            X
+                            <span class="info"><?php print $info->seguro;?></span>
                           </td>
                         </tr>
                       </table>
@@ -683,13 +702,13 @@ if ($user_ok == FALSE) {
                 <span>ESTABLECIMIENTO AL QUE SE ENVIA LA CONTRAREFERENCIA</span>
               </td>
               <td>
-                X
+                <span class="info"><?php print $info->unidad;?></span>
               </td>
               <td>
                 <span>SERVICIO QUE CONTRAREFIERE</span>
               </td>
               <td>
-                X
+                <span class="info">(Ver Plan de tratamiento recomendado.)</span>
               </td>
             </tr>            
           </table>
@@ -732,14 +751,12 @@ if ($user_ok == FALSE) {
           <table>
             <tr>
               <td>
-                <span>4 DIAGNOSTICO</span><span>def = definitivo.</span>
+                <span>4 DIAGNOSTICO</span><span>   (Ver observaciones en Plan de tratamiento recomendado).</span>
               </td>
             </tr>
             <tr>
-              <td>
-                <table>
-                  <!-- AQUI SE DESPLIEGA EL CUADRO DE DIAGNOSTICO -->
-                </table>
+              <td>                
+                  <?php print $info->diagnostico;?>                
               </td>
             </tr>
           </table>
@@ -753,7 +770,7 @@ if ($user_ok == FALSE) {
             </tr>
             <tr>
               <td>
-                X
+                <span class="info"><?php print $info->observacion;?></span>
               </td>
             </tr>
           </table>
@@ -761,30 +778,35 @@ if ($user_ok == FALSE) {
           <!-- SEXTO BLOQUE -->
           <table>
             <tr>
-
               <td>
-                <span>SALA</span>
-              </td>
-              <td>
-                X
-              </td>
-              <td>
-                <span>CAMA</span>
-              </td>
-              <td>
-                X
-              </td>
-              <td>
-                <span>MEDICO</span>
-              </td>
-              <td>
-                X
-              </td>
-              <td>
-                <span>FIRMA</span>
-              </td>
-              <td>
-                X
+                <table>
+                  <tr>
+                    <td>
+                      <span>SALA</span>
+                    </td>
+                    <td>
+                      <span class="info"><?php print $info->sala;?></span>
+                    </td>
+                    <td>
+                      <span>CAMA</span>
+                    </td>
+                    <td>
+                      <span class="info"><?php print $info->cama;?></span>
+                    </td>
+                    <td>
+                      <span>MEDICO</span>
+                    </td>
+                    <td>
+                      <span class="info"><?php print $info->medref;?></span>
+                    </td>
+                    <td>
+                      <span>FIRMA</span>
+                    </td>
+                    <td>
+                      _____
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
             <tr>
@@ -801,13 +823,13 @@ if ($user_ok == FALSE) {
                       <span>SI</span>
                     </td>
                     <td>
-                      X
+                      _______
                     </td>
                     <td>
                       <span>NO</span>
                     </td>
                     <td>
-                      X
+                      _______
                     </td>
                   </tr>
                 </table>
@@ -815,7 +837,6 @@ if ($user_ok == FALSE) {
             </tr>
           </table>          
         </div>
-
       </div>
     </div>
   </body>
