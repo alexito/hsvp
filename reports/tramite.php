@@ -10,7 +10,6 @@ if ($user_ok == FALSE) {
   exit();
 }
 
-$a = 0;
 if(isset($_GET['cod'])){
   $info = tramite_get_full_info($db_conx, $_GET['cod']);
 } else {
@@ -469,7 +468,7 @@ $a = 0;
                             <span class="info institucion">Hospital San Vicente de Paúl.</span>
                           </td>
                           <td>
-                            <span class="info institucion"><?php print $info->unidad;?></span>                            
+                            <span class="info institucion"><?php print ($info->tipo == 'contrareferencia')?$info->unidad:'-' ;?></span>                            
                           </td>
                           <td>
                             X
@@ -489,13 +488,13 @@ $a = 0;
                               </tr>
                               <tr>
                                 <td>
-                                  <span class="info institucion"><?php print $info->parroquia;?></span>
+                                  <span class="info institucion"><?php print ($info->tipo == 'contrareferencia')?$info->parroquia:'-';?></span>
                                 </td>
                                 <td>
-                                  <span class="info institucion"><?php print $info->canton;?></span>
+                                  <span class="info institucion"><?php print ($info->tipo == 'contrareferencia')?$info->canton:'-';?></span>
                                 </td>
                                 <td>
-                                  <span class="info institucion"><?php print $info->provincia;?></span>
+                                  <span class="info institucion"><?php print ($info->tipo == 'contrareferencia')?$info->provincia:'-';?></span>
                                 </td>
                               </tr>
                             </table>
@@ -512,7 +511,7 @@ $a = 0;
                         </tr>
                         <tr>
                           <td>
-                            <span class="info institucion"><?php print $info->hc;?></span>
+                            <span class="info institucion"><?php print ($info->tipo == 'contrareferencia')?$info->hc:'-';?></span>
                           </td>
                         </tr>
                       </table>
@@ -543,19 +542,19 @@ $a = 0;
                   </tr>
                   <tr>
                     <td>
-                      <span class="info institucion"><?php print $info->pape;?></span>
+                      <span class="info institucion"><?php print ($info->tipo == 'contrareferencia')?$info->pape:'-';?></span>
                     </td>           
                     <td>
-                      <span class="info institucion"><?php print $info->sape;?></span>
+                      <span class="info institucion"><?php print ($info->tipo == 'contrareferencia')?$info->sape:'-';?></span>
                     </td>           
                     <td>
-                      <span class="info institucion"><?php print $info->pnom;?></span>
+                      <span class="info institucion"><?php print ($info->tipo == 'contrareferencia')?$info->pnom:'-';?></span>
                     </td>           
                     <td>
-                      <span class="info institucion"><?php print $info->snom;?></span>
+                      <span class="info institucion"><?php print ($info->tipo == 'contrareferencia')?$info->snom:'-';?></span>
                     </td>           
                     <td>
-                      <span class="info institucion"><?php print $info->cedula;?></span>
+                      <span class="info institucion"><?php print ($info->tipo == 'contrareferencia')?$info->cedula:'-';?></span>
                     </td>
                   </tr>
                 </table>
@@ -580,13 +579,13 @@ $a = 0;
                         </tr>
                         <tr>
                           <td>
-                            <span class="info institucion"><?php print $info->fecha;?></span>
+                            <span class="info institucion"><?php print ($info->tipo == 'contrareferencia')?$info->fecha:'-';?></span>
                           </td>
                           <td>
-                            <span class="info institucion"><?php print $info->hora;?></span>
+                            <span class="info institucion"><?php print ($info->tipo == 'contrareferencia')?$info->hora:'-';?></span>
                           </td>
                           <td>
-                            <span class="info institucion"><?php print $info->edad;?></span>
+                            <span class="info institucion"><?php print ($info->tipo == 'contrareferencia')?$info->edad:'-';?></span>
                           </td>
                         </tr>                  
                       </table>                  
@@ -614,10 +613,10 @@ $a = 0;
                               </tr>
                               <tr>
                                 <td>                                  
-                                  <span><?php if ($info->genero == 'masculino'){ print 'X';}?></span>                                  
+                                  <span><?php if ($info->genero == 'masculino'){ print ($info->tipo == 'contrareferencia')?'X':'';}?></span>                                  
                                 </td>
                                 <td>
-                                  <span><?php if ($info->genero == 'femenino'){ print 'X';}?></span>
+                                  <span><?php if ($info->genero == 'femenino'){ print ($info->tipo == 'contrareferencia')?'X':'';}?></span>
                                 </td>
                               </tr>
                             </table>
@@ -643,19 +642,19 @@ $a = 0;
                               </tr>
                               <tr>
                                 <td>
-                                  <span><?php if ($info->est_civil == 'soltero'){ print 'X';}?></span>
+                                  <span><?php if ($info->est_civil == 'soltero'){ ($info->tipo == 'contrareferencia')?print 'X':'';}?></span>
                                 </td>
                                 <td>
-                                  <span><?php if ($info->est_civil == 'casado'){ print 'X';}?></span>
+                                  <span><?php if ($info->est_civil == 'casado'){ print ($info->tipo == 'contrareferencia')?'X':'';}?></span>
                                 </td>
                                 <td>
-                                  <span><?php if ($info->est_civil == 'divorciado'){ print 'X';}?></span>
+                                  <span><?php if ($info->est_civil == 'divorciado'){ print ($info->tipo == 'contrareferencia')?'X':'';}?></span>
                                 </td>
                                 <td>
-                                  <span><?php if ($info->est_civil == 'viudo'){ print 'X';}?></span>
+                                  <span><?php if ($info->est_civil == 'viudo'){ print ($info->tipo == 'contrareferencia')?'X':'';}?></span>
                                 </td>
                                 <td>
-                                  <span><?php if ($info->est_civil == 'unionlibre'){ print 'X';}?></span>
+                                  <span><?php if ($info->est_civil == 'unionlibre'){ print ($info->tipo == 'contrareferencia')?'X':'';}?></span>
                                 </td>
                               </tr>
                             </table>
@@ -678,13 +677,13 @@ $a = 0;
                         </tr>
                         <tr>
                           <td>
-                            <span class="info"><?php print $info->instruccion;?></span>
+                            <span class="info"><?php print ($info->tipo == 'contrareferencia')?$info->instruccion:'-';?></span>
                           </td>
                           <td>
-                            <span class="info"><?php print $info->empresa;?></span>
+                            <span class="info"><?php print ($info->tipo == 'contrareferencia')?$info->empresa:'-';?></span>
                           </td>
                           <td>
-                            <span class="info"><?php print $info->seguro;?></span>
+                            <span class="info"><?php print ($info->tipo == 'contrareferencia')?$info->seguro:'-';?></span>
                           </td>
                         </tr>
                       </table>
@@ -702,7 +701,7 @@ $a = 0;
                 <span>ESTABLECIMIENTO AL QUE SE ENVIA LA CONTRAREFERENCIA</span>
               </td>
               <td>
-                <span class="info"><?php print $info->unidad;?></span>
+                <span class="info"><?php print ($info->tipo == 'contrareferencia')?$info->unidad:'-';?></span>
               </td>
               <td>
                 <span>SERVICIO QUE CONTRAREFIERE</span>
@@ -756,7 +755,7 @@ $a = 0;
             </tr>
             <tr>
               <td>                
-                  <?php print $info->diagnostico;?>                
+                  <?php print ($info->tipo == 'contrareferencia')?$info->diagnostico:'';?>                
               </td>
             </tr>
           </table>
@@ -770,7 +769,7 @@ $a = 0;
             </tr>
             <tr>
               <td>
-                <span class="info"><?php print $info->observacion;?></span>
+                <span class="info"><?php print ($info->tipo == 'contrareferencia')?$info->observacion:'-';?></span>
               </td>
             </tr>
           </table>
@@ -785,19 +784,19 @@ $a = 0;
                       <span>SALA</span>
                     </td>
                     <td>
-                      <span class="info"><?php print $info->sala;?></span>
+                      <span class="info"><?php print ($info->tipo == 'contrareferencia')?$info->sala:'-';?></span>
                     </td>
                     <td>
                       <span>CAMA</span>
                     </td>
                     <td>
-                      <span class="info"><?php print $info->cama;?></span>
+                      <span class="info"><?php print ($info->tipo == 'contrareferencia')?$info->cama:'-';?></span>
                     </td>
                     <td>
                       <span>MEDICO</span>
                     </td>
                     <td>
-                      <span class="info"><?php print $info->medref;?></span>
+                      <span class="info"><?php print ($info->tipo == 'contrareferencia')?$info->medref:'-';?></span>
                     </td>
                     <td>
                       <span>FIRMA</span>
