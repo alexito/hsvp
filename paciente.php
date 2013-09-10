@@ -160,7 +160,7 @@ if (isset($_POST["pnom"])) {
                       <h5>Seguro:</h5>
                       <input type="hidden" name="cod_seguro" id="cod_seguro" value="" />
                       <label>Descripcion:</label>
-                      <input id="seg_descrip" type="text" maxlength="15">
+                      <input id="seg_descrip" type="text" maxlength="50">
                       <label>Observacion:</label>
                       <textarea id="seg_observ" cols="10" rows="2"></textarea><br>
                       <a id="segguardar" href="#">Guardar</a> - <a id="segcancelar" href="#">Cancelar</a>
@@ -184,7 +184,7 @@ if (isset($_POST["pnom"])) {
                       <h4>Empresa:</h4>
                       <input type="hidden" name="cod_empresa" id="cod_empresa" value="" />
                       <label>Descripcion:</label>
-                      <input id="emp_descrip" type="text" maxlength="15">
+                      <input id="emp_descrip" type="text" maxlength="50">
                       <label>Observacion:</label>
                       <textarea id="emp_observ" cols="10" rows="2"></textarea><br>
                       <a id="empguardar" href="#">Guardar</a> - <a id="empcancelar" href="#">Cancelar</a>

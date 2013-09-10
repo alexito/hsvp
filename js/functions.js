@@ -152,9 +152,9 @@ function saveTramiteUnidad(){
     $("#table_content").hide(300);
     var ajax = ajaxObj("POST", "tramite_uni.php");
     ajax.onreadystatechange = function() {
-      if(ajaxReturn(ajax) == true) {        
+      if(ajaxReturn(ajax) == true) {
         alert('Se envió correctamente la REFERENCIA.');
-        window.location.href = 'ver_referencias_uni.php?cod_tramite=' + ajax.responseText;
+        window.location.href = 'reports/tramite.php?cod=' + ajax.responseText;
       }
     }
     ajax.send("codpac="+codpac+"&codmed="+codmed+"&coduni="+coduni+"&codser="+codser+

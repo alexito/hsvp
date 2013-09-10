@@ -109,7 +109,7 @@ $a = 0;
                       <table style="margin-bottom: -8px;">
                         <tr>
                           <td>
-                            <span>NUMERO DE HISTORIA CLINICA</span>
+                            <span>NUMERO DE HISTORIA CLÍNICA</span>
                           </td>
                         </tr>
                         <tr>
@@ -329,7 +329,7 @@ $a = 0;
             </tr>
             <tr>
               <td>
-                <span>2 RESUMEN DEL CUADRO CLINICO</span>
+                <span>2 RESUMEN DEL CUADRO CLÍNICO</span>
               </td>
             </tr>
             <tr>
@@ -339,7 +339,7 @@ $a = 0;
             </tr>
             <tr>
               <td>
-                <span>3 HALLAZGOS RELEVANTES DE EXAMENES Y PROCEDIMIENTOS DIAGNOSTICOS</span>
+                <span>3 HALLAZGOS RELEVANTES DE EXÁMENES Y PROCEDIMIENTOS DIAGNÓSTICOS</span>
               </td>
             </tr>
             <tr>
@@ -506,7 +506,7 @@ $a = 0;
                       <table style="margin-bottom: -8px;">
                         <tr>
                           <td>
-                            <span>NUMERO DE HISTORIA CLINICA</span>
+                            <span>NUMERO DE HISTORIA CLÍNICA</span>
                           </td>
                         </tr>
                         <tr>
@@ -716,7 +716,7 @@ $a = 0;
           <table>
             <tr>
               <td>
-                <span>1 MOTIVO DEL CUADRO CLINICO</span>
+                <span>1 MOTIVO DEL CUADRO CLÍNICO</span>
               </td>
             </tr>
             <tr>
@@ -726,7 +726,7 @@ $a = 0;
             </tr>
             <tr>
               <td>
-                <span>2 HALLAZGOS RELEVANTES DE EXAMENES Y PROCEDIMIENTOS DIAGNOSTICOS</span>
+                <span>2 HALLAZGOS RELEVANTES DE EXÁMENES Y PROCEDIMIENTOS DIAGNÓSTICOS</span>
               </td>
             </tr>
             <tr>
@@ -736,7 +736,7 @@ $a = 0;
             </tr>
             <tr>
               <td>
-                <span>3 TRATAMIENTO Y PROCEDIMIENTOS TERAPEUTICOS REALIZADOS</span>
+                <span>3 TRATAMIENTO Y PROCEDIMIENTOS TERAPÉUTICOS REALIZADOS</span>
               </td>
             </tr>
             <tr>

@@ -224,7 +224,7 @@ if (isset($_POST["d"])) {
                   </td>
                 </tr><tr>
                   <td>
-                    <label style="width: 400px;"><h5>Hallazgos relevantes de examenes y procedimientos diagnósticos:</h5></label>
+                    <label style="width: 500px;"><h5>Hallazgos relevantes de exámenes y procedimientos diagnósticos:</h5></label>
                     <textarea style="width: 770px; height: 70px;" id="hallazgo_ref" cols="20" rows="2"></textarea>
                   </td>
                 </tr><tr class="tr-data">

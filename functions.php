@@ -716,14 +716,10 @@ function SelectValuesLocalizacion($db_conx) {
   $sql = "SELECT loc_codigo, loc_descrip FROM tlocalizacion ORDER BY loc_descrip ASC";
   $query = mysqli_query($db_conx, $sql);
 
-  $n_filas = $query->num_rows;
   $data = '<select class="localizacion" id="cmblocalizacion">
     <option value="">Seleccione...</option>';
-  $c = 0;
-  while ($c < $n_filas) {
-    $row = mysqli_fetch_array($query);
-    $data .= '<option value="' . $row[0] . '">' . $row[1] . '</option>';
-    $c++;
+  while ($row = mysqli_fetch_array($query)) {
+    $data .= '<option value="' . $row[0] . '">' . $row[1] . '</option>';    
   }
   $data .= '</select">';
   echo $data;
@@ -736,13 +732,8 @@ function SelectValuesLocalizacion($db_conx) {
 function SelectValuesLocalizacionArray($db_conx) {
   $sql = "SELECT loc_codigo, loc_descrip FROM tlocalizacion ORDER BY loc_descrip ASC";
   $query = mysqli_query($db_conx, $sql);
-
-  $n_filas = $query->num_rows;
-  $c = 0;
-  while ($c < $n_filas) {
-    $row = mysqli_fetch_array($query);
+  while ($row = mysqli_fetch_array($query)) {
     $data[$row[0]] = $row[1];
-    $c++;
   }
   return $data;
 }
