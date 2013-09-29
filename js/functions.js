@@ -435,7 +435,7 @@ function createLocalizacion(){
   var c = _("canton").value;
   var pr = _("provincia").value;
   var status = _("status");
-  if(d == "" || p == "" || c == "" || pr == "" ){
+  if(p == "" || c == "" || pr == "" ){
     status.innerHTML = "Todos los campos son requeridos";
   } else {    
     _("signupbtn").style.display = "none";
