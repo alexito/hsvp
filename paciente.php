@@ -94,20 +94,20 @@ if (isset($_POST["pnom"])) {
               <input type="hidden" name="cod_paciente" id="cod_paciente" value="" />
               <table><tr><td>
                     <label>P. Nombre: </label>
-                    <input id="pnom" type="text" maxlength="25">
+                    <input id="pnom" type="text" maxlength="25" onKeyPress="return onlyText(event);">
                   </td><td>
                     <label>S. Nombre:</label>
-                    <input id="snom" type="text" maxlength="25">
+                    <input id="snom" type="text" maxlength="25" onKeyPress="return onlyText(event);">
                   </td><td>
                     <label>P. Apellido: </label>
-                    <input id="pape" type="text" maxlength="25">
+                    <input id="pape" type="text" maxlength="25" onKeyPress="return onlyText(event);">
                   </td><td>
                     <label>S. Apellido:</label>
-                    <input id="sape" type="text" maxlength="25">
+                    <input id="sape" type="text" maxlength="25" onKeyPress="return onlyText(event);">
                   </td>                  
                 </tr><tr><td>
                     <label>Cedula: </label>
-                    <input id="ced" type="text" maxlength="15">
+                    <input id="ced" type="text" maxlength="15" onKeyPress="return onlyNumber(event);">
                   </td><td>
                     <label>F. Nacimiento:</label>
                     <input id="fnac" type="text" maxlength="10">
@@ -132,13 +132,13 @@ if (isset($_POST["pnom"])) {
                   </td>                  
                 </tr><tr><td>
                     <label>Instruccion: </label>
-                    <input id="ins" type="text" maxlength="15">
+                    <input id="ins" type="text" maxlength="15" onKeyPress="return onlyText(event);">
                   </td><td>
                     <label>Historia Clinica:</label>
                     <input id="hc" type="text" maxlength="10">
                   </td><td>
                     <label>Telefono: </label>
-                    <input id="tel" type="text" maxlength="12">
+                    <input id="tel" type="text" maxlength="12" onKeyPress="return onlyNumber(event);">
                   </td>
                 </tr>
                 <tr>

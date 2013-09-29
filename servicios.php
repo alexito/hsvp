@@ -14,6 +14,10 @@ if (isset($_POST['btn'])) {//Filtra los datos
   filtrarServicios($db_conx, $_POST['btn'], $_POST['rxp'], $_POST['pa'], $_POST['ord'], $_POST['tex']);
   exit();
 }
+if (isset($_POST['exist'])) {//Filtra los datos
+  existeServicio($db_conx, $_POST['d']);
+  exit();
+}
 
 if (isset($_POST["d"])) {
   $d = $_POST['d'];
@@ -63,7 +67,7 @@ if (isset($_POST["d"])) {
               <input type="hidden" name="cod_servicios" id="cod_servicios" value="" />
               <table><tr><td>
                     <label>Descripción: </label>
-                    <input id="descripcion" type="text" maxlength="25">
+                    <input id="descripcion" type="text" maxlength="25" onblur="existService();" onKeyPress="return onlyText(event);">
                   </td>
                 </tr>
                 <div class="div-referenciado" style="float: right; margin-right: 560px;">

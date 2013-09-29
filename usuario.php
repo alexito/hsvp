@@ -59,10 +59,10 @@ if (isset($_POST["u"])) {
               <input type="hidden" name="cod_usuario" id="cod_usuario" value="" />
               <table><tr><td>
                     <label>Usuario: </label>
-                    <input id="usuario" type="text" maxlength="20">
+                    <input id="usuario" type="text" maxlength="20" onKeyPress="return onlyText(event);">
                   </td><td>
                     <label>Clave:</label>
-                    <input id="clave" type="text" maxlength="20">
+                    <input id="clave" type="text" maxlength="20" placeholder="mínimo 6 caracteres">
                   </td>
                 </tr>
                 <tr><td>

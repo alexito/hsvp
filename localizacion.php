@@ -64,19 +64,19 @@ if (isset($_POST["d"])) {
             <form name="genform" id="genform" onsubmit="return false;">
               <input type="hidden" name="cod_localizacion" id="cod_localizacion" value="" />
               <table><tr><td>
-                    <label>Descripción: </label>
-                    <input id="descripcion" type="text" maxlength="25">
-                  </td><td>
                     <label>Parroquía:</label>
-                    <input id="parroquia" type="text" maxlength="50">
+                    <input id="parroquia" type="text" maxlength="50" onKeyPress="return onlyText(event);">
+                  </td><td>                    
+                    <label>Cantón:</label>
+                    <input id="canton" type="text" maxlength="50" onKeyPress="return onlyText(event);">
                   </td>
                 </tr>
-                <tr><td>
-                    <label>Cantón:</label>
-                    <input id="canton" type="text" maxlength="50">
-                  </td><td>
+                <tr><td>                    
                     <label>Provincia:</label>
-                    <input id="provincia" type="text" maxlength="50">
+                    <input id="provincia" type="text" maxlength="50" onKeyPress="return onlyText(event);">
+                  </td><td>                    
+                    <label>Descripción: </label>
+                    <input id="descripcion" type="text" maxlength="25">
                   </td>
                 </tr>
               </table>

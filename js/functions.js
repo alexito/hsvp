@@ -1,6 +1,29 @@
 var sie10 = null;
 var pd = '';
 
+function onlyNumber(evt) {
+  var charCode = (evt.which) ? evt.which : evt.keyCode
+  if (charCode > 31 && (charCode < 48 || charCode > 57)){
+    return false;
+  }
+  return true;
+}
+
+function onlyText(evt) {
+  var charCode = (evt.which) ? evt.which : evt.keyCode;
+  if(charCode == 32 ||//espacio
+    charCode == 241 || charCode == 209 ||//Enie
+    charCode == 225 || charCode == 233 || charCode == 237 || charCode == 243 || charCode == 250 ||//tilde minuscula
+    charCode == 193 || charCode == 201 || charCode == 205 || charCode == 211 || charCode == 218){//tilde mayuscula
+    return true;
+  }else if(charCode >= 97 && charCode <= 122){
+    return true;
+  }else if (charCode > 31 && (charCode < 65 || charCode > 90)){
+    return false;
+  }else{
+    return true;
+  }
+}
 
 function isNumber(n) {
   return typeof n === 'number' && n % 1 == 0;
@@ -418,7 +441,7 @@ function createLocalizacion(){
     _("signupbtn").style.display = "none";
     _("nueva_localizacion").style.display = "none";
     status.innerHTML = '<br><img src="images/loading.gif">';       
-//    $("#table_content").hide(300);
+    //    $("#table_content").hide(300);
     var ajax = ajaxObj("POST", "localizacion.php");
     ajax.onreadystatechange = function() {
       if(ajaxReturn(ajax) == true) {
@@ -467,15 +490,15 @@ function createUnidad(){
     _("submitbtn").style.display = "none";
     _("nueva_unidad").style.display = "none";
     status.innerHTML = '<br><img src="images/loading.gif">';       
-//    $("#table_content").hide(300);
+    //    $("#table_content").hide(300);
     var ajax = ajaxObj("POST", "unidad.php");
     ajax.onreadystatechange = function() {
       if(ajaxReturn(ajax) == true) {
         status.innerHTML = "Datos guardados correctamente.";
         _("submitbtn").style.display = "block";        
         _("nueva_unidad").style.display = "block";
-//        _("table_data").innerHTML = ajax.responseText;
-//        $("#table_content").show(500);    
+        //        _("table_data").innerHTML = ajax.responseText;
+        //        $("#table_content").show(500);    
         $('#nueva_unidad').click();
         filtrarDatos('unidad', 'car');
       }
@@ -506,6 +529,11 @@ function editUnidad(id){
 function createMedicoReferente(){
   var usu = '0';
   var cla = '0';
+  if(String(_("clave").value).length > 0 && String(_("clave").value).length < 6){
+    alert('La clave debe tener al menos 6 caracteres.');
+    _("clave").focus();
+    return false;
+  }
   if(String(_("usuario").value).length > 5 && String(_("clave").value).length > 5){
     usu = _("usuario").value;
     cla = _("clave").value;
@@ -536,8 +564,8 @@ function createMedicoReferente(){
         status.innerHTML = "Datos guardados correctamente.";
         _("submitbtn").style.display = "block";        
         _("nuevo_medicoreferente").style.display = "block";
-//        _("table_data").innerHTML = ajax.responseText;
-//        $("#table_content").show(500);      
+        //        _("table_data").innerHTML = ajax.responseText;
+        //        $("#table_content").show(500);      
         $('#nuevo_medicoreferente').click();
         filtrarDatos('med-ref', 'car');
       }
@@ -600,8 +628,8 @@ function createMedicoReferenciado(){
         status.innerHTML = "Datos guardados correctamente.";
         _("submitbtn").style.display = "block";        
         _("nuevo_medicoreferenciado").style.display = "block";
-//        _("table_data").innerHTML = ajax.responseText;
-//        $("#table_content").show(500); 
+        //        _("table_data").innerHTML = ajax.responseText;
+        //        $("#table_content").show(500); 
         $('#nuevo_medicoreferenciado').click();
         filtrarDatos('med-referenciado', 'car');
       }
@@ -661,15 +689,15 @@ function createPaciente(){
     _("submitbtn").style.display = "none";
     _("nuevo_paciente").style.display = "none";
     status.innerHTML = '<br><img src="images/loading.gif">';       
-//    $("#table_content").hide(300);
+    //    $("#table_content").hide(300);
     var ajax = ajaxObj("POST", "paciente.php");
     ajax.onreadystatechange = function() {
       if(ajaxReturn(ajax) == true) {
         status.innerHTML = "Datos guardados correctamente.";
         _("submitbtn").style.display = "block";        
         _("nuevo_paciente").style.display = "block";
-//        _("table_data").innerHTML = ajax.responseText;
-//        $("#table_content").show(500);
+        //        _("table_data").innerHTML = ajax.responseText;
+        //        $("#table_content").show(500);
         $('#nuevo_paciente').click();
         filtrarDatos('paciente', 'car');
       }
@@ -787,6 +815,12 @@ function createUsuario(){
   var t = _("cmbtipo").value;
   var a = _("cmbactivo").value;
   
+  if(String(_("clave").value).length > 0 && String(_("clave").value).length < 6){
+    alert('La clave debe tener al menos 6 caracteres.');
+    _("clave").focus();
+    return false;
+  }
+  
   var status = _("status");
   if(u == "" || c == "" || t == "" || a == ""){
     status.innerHTML = "Todos los campos son requeridos";
@@ -835,6 +869,21 @@ function editUsuario(id){
   return false;
 }
 
+function existService(){
+  var ajax = ajaxObj("POST", "servicios.php");
+  var d = _("descripcion").value;
+  ajax.onreadystatechange = function() {
+    if(ajaxReturn(ajax) == true) {
+      if(ajax.responseText == '1'){
+        alert('El servicio ya existe en el Sistema.');
+        $('#descripcion').val('');
+      }
+    }
+  }
+  ajax.send("d="+d+"&exist=a");  
+  
+}
+
 function createServicios(){
   var cod = _('cod_servicios').value;
   var d = _("descripcion").value;
@@ -844,20 +893,20 @@ function createServicios(){
   if (r == ""){
     alert('Debe seleccionar un referenciado de la lista.');
   }else if(d == ""){
-    status.innerHTML = "Todos los campos son requeridos";
-  } else {    
+    status.innerHTML = "La descripción es requerida.";
+  }else {    
     _("submitbtn").style.display = "none";
     _("nuevo_servicios").style.display = "none";
     status.innerHTML = '<br><img src="images/loading.gif">';       
-//    $("#table_content").hide(300);
+    //    $("#table_content").hide(300);
     var ajax = ajaxObj("POST", "servicios.php");
     ajax.onreadystatechange = function() {
       if(ajaxReturn(ajax) == true) {
         status.innerHTML = "Datos guardados correctamente.";
         _("submitbtn").style.display = "block";        
         _("nuevo_servicios").style.display = "block";
-//        _("table_data").innerHTML = ajax.responseText;
-//        $("#table_content").show(500);
+        //        _("table_data").innerHTML = ajax.responseText;
+        //        $("#table_content").show(500);
         $('#nuevo_servicios').click();   
         filtrarDatos('servicios', 'car');
       }

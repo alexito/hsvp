@@ -130,23 +130,23 @@ if (isset($_POST["codmed"])) {
                   <?php SelectValuesUnidad($db_conx); ?>
                 </div></tr><tr><td>                    
                     <label>P. Nombre: </label>
-                    <input id="pnom" type="text" maxlength="25">                    
+                    <input id="pnom" type="text" maxlength="25" onKeyPress="return onlyText(event);">                    
                   </td><td>
                     <label>S. Nombre:</label>
-                    <input id="snom" type="text" maxlength="25">
+                    <input id="snom" type="text" maxlength="25" onKeyPress="return onlyText(event);">
                   </td></tr>
                 <tr><td>
                     <label>P. Apellido:</label>
-                    <input id="pape" type="text" maxlength="25">
+                    <input id="pape" type="text" maxlength="25" onKeyPress="return onlyText(event);">
                   </td><td>
                     <label>S. Apellido:</label>
-                    <input id="sape" type="text" maxlength="25">
+                    <input id="sape" type="text" maxlength="25" onKeyPress="return onlyText(event);">
                   </td></tr><tr><td>                    
-                    <label>Cod. Medico: </label>
+                    <label>Cod. Médico: </label>
                     <input id="codmed" type="text" maxlength="15">                    
                   </td><td>
                     <label>Especialidad:</label>
-                    <input id="especialidad" type="text" maxlength="15">
+                    <input id="especialidad" type="text" maxlength="15" onKeyPress="return onlyText(event);">
                   </td><td>
                     <label>Estado:</label>
                     <select class="estado" id="cmbestado">
@@ -157,10 +157,10 @@ if (isset($_POST["codmed"])) {
                   </td></tr>
                 <tr class="usu-cla"><td >
                     <label>Usuario: </label>
-                    <input id="usuario" type="text" maxlength="20">
+                    <input id="usuario" type="text" maxlength="20" onKeyPress="return onlyText(event);">
                   </td><td>
                     <label>Clave:</label>
-                    <input id="clave" type="text" maxlength="20">
+                    <input id="clave" type="text" maxlength="20" placeholder="mínimo 6 caracteres">
                   </td></tr>
               </table>
               <label>Observacion:</label>

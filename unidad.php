@@ -70,7 +70,7 @@ if (isset($_POST["loc"])) {
                     </div>
                   </td><td>
                     <label>Descripcion:</label>
-                    <input id="descripcion" type="text" maxlength="25">
+                    <input id="descripcion" type="text" maxlength="25" onKeyPress="return onlyText(event);">
                   </td>
                   <td>
                     <div class="ui-widget">

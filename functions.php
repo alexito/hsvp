@@ -1,5 +1,18 @@
 <?php
 
+function existeServicio($db_conx, $d){
+  $sql = "SELECT ser_descrip FROM vreferenciaservicio WHERE ser_descrip LIKE '%$d%'";
+  $query = mysqli_query($db_conx, $sql);
+  $existe = '0';
+  while($row = mysqli_fetch_array($query)){    
+    if(strtolower($d) == strtolower($row[0])){
+      $existe = '1';
+      break;
+    }
+  }
+  echo $existe;
+}
+
 function tramite_get_full_info($db_conx, $cod) {
   $info = new stdClass();
 
