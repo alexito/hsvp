@@ -15,6 +15,7 @@ if ($user_ok == FALSE) {
   <head>
     <meta charset="UTF-8">
     <title>HSVP - RC</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link href="css/style.css" rel="stylesheet" type="text/css" />
     <script src="../js/jquery-2.0.0.min.js"></script>

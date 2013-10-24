@@ -38,7 +38,7 @@ if (isset($_POST["u"])) {
     $query = mysqli_query($db_conx, $sql);
   }
 
-  SelectUsuario($db_conx, 10, 1);
+  SelectUsuario($db_conx);
 
   exit();
 }

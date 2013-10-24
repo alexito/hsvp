@@ -1,6 +1,7 @@
 <meta charset="UTF-8">
 <title>HSVP - RC</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 
 <!-- Other JS libraries  -->
 <script src="js/main.js"></script>

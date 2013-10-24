@@ -1,15 +1,3 @@
-# SQL Manager 2007 for MySQL 4.5.0.7
-# ---------------------------------------
-# Host     : localhost
-# Port     : 3306
-# Database : bdd_hsvp_rc
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES latin1 */;
-
 SET FOREIGN_KEY_CHECKS=0;
 
 CREATE DATABASE `bdd_hsvp_rc`
@@ -24,7 +12,7 @@ USE `bdd_hsvp_rc`;
 
 CREATE TABLE `tmedicoreferenciado` (
   `MER_CODIGO` smallint(6) NOT NULL AUTO_INCREMENT,
-  `MER_CODMED` varchar(15) NOT NULL,
+  `MER_CODMED` varchar(15) DEFAULT NULL,
   `MER_ESPECIAL` varchar(15) NOT NULL,
   `MER_OBSERV` varchar(40) DEFAULT 'Ninguna',
   `MER_ESTADO` enum('activo','inactivo') NOT NULL,
@@ -33,7 +21,7 @@ CREATE TABLE `tmedicoreferenciado` (
   `MER_PAPE` varchar(25) NOT NULL,
   `MER_SAPE` varchar(25) NOT NULL,
   PRIMARY KEY (`MER_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COMMENT='LISTADO DE MEDICOS DEL ESTABLECIMIENTO REFERENCIADO';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1 COMMENT='LISTADO DE MEDICOS DEL ESTABLECIMIENTO REFERENCIADO';
 
 #
 # Structure for the `treferenciado` table : 
@@ -56,7 +44,7 @@ CREATE TABLE `tservicios` (
   `SER_DESCRIP` varchar(15) NOT NULL,
   `SER_OBSERV` varchar(40) NOT NULL,
   PRIMARY KEY (`SER_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 COMMENT='SERVICIOS DE HOSPITALES REFERENCIADOS';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1 COMMENT='SERVICIOS DE HOSPITALES REFERENCIADOS';
 
 #
 # Structure for the `trefservicios` table : 
@@ -87,7 +75,7 @@ CREATE TABLE `tmedicoxservicio` (
   KEY `FK_RMSXRS` (`RES_CODIGO`),
   CONSTRAINT `FK_RMSXMR` FOREIGN KEY (`MER_CODIGO`) REFERENCES `tmedicoreferenciado` (`MER_CODIGO`),
   CONSTRAINT `FK_RMSXRS` FOREIGN KEY (`RES_CODIGO`) REFERENCES `trefservicios` (`RES_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1 COMMENT='CADA MEDICO ASIGNADO A UN SERVICIO EN EL ESTABLECIMIENTO REF';
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=latin1 COMMENT='CADA MEDICO ASIGNADO A UN SERVICIO EN EL ESTABLECIMIENTO REF';
 
 #
 # Structure for the `tempresas` table : 
@@ -95,8 +83,8 @@ CREATE TABLE `tmedicoxservicio` (
 
 CREATE TABLE `tempresas` (
   `EMP_CODIGO` smallint(6) NOT NULL AUTO_INCREMENT,
-  `EMP_DESCRIP` varchar(25) NOT NULL,
-  `EMP_OBSERV` varchar(40) DEFAULT 'Ninguna',
+  `EMP_DESCRIP` varchar(50) NOT NULL,
+  `EMP_OBSERV` varchar(100) DEFAULT 'Ninguna',
   PRIMARY KEY (`EMP_CODIGO`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COMMENT='EMPRESAS DONDE TRABAJAN LOS REFERENCIADOS';
 
@@ -106,8 +94,8 @@ CREATE TABLE `tempresas` (
 
 CREATE TABLE `tseguros` (
   `SEG_CODIGO` tinyint(4) NOT NULL AUTO_INCREMENT,
-  `SEG_DESCRIP` varchar(15) NOT NULL,
-  `SEG_OBSERV` varchar(40) DEFAULT 'Ninguna',
+  `SEG_DESCRIP` varchar(50) NOT NULL,
+  `SEG_OBSERV` varchar(100) DEFAULT 'Ninguna',
   PRIMARY KEY (`SEG_CODIGO`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 AVG_ROW_LENGTH=1260 COMMENT='LISTA DE SEGUROS';
 
@@ -128,14 +116,14 @@ CREATE TABLE `tpaciente` (
   `PAC_GENERO` enum('masculino','femenino','indefinido') NOT NULL,
   `PAC_EST_CIV` enum('soltero','casado','divorciado','viudo','unionlibre') NOT NULL,
   `PAC_INSTRUC` varchar(15) NOT NULL,
-  `PAC_HC` varchar(10) NOT NULL,
-  `PAC_TELEF` varchar(12) NOT NULL,
+  `PAC_HC` varchar(10) DEFAULT NULL,
+  `PAC_TELEF` varchar(12) DEFAULT NULL,
   PRIMARY KEY (`PAC_CODIGO`),
   KEY `FK_RPACIENTEEMPRESA` (`EMP_CODIGO`),
   KEY `FK_RPACIENTESEGURO` (`SEG_CODIGO`),
   CONSTRAINT `FK_RPACIENTEEMPRESA` FOREIGN KEY (`EMP_CODIGO`) REFERENCES `tempresas` (`EMP_CODIGO`),
   CONSTRAINT `FK_RPACIENTESEGURO` FOREIGN KEY (`SEG_CODIGO`) REFERENCES `tseguros` (`SEG_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1 COMMENT='LISTADO DE PACIENTES';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 COMMENT='LISTADO DE PACIENTES';
 
 #
 # Structure for the `tmedicoreferente` table : 
@@ -143,7 +131,7 @@ CREATE TABLE `tpaciente` (
 
 CREATE TABLE `tmedicoreferente` (
   `MED_CODIGO` smallint(6) NOT NULL AUTO_INCREMENT,
-  `MED_CODMED` varchar(15) NOT NULL,
+  `MED_CODMED` varchar(15) DEFAULT NULL,
   `MED_ESPECIAL` varchar(15) NOT NULL,
   `MED_OBSERV` varchar(40) DEFAULT 'Ninguna',
   `MED_ESTADO` enum('activo','inactivo') NOT NULL,
@@ -152,7 +140,7 @@ CREATE TABLE `tmedicoreferente` (
   `MED_PAPE` varchar(25) NOT NULL,
   `MED_SAPE` varchar(25) NOT NULL,
   PRIMARY KEY (`MED_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1 COMMENT='INFORMACION DEL MEDICO REFERENTE';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1 COMMENT='INFORMACION DEL MEDICO REFERENTE';
 
 #
 # Structure for the `tlocalizacion` table : 
@@ -160,12 +148,12 @@ CREATE TABLE `tmedicoreferente` (
 
 CREATE TABLE `tlocalizacion` (
   `LOC_CODIGO` smallint(6) NOT NULL AUTO_INCREMENT,
-  `LOC_DESCRIP` varchar(25) NOT NULL,
+  `LOC_DESCRIP` varchar(25) DEFAULT 'ninguna',
   `LOC_CPARR` varchar(50) NOT NULL,
   `LOC_CCAN` varchar(50) NOT NULL,
   `LOC_CPRO` varchar(50) NOT NULL,
   PRIMARY KEY (`LOC_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 COMMENT='CODIGOS DE LOCALIZACION';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1 COMMENT='CODIGOS DE LOCALIZACION';
 
 #
 # Structure for the `tunidad` table : 
@@ -196,7 +184,7 @@ CREATE TABLE `tunidadmedico` (
   KEY `FK_RUXM` (`UNI_CODIGO`),
   CONSTRAINT `FK_RMXU` FOREIGN KEY (`MED_CODIGO`) REFERENCES `tmedicoreferente` (`MED_CODIGO`),
   CONSTRAINT `FK_RUXM` FOREIGN KEY (`UNI_CODIGO`) REFERENCES `tunidad` (`UNI_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1 COMMENT='LISTA DE MEDICOS POR UNIDAD';
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=latin1 COMMENT='LISTA DE MEDICOS POR UNIDAD';
 
 #
 # Structure for the `ttramite` table : 
@@ -229,7 +217,7 @@ CREATE TABLE `ttramite` (
   CONSTRAINT `FK_RESTABLECTRAMITE` FOREIGN KEY (`RES_CODIGO`) REFERENCES `trefservicios` (`RES_CODIGO`),
   CONSTRAINT `FK_RTRAMITEPACIENTE` FOREIGN KEY (`PAC_CODIGO`) REFERENCES `tpaciente` (`PAC_CODIGO`),
   CONSTRAINT `FK_TUNIDADMEDICOXTRAMITE` FOREIGN KEY (`UNM_CODIGO`) REFERENCES `tunidadmedico` (`UNM_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1 AVG_ROW_LENGTH=8192 COMMENT='CONTIENE LOS REGISTROS DE CADA REFERENCIA O CONTRAREFERENCIA';
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1 AVG_ROW_LENGTH=8192 COMMENT='CONTIENE LOS REGISTROS DE CADA REFERENCIA O CONTRAREFERENCIA';
 
 #
 # Structure for the `tasignacion` table : 
@@ -246,7 +234,7 @@ CREATE TABLE `tasignacion` (
   KEY `FK_RTRAMITEASIGNACION2` (`TRA_CODIGO`),
   CONSTRAINT `FK_RMEDICOASIGNACION` FOREIGN KEY (`MES_CODIGO`) REFERENCES `tmedicoxservicio` (`MES_CODIGO`),
   CONSTRAINT `FK_RTRAMITEASIGNACION2` FOREIGN KEY (`TRA_CODIGO`) REFERENCES `ttramite` (`TRA_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 COMMENT='ASIGNACION DE FECHAS Y MEDICO POR ESPECIALIDAD PARA ATENCION';
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1 COMMENT='ASIGNACION DE FECHAS Y MEDICO POR ESPECIALIDAD PARA ATENCION';
 
 #
 # Structure for the `tsie10` table : 
@@ -273,7 +261,7 @@ CREATE TABLE `tdiagsie10` (
   KEY `FK_RSXD` (`SIE_CODIGO`),
   CONSTRAINT `FK_RDXS` FOREIGN KEY (`TRA_CODIGO`) REFERENCES `ttramite` (`TRA_CODIGO`),
   CONSTRAINT `FK_RSXD` FOREIGN KEY (`SIE_CODIGO`) REFERENCES `tsie10` (`SIE_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1 AVG_ROW_LENGTH=3276 COMMENT='CONTIENE LOS DIAGNOSTICOS DEL SIE10 PARA CADA TRAMITE, PÚEDE';
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1 AVG_ROW_LENGTH=3276 COMMENT='CONTIENE LOS DIAGNOSTICOS DEL SIE10 PARA CADA TRAMITE, PÃšEDE';
 
 #
 # Structure for the `tusuario` table : 
@@ -292,7 +280,7 @@ CREATE TABLE `tusuario` (
   UNIQUE KEY `usu_usuario_2` (`USU_USUARIO`),
   UNIQUE KEY `USU_USUARIO_3` (`USU_USUARIO`),
   UNIQUE KEY `MED_CODIGO` (`MED_CODIGO`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 #
 # Definition for the `vlocalizacionxunidad` view : 
@@ -471,7 +459,8 @@ INSERT INTO `tmedicoreferenciado` (`MER_CODIGO`, `MER_CODMED`, `MER_ESPECIAL`, `
   (2,'codme','esp','observacion','activo','pnom','snom','Bape','sape'),
   (3,'cod3','esp3','cobser','inactivo','paul','vicente','Capellido','sapellido'),
   (4,'cod4','esp4','dobservacion4','activo','nombre4','segno4','Dap4','seg4'),
-  (5,'jj','kk','','activo','uu','ii','oo','pp');
+  (5,'jj','kk','','activo','uu','ii','oo','pp'),
+  (6,'','espec','nvnvn','activo','ferenciadoa','fvervedr','cdrfrvg','asxxxccc');
 COMMIT;
 
 #
@@ -494,7 +483,8 @@ INSERT INTO `tservicios` (`SER_CODIGO`, `SER_DESCRIP`, `SER_OBSERV`) VALUES
   (5,'ServicioX','des'),
   (6,'servicioY',''),
   (7,'ServicioZ','obs'),
-  (8,'servPO','ddd');
+  (8,'servPO','ddd'),
+  (9,'ServicioS','');
 COMMIT;
 
 #
@@ -509,7 +499,8 @@ INSERT INTO `trefservicios` (`RES_CODIGO`, `SER_CODIGO`, `REF_CODIGO`) VALUES
   (5,5,1),
   (6,6,1),
   (7,7,1),
-  (8,8,1);
+  (8,8,1),
+  (9,9,1);
 COMMIT;
 
 #
@@ -528,18 +519,26 @@ INSERT INTO `tmedicoxservicio` (`MES_CODIGO`, `MER_CODIGO`, `RES_CODIGO`, `MES_A
   (9,2,4,'inactivo'),
   (10,1,1,'inactivo'),
   (11,4,1,'activo'),
-  (12,2,1,'activo'),
-  (13,2,3,'activo'),
+  (12,2,1,'inactivo'),
+  (13,2,3,'inactivo'),
   (14,3,6,'inactivo'),
   (15,3,7,'inactivo'),
   (16,4,3,'inactivo'),
   (17,5,7,'inactivo'),
   (18,4,8,'inactivo'),
   (19,5,5,'activo'),
-  (20,3,8,'activo'),
-  (21,1,8,'inactivo'),
+  (20,3,8,'inactivo'),
+  (21,1,8,'activo'),
   (22,1,7,'activo'),
-  (23,1,8,'activo');
+  (23,1,8,'activo'),
+  (24,2,2,'inactivo'),
+  (25,4,2,'activo'),
+  (26,2,8,'inactivo'),
+  (27,2,1,'activo'),
+  (28,2,2,'activo'),
+  (29,2,3,'activo'),
+  (30,2,5,'activo'),
+  (31,2,8,'activo');
 COMMIT;
 
 #
@@ -573,7 +572,8 @@ INSERT INTO `tpaciente` (`PAC_CODIGO`, `SEG_CODIGO`, `EMP_CODIGO`, `PAC_CEDULA`,
   (4,NULL,NULL,'20000','pac4','nom4','ape4','sape4','2013-07-01','masculino','soltero','pri','hc4','09090909'),
   (5,3,1,'3000000','pac5','nom5','pae5','sape5','2013-07-01','femenino','viudo','sec','hc5','telef'),
   (6,NULL,3,'9898989899','usuarioxpac6','nocsdcsdcm6','pape6','sape6','2013-07-05','masculino','unionlibre','primar','hc6','0988899'),
-  (7,1,NULL,'8777777777','pac7','nom7','ape7','sape7','2013-07-03','femenino','casado','pri','hc7','77880909090');
+  (7,1,NULL,'8777777777','pac7','nom7','ape7','sape7','2013-07-03','femenino','casado','pri','hc7','77880909090'),
+  (8,NULL,NULL,'123123123','paca','crerr','cfvdrv','csdcsadc','2013-10-08','masculino','casado','aeiou','','');
 COMMIT;
 
 #
@@ -586,7 +586,10 @@ INSERT INTO `tmedicoreferente` (`MED_CODIGO`, `MED_CODMED`, `MED_ESPECIAL`, `MED
   (3,'med12','esp2','observ2','inactivo','alwq','fe','sa ','ch '),
   (4,'med3','esp2','observ2','inactivo','al ','fe','hbrtsa ','ch '),
   (5,'med1','esp2e3ew2','observ2sssssssss','activo','rfseal ','fe','xxvsa ','ch '),
-  (6,'med14445','esp2','observ2444444444','activo','al  ','fe','grtgsa  ','ch  ');
+  (6,'med14445','esp2','observ2444444444','activo','al  ','fe','grtgsa  ','ch  '),
+  (7,'213','we','observacion','activo','Alexis','fer','sar','chi'),
+  (8,'omi','omi','','activo','Nuevbo','asdasd','wqeqweqweqwe','csdcsd'),
+  (9,'','esp','blublu','activo','medrefa','asdasd','wefwef','cdfcf');
 COMMIT;
 
 #
@@ -601,7 +604,8 @@ INSERT INTO `tlocalizacion` (`LOC_CODIGO`, `LOC_DESCRIP`, `LOC_CPARR`, `LOC_CCAN
   (5,'local5','pa5','ca5','pr5'),
   (6,'local6','pa6','ca6','pr6'),
   (7,'local7','parroki','sqwsqswq','acascdac'),
-  (8,'local88','par8','elcanton8','prov8');
+  (8,'local88','par8','elcanton8','prov8'),
+  (9,'local x','par x','can x','pro x');
 COMMIT;
 
 #
@@ -636,7 +640,10 @@ INSERT INTO `tunidadmedico` (`UNM_CODIGO`, `MED_CODIGO`, `UNI_CODIGO`, `UNM_ACTI
   (27,1,3,'activo'),
   (28,1,5,'activo'),
   (29,2,5,'activo'),
-  (30,3,1,'activo');
+  (30,3,1,'activo'),
+  (31,7,1,'activo'),
+  (32,8,3,'activo'),
+  (33,9,1,'activo');
 COMMIT;
 
 #
@@ -646,15 +653,19 @@ COMMIT;
 INSERT INTO `ttramite` (`TRA_CODIGO`, `TRA_ESTADO`, `PAC_CODIGO`, `RES_CODIGO`, `UNM_CODIGO`, `TRA_SISTEMA`, `TRA_FECHA`, `TRA_MOTIVO`, `TRA_RESUM_CUAD_CLIN`, `TRA_HALL_EXM_PROC_DIAG`, `TRA_PLAN_TRAT`, `TRA_SALA`, `TRA_CAMA`, `TRA_TIPO`, `TRA_ACTIVO`, `TRA_JUSTIF`, `TRA_OBSERV`) VALUES 
   (1,'confirmado',2,2,27,'publico','2013-06-15 14:28:15','motivo1','resumen1','hall1','plan1','sala1','cama1','contrareferencia','activo','si','\n                        observacion del tramite 1\n* esta es la verdadera contrareferencia :)'),
   (2,'atendido',1,1,2,'publico','2013-06-15 14:29:27','motivo2','res2','hall2','plan2','','','referencia','activo','si','\n                        El paciente puede demorarse 10 minutos porque tiene dificultades.\n* El paciente necesita que le retiren las bendas de la mano izquierda en 2 semanas.'),
-  (3,'confirmado',2,3,4,'publico','2013-06-15 14:30:34','mot3','res3','hall3','plan3','','','referencia','activo','no','sin ovservacion'),
-  (4,'confirmado',5,3,1,'publico','2013-07-11 22:09:26','motivo cualkiera lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','resumen cualkiera','hallazgo cualkiera lorem ipsum',' lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','','','referencia','activo','no','ninguna'),
-  (5,'confirmado',4,3,1,'publico','2013-07-12 00:00:00','motivo lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','resumen  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','hallazgo  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','plan  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','','','referencia','activo','no',''),
-  (6,'confirmado',7,4,1,'publico','2013-07-12 00:00:00','motivo  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','resumen  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','halazgo  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','plan  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','','','referencia','activo','no',''),
+  (3,'confirmado',2,3,4,'publico','2013-06-15 14:30:34','mot3','res3','hall3','plan3','','','contrareferencia','activo','si','\n                        sin ovservacion\n* es una contra'),
+  (4,'atendido',5,3,1,'publico','2013-07-11 22:09:26','motivo cualkiera lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','resumen cualkiera','hallazgo cualkiera lorem ipsum',' lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','','','referencia','activo','si','\n                        ninguna\n* '),
+  (5,'confirmado',4,3,1,'publico','2013-07-12 00:00:00','motivo lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','resumen  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','hallazgo  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','plan  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','','','contrareferencia','activo','si','\n                        \n* '),
+  (6,'atendido',7,4,1,'publico','2013-07-12 00:00:00','motivo  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','resumen  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','halazgo  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','plan  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum','','','referencia','activo','si','\n                        \n* '),
   (7,'confirmado',6,1,1,'publico','2013-07-13 00:00:00','motivo IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','resumen IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','hallazgo IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','plan IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','','','referencia','activo','no',''),
   (8,'confirmado',6,1,1,'publico','2013-07-14 00:00:00','motivo IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','resumen IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','hallazgo IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','plan IH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUSIH, RESULTANTE EN ENFERMEDAD POR CITOMEGALOVIRUS','','','referencia','activo','no',''),
-  (9,'pendiente',5,2,27,'publico','2013-07-15 00:00:00','motivo IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','resumen IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','hallazgo IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','plan IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE',NULL,NULL,'referencia','activo','no',NULL),
+  (9,'cancelado',5,2,27,'publico','2013-07-15 00:00:00','motivo IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','resumen IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','hallazgo IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','plan IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','salaX','cama2','referencia','activo','no',''),
   (10,'cancelado',4,2,28,'publico','2013-07-16 00:00:00','motivo IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','resumen IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','hallazgo IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE','Plan IDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTEIDAS A RETROVIRUS, NO CLASIFICADAS EN OTRA PARTE',NULL,NULL,'referencia','activo','no',NULL),
-  (11,'pendiente',3,3,1,'publico','2013-07-17 00:00:00','motivo NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS ','resumen NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS ','Hallazgo NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS ','plan NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS ',NULL,NULL,'referencia','activo','no',NULL);
+  (11,'atendido',3,3,1,'publico','2013-07-17 00:00:00','motivo NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS ','resumen NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS ','Hallazgo NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS ','plan NO DEL HIGADO Y DE LAS VIAS BILIARES INTRAHEPATICAS ','salaT','camaY','referencia','activo','si','\n                        \n* esta es una contrareferencia'),
+  (12,'confirmado',2,5,1,'publico','2013-08-31 16:17:35','loremipcusnlskndlsdksldk loremipcusnlskndlsdksldkloremipcusnlskndlsdksldk loremipcusnlskndlsdksldkloremipcusnlskndlsdksldk loremipcusnlskndlsdksldkloremipcusnlskndlsdksldk loremipcusnlskndlsdksldkloremipcusnlskndlsdksldk loremipcusnlskndlsdksldkloremipcusnlskndlsdksldk loremipcusnlskndlsdksldkloremipcusnlskndlsdksldk loremipcusnlskndlsdksldkloremipcusnlskndlsdksldk loremipcusnlskndlsdksldk','popkpokpokpokopk  popkpokpokpokopkpopkpokpokpokopk  popkpokpokpokopkpopkpokpokpokopk  popkpokpokpokopkpopkpokpokpokopk  popkpokpokpokopkpopkpokpokpokopk  popkpokpokpokopkpopkpokpokpokopk  popkpokpokpokopk','bgtytgytgytgyt bgtytgytgytgyt bgtytgytgytgyt bgtytgytgytgyt bgtytgytgytgyt bgtytgytgytgyt bgtytgytgytgyt bgtytgytgytgyt bgtytgytgytgyt bgtytgytgytgyt bgtytgytgytgyt bgtytgytgytgyt bgtytgytgytgyt ','kjjkjlkjlkjlk kjjkjlkjlkjlkkjjkjlkjlkjlk kjjkjlkjlkjlkkjjkjlkjlkjlk kjjkjlkjlkjlkkjjkjlkjlkjlk kjjkjlkjlkjlkkjjkjlkjlkjlk kjjkjlkjlkjlkkjjkjlkjlkjlk kjjkjlkjlkjlkkjjkjlkjlkjlk kjjkjlkjlkjlkkjjkjlkjlkjlk kjjkjlkjlkjlkkjjkjlkjlkjlk kjjkjlkjlkjlkkjjkjlkjlkjlk kjjkjlkjlkjlkkjjkjlkjlkjlk kjjkjlkjlkjlk','','','contrareferencia','activo','si','\n                        \n* Esta es la observacion.. con contrareferencia'),
+  (13,'confirmado',2,5,1,'publico','2013-09-09 20:49:23','por algo esta aki','alguien sabe','no yo no se','a bueno','','','referencia','activo','no',''),
+  (14,'confirmado',2,5,1,'publico','2013-09-09 20:51:27','el motivo es desconocido ','asi como el paciente','alguien le conoce','no nadie','','','referencia','activo','no',''),
+  (15,'pendiente',1,5,2,'publico','2013-10-23 21:00:16','nosesabe','tampoco','qsera','buuuuu',NULL,NULL,'referencia','activo','no',NULL);
 COMMIT;
 
 #
@@ -669,7 +680,12 @@ INSERT INTO `tasignacion` (`ASI_CODIGO`, `MES_CODIGO`, `TRA_CODIGO`, `ASI_FECHA`
   (5,1,5,'2013-07-23 10:00:00','activo'),
   (6,8,6,'2013-07-31 13:00:00','activo'),
   (7,12,7,'2013-07-23 09:00:00','activo'),
-  (8,4,8,'2013-07-28 08:21:00','activo');
+  (8,4,8,'2013-07-28 08:21:00','activo'),
+  (9,24,9,'2013-09-11 01:03:00','activo'),
+  (10,13,11,'2013-09-11 00:00:00','activo'),
+  (11,30,12,'2013-10-15 00:00:00','activo'),
+  (12,30,13,'2013-10-24 10:00:00','activo'),
+  (13,19,14,'2013-10-24 15:00:00','activo');
 COMMIT;
 
 #
@@ -8696,7 +8712,7 @@ INSERT INTO `tsie10` (`SIE_CODIGO`, `SIE_DESCRIP`, `SIE_CODIF`) VALUES
   ('1715','LINFOMA NO HODGKIN, NO ESPECIFICADO ','C85.9'),
   ('1716','ENFERMEDADES INMUNOPROLIFERATIVAS MALIGNAS ','C88  '),
   ('1717','ENFERMEDADES INMUNOPROLIFERATIVAS MALIGNAS','C88.-'),
-  ('1718','MACROGLOBULINEMIA DE WALDENSTRÖM','C88.0'),
+  ('1718','MACROGLOBULINEMIA DE WALDENSTRÃ–M','C88.0'),
   ('1719','ENFERMEDAD DE CADENA PESADA ALFA ','C88.1'),
   ('172','CARBUNCO, NO ESPECIFICADO','A22.9'),
   ('1720','ENFERMEDAD DE CADENA PESADA GAMMA ','C88.2'),
@@ -12872,7 +12888,7 @@ INSERT INTO `tsie10` (`SIE_CODIGO`, `SIE_DESCRIP`, `SIE_CODIF`) VALUES
   ('5417','OTROS TIPOS DE NEUMOTORAX ESPONTANEO','J93.1'),
   ('5418','OTROS NEUMOTORAX','J93.8'),
   ('5419','NEUMOTORAX','J93.9'),
-  ('542','FIEBRE DE OÞNYONG-NYONG ','A92.1'),
+  ('542','FIEBRE DE OÃžNYONG-NYONG ','A92.1'),
   ('5420','OTRAS AFECCIONES DE LA PLEURA ','J94  '),
   ('5421','OTRAS AFECCIONES DE LA PLEURA','J94.-'),
   ('5422','QUILOTORAX ','J94.0'),
@@ -14504,9 +14520,9 @@ INSERT INTO `tsie10` (`SIE_CODIGO`, `SIE_DESCRIP`, `SIE_CODIF`) VALUES
   ('6868','OTRO COMPROMISO SISTEMICO DEL TEJIDO CONJUNTIVO ','M35  '),
   ('6869','OTRO COMPROMISO SISTEMICO DEL TEJIDO CONJUNTIVO','M35.-'),
   ('687','ENFERMEDAD POR VIH, RESULTANTE EN TUMORES MALIGNOS NO ESPECIFICAD','B21.9'),
-  ('6870','SINDROME SECO [SJÖGREN]','M35.0'),
+  ('6870','SINDROME SECO [SJÃ–GREN]','M35.0'),
   ('6871','OTROS SINDROMES SUPERPUESTOS','M35.1'),
-  ('6872','ENFERMEDAD DE BEHÇET','M35.2'),
+  ('6872','ENFERMEDAD DE BEHÃ‡ET','M35.2'),
   ('6873','POLIMIALGIA REUMATICA','M35.3'),
   ('6874','FASCITIS DIFUSA (EOSINOFILICA) ','M35.4'),
   ('6875','FIBROSCLEROSIS MULTIFOCAL','M35.5'),
@@ -14986,7 +15002,7 @@ INSERT INTO `tsie10` (`SIE_CODIGO`, `SIE_DESCRIP`, `SIE_CODIF`) VALUES
   ('7295','OTRAS OSTEOCONDROPATIAS ','M93  '),
   ('7296','OTRAS OSTEOCONDROPATIAS','M93.-'),
   ('7297','DESLIZAMIENTO DE LA EPIFISIS FEMORAL SUPERIOR (NO TRAUMATICO)','M93.0'),
-  ('7298','ENFERMEDAD DE KIENBÖCK DEL ADULTO','M93.1'),
+  ('7298','ENFERMEDAD DE KIENBÃ–CK DEL ADULTO','M93.1'),
   ('7299','OSTEOCONDRITIS DISECANTE','M93.2'),
   ('73','INFECCION AMEBIANA DE OTRAS LOCALIZACIONES','A06.8'),
   ('730','OTRAS ENFERMEDADES VIRALES, NO CLASIFICADAS EN OTRA PARTE ','B33  '),
@@ -18051,7 +18067,14 @@ INSERT INTO `tdiagsie10` (`DIA_CODIGO`, `TRA_CODIGO`, `SIE_CODIGO`, `DIA_DIAGNOS
   (13,8,'671','pre'),
   (14,9,'735','pre'),
   (15,10,'16300','pre'),
-  (16,11,'1275','pre');
+  (16,11,'1275','pre'),
+  (17,12,'16853','pre'),
+  (18,12,'747','def'),
+  (19,13,'5160','def'),
+  (20,13,'14340','pre'),
+  (21,14,'2291','pre'),
+  (22,14,'1106','def'),
+  (23,15,'7990','pre');
 COMMIT;
 
 #
@@ -18059,14 +18082,10 @@ COMMIT;
 #
 
 INSERT INTO `tusuario` (`USU_CODIGO`, `USU_USUARIO`, `USU_CLAVE`, `USU_TIPO`, `USU_ACTIVO`, `USU_FECHA`, `MED_CODIGO`) VALUES 
-  (1,'usuario1','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-08-24 12:13:41',1),
+  (1,'usuario1','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-10-23 22:42:44',1),
   (2,'usuario2','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-07-22 21:47:07',2),
-  (3,'usuario3','a8f5f167f44f4964e6c998dee827110c','contrareferente','activo','2013-07-23 09:08:15',3),
-  (4,'usuario4','a8f5f167f44f4964e6c998dee827110c','admin','activo','2013-08-23 00:13:09',4);
+  (3,'usuario3','a8f5f167f44f4964e6c998dee827110c','contrareferente','activo','2013-10-23 21:17:52',3),
+  (4,'usuario4','a8f5f167f44f4964e6c998dee827110c','admin','activo','2013-10-23 22:15:50',4),
+  (5,'alexis','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-09-23 12:28:48',7),
+  (6,'etsito','efe6398127928f1b2e9ef3207fb82663','referente','activo','2013-09-30 20:49:24',8);
 COMMIT;
-
-
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

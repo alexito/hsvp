@@ -24,7 +24,7 @@ if (isset($_POST["codmed"])) {
   $snom = $_POST['snom'];
   $pape = $_POST['pape'];
   $sape = $_POST['sape'];
-  if ($codmed == "" || $esp == "" || $est == "" || $pnom == "" || $snom == "" || $pape == "" || $sape == "") {
+  if ($esp == "" || $est == "" || $pnom == "" || $snom == "" || $pape == "" || $sape == "") {
     echo "Algunos valores del formulario con invalidos.";
     exit();
   } else if (isset($_POST["cod"])) { //This is for UPDATE

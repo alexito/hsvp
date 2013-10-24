@@ -130,68 +130,68 @@ function filtrarUsuario($db_conx, $op, $btn, $rxp, $pa, $ord, $tip, $est, $tex) 
   if ($op == "op1" || $op == "op2") {
     $ban = false;
     $sql = "SELECT COUNT(*) FROM tusuario";
-    if($est != "op0"){
+    if ($est != "op0") {
       $sql .= " WHERE usu_activo = '$est'";
       $ban = true;
     }
-    if($tip != "op0"){
-      $sql .= (!$ban)?" WHERE usu_tipo = '$tip'":" AND usu_tipo = '$tip'";  
+    if ($tip != "op0") {
+      $sql .= (!$ban) ? " WHERE usu_tipo = '$tip'" : " AND usu_tipo = '$tip'";
     }
   }
-  if ($op == "op3") {    
+  if ($op == "op3") {
     $sql = "SELECT COUNT(*) FROM tusuario WHERE usu_tipo = '$tip'";
-    if($est != "op0"){
+    if ($est != "op0") {
       $sql .= " AND usu_activo = '$est'";
     }
   }
   if ($op == "op4") {
     $sql = "SELECT COUNT(*) FROM tusuario WHERE usu_usuario = '$tex'";
-    if($est != "op0"){
+    if ($est != "op0") {
       $sql .= " AND usu_activo = '$est'";
     }
-    if($tip != "op0"){
-      $sql .= " AND usu_tipo = '$tip'";  
+    if ($tip != "op0") {
+      $sql .= " AND usu_tipo = '$tip'";
     }
   }
-  
+
 
   $query = mysqli_query($db_conx, $sql);
   $row = mysqli_fetch_array($query);
   $total = $row[0];
   $limit = limitarResultado($btn, $rxp, $pa, $total);
-  
+
   $sel = "usu_codigo, usu_usuario, usu_tipo, usu_activo, usu_fecha";
 
   if ($op == "op1" || $op == "op2") {
     $ban = false;
     $sql = "SELECT $sel FROM tusuario";
-    if($est != "op0"){
+    if ($est != "op0") {
       $sql .= " WHERE usu_activo = '$est'";
       $ban = true;
     }
-    if($tip != "op0"){
-      $sql .= (!$ban)?" WHERE usu_tipo = '$tip'":" AND usu_tipo = '$tip'";  
+    if ($tip != "op0") {
+      $sql .= (!$ban) ? " WHERE usu_tipo = '$tip'" : " AND usu_tipo = '$tip'";
     }
   }
-  if ($op == "op3") {    
+  if ($op == "op3") {
     $sql = "SELECT $sel FROM tusuario WHERE usu_tipo = '$tip'";
-    if($est != "op0"){
+    if ($est != "op0") {
       $sql .= " AND usu_activo = '$est'";
     }
   }
   if ($op == "op4") {
     $sql = "SELECT $sel FROM tusuario WHERE usu_usuario = '$tex'";
-    if($est != "op0"){
+    if ($est != "op0") {
       $sql .= " AND usu_activo = '$est'";
     }
-    if($tip != "op0"){
-      $sql .= " AND usu_tipo = '$tip'";  
+    if ($tip != "op0") {
+      $sql .= " AND usu_tipo = '$tip'";
     }
   }
 
   if ($op == 'op1') {
     $sql .= " ORDER BY usu_codigo $ord";
-  } else{
+  } else {
     $sql .= " ORDER BY usu_usuario $ord";
   }
 
@@ -450,11 +450,19 @@ function filtrarReferenciasUnidad($db_conx, $codmed, $op, $btn, $rxp, $pa, $est,
 
 function filtrarReferenciasHospital($db_conx, $op, $btn, $rxp, $pa, $est, $nro, $fd, $fh) {
   if ($op == 'op1') {
-    $sql = "SELECT COUNT(*) FROM vreferencias_uni WHERE tra_estado = '$est' OR tra_tipo = '$est'";
+    if ($est == "confirmado") {
+      $sql = "SELECT COUNT(*) FROM vreferencias_uni WHERE tra_estado = '$est' AND tra_tipo != 'contrareferencia'";
+    } else {
+      $sql = "SELECT COUNT(*) FROM vreferencias_uni WHERE tra_estado = '$est' OR tra_tipo = '$est'";
+    }
   } elseif ($op == 'op2') {
     $sql = "SELECT COUNT(*) FROM vreferencias_uni WHERE tra_codigo = $nro OR pac_cedula = '$nro'";
   } elseif ($op == 'op3') {
-    $sql = "SELECT COUNT(*) FROM vreferencias_uni WHERE (tra_estado = '$est' OR tra_tipo = '$est') AND tra_fecha BETWEEN '$fd' AND '$fh'";
+    if ($est == "confirmado") {
+      $sql = "SELECT COUNT(*) FROM vreferencias_uni WHERE tra_estado = '$est' AND tra_tipo != 'contrareferencia' AND tra_fecha BETWEEN '$fd' AND '$fh'";
+    } else {
+      $sql = "SELECT COUNT(*) FROM vreferencias_uni WHERE (tra_estado = '$est' OR tra_tipo = '$est') AND tra_fecha BETWEEN '$fd' AND '$fh'";
+    }
   }
 
   $query = mysqli_query($db_conx, $sql);
@@ -463,11 +471,19 @@ function filtrarReferenciasHospital($db_conx, $op, $btn, $rxp, $pa, $est, $nro, 
   $limit = limitarResultado($btn, $rxp, $pa, $total);
 
   if ($op == 'op1') {
-    $sql = "SELECT * FROM vreferencias_uni WHERE tra_estado = '$est' OR tra_tipo = '$est' ORDER BY tra_fecha ASC LIMIT $limit";
+    if ($est == "confirmado") {
+      $sql = "SELECT * FROM vreferencias_uni WHERE tra_estado = '$est' AND tra_tipo != 'contrareferencia' ORDER BY tra_fecha ASC LIMIT $limit";
+    } else {
+      $sql = "SELECT * FROM vreferencias_uni WHERE tra_estado = '$est' OR tra_tipo = '$est' ORDER BY tra_fecha ASC LIMIT $limit";
+    }
   } elseif ($op == 'op2') {
     $sql = "SELECT * FROM vreferencias_uni WHERE tra_codigo = $nro OR pac_cedula = '$nro' ORDER BY tra_fecha ASC LIMIT $limit";
   } elseif ($op == 'op3') {
-    $sql = "SELECT * FROM vreferencias_uni WHERE (tra_estado = '$est' OR tra_tipo = '$est') AND tra_fecha BETWEEN '$fd' AND '$fh' ORDER BY tra_fecha ASC LIMIT $limit";
+    if ($est == "confirmado") {
+      $sql = "SELECT * FROM vreferencias_uni WHERE tra_estado = '$est' AND tra_tipo != 'contrareferencia' AND tra_fecha BETWEEN '$fd' AND '$fh' ORDER BY tra_fecha ASC LIMIT $limit";
+    } else {
+      $sql = "SELECT * FROM vreferencias_uni WHERE (tra_estado = '$est' OR tra_tipo = '$est') AND tra_fecha BETWEEN '$fd' AND '$fh' ORDER BY tra_fecha ASC LIMIT $limit";
+    }
   }
 
   $query = mysqli_query($db_conx, $sql);

@@ -67,9 +67,9 @@ function contrareferenciaTramiteHospital(){
    
   var ajax = ajaxObj("POST", "ver_referencias_hos.php");
   ajax.onreadystatechange = function(){
-    if(ajaxReturn(ajax) == true) {      
-      window.location.href = 'referencias.php';
-      alert('La CONTRAREFERENCIA se envió correctamente.');      
+    if(ajaxReturn(ajax) == true) {
+      alert('La CONTRAREFERENCIA se envió correctamente.');
+      window.location.href = 'inicio.php';
     }
   }  
   ajax.send("contrareferencia=true&cod=" + cod + "&observ=" + observ + "&jus=" + jus);
@@ -83,8 +83,8 @@ function atendidoTramiteHospital(){
   var ajax = ajaxObj("POST", "ver_referencias_hos.php");
   ajax.onreadystatechange = function(){
     if(ajaxReturn(ajax) == true) {      
-      window.location.href = 'referencias.php';
-      alert('El trámite terminó correctamente.');      
+      alert('El trámite terminó correctamente.');
+      window.location.href = 'inicio.php';
     }
   }  
   ajax.send("atendido=true&cod=" + cod + "&observ=" + observ + "&jus=" + jus);
@@ -112,7 +112,7 @@ function confirmarTramiteHospital(){
   ajax.onreadystatechange = function(){
     if(ajaxReturn(ajax) == true) {      
       alert('El trámite ha sido Confirmado y Asignado correctamente.');      
-      window.close();
+      window.location.href = 'inicio.php';
     }
   }  
   ajax.send("confirmar=true&cod=" + cod + "&cod_mes=" + cod_mes + "&fecha=" + fecha + "&sala=" + sala + "&cama=" + cama + "&observ=" + observ);
@@ -124,7 +124,7 @@ function cancelTramiteHospital(){
   ajax.onreadystatechange = function(){
     if(ajaxReturn(ajax) == true) {            
       alert('El trámite se CANCELÓ CORRECTAMENTE');    
-      window.close();
+      window.location.href = 'inicio.php';
     }
   }  
   ajax.send("cancel=true&cod=" + cod);
@@ -134,9 +134,9 @@ function cancelTramiteUnidad(){
   var cod = _('cod_tramite').value;
   var ajax = ajaxObj("POST", "tramite_uni.php");
   ajax.onreadystatechange = function(){
-    if(ajaxReturn(ajax) == true) {      
+    if(ajaxReturn(ajax) == true) {
+      alert('El trámite se CANCELÓ CORRECTAMENTE'); 
       window.location.href = 'ver_referencias_uni.php';
-      alert('El trámite se CANCELÓ CORRECTAMENTE');      
     }
   }  
   ajax.send("cancel=true&cod="+cod);
@@ -550,7 +550,7 @@ function createMedicoReferente(){
   var sape = _("sape").value;
   var unid = $("#cmbunidad").val();
   var status = _("status");
-  if(codmed == "" || esp == "" || est == "" || pnom == "" ||
+  if(esp == "" || est == "" || pnom == "" ||
     snom == "" || pape == "" || sape == ""){
     status.innerHTML = "Todos los campos son requeridos";
   } else {    
@@ -614,7 +614,7 @@ function createMedicoReferenciado(){
   var pape = _("pape").value;
   var sape = _("sape").value;
   var status = _("status");
-  if(codmed == "" || esp == "" || est == "" || pnom == "" ||
+  if(esp == "" || est == "" || pnom == "" ||
     snom == "" || pape == "" || sape == ""){
     status.innerHTML = "Todos los campos son requeridos";
   } else {    
@@ -683,7 +683,7 @@ function createPaciente(){
   
   var status = _("status");
   if(ced == "" || fnac == "" || cmbgenero == "" || cmbestciv == "" || pnom == "" ||
-    snom == "" || pape == "" || sape == "" || ins == "" || hc == "" || tel == ""){
+    snom == "" || pape == "" || sape == "" || ins == ""){
     status.innerHTML = "Todos los campos son requeridos";
   } else {    
     _("submitbtn").style.display = "none";

@@ -42,7 +42,7 @@ if (isset($_POST["pnom"])) {
     $emp[2] = "emp_codigo = " . $_POST['emp'] . ",";
   }
   if ($pnom == "" || $snom == "" || $pape == "" || $sape == "" || $ced == "" || $fnac == "" ||
-          $cmbgenero == "" || $cmbestciv == "" || $ins == "" || $hc == "" || $tel == "") {
+          $cmbgenero == "" || $cmbestciv == "" || $ins == "") {
     echo "The form submission is missing values.";
     exit();
   } else if (isset($_POST["cod"])) { //This is for UPDATE
