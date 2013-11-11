@@ -246,7 +246,7 @@ function cargarReferenciasFiltradasHospital(btn, rxp, pa, lp1, op, est, nro, fd,
   ajax.onreadystatechange = function() {
     if(ajaxReturn(ajax) == true) { 
       $("#table_content").hide();
-         
+      $("#table_content > h3").remove();
       _("table_data").innerHTML = ajax.responseText;  
       var tem2 = $('#table_data tr:last-child > td:first-child > span').text();
       actualizarPaginador(btn, tem1, tem2);
@@ -265,7 +265,8 @@ function cargarReferenciasFiltradasUnidad(btn, rxp, pa, lp1, op, est, nro, fd, f
   var ajax = ajaxObj("POST", "referencias_uni.php");
   ajax.onreadystatechange = function() {
     if(ajaxReturn(ajax) == true) { 
-      $("#table_content").hide();     
+      $("#table_content").hide();   
+      $("#table_content > h3").remove();
       _("table_data").innerHTML = ajax.responseText;  
       var tem2 = $('#table_data tr:last-child > td:first-child > span').text();
       actualizarPaginador(btn, tem1, tem2);
