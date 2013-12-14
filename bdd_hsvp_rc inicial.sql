@@ -469,11 +469,9 @@ COMMIT;
 #
 
 INSERT INTO `tusuario` (`USU_CODIGO`, `USU_USUARIO`, `USU_CLAVE`, `USU_TIPO`, `USU_ACTIVO`, `USU_FECHA`, `MED_CODIGO`) VALUES 
-  (1,'usuario1','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-09-29 12:50:40',1),
-  (2,'usuario2','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-07-22 21:47:07',2),
-  (3,'usuario3','a8f5f167f44f4964e6c998dee827110c','contrareferente','activo','2013-09-23 12:27:04',3),
-  (4,'usuario4','a8f5f167f44f4964e6c998dee827110c','admin','activo','2013-09-29 12:51:24',4),
-  (5,'alexis','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-09-23 12:28:48',7);
+  (1,'admin','a8f5f167f44f4964e6c998dee827110c','admin','activo','2013-10-23 22:42:44',1),
+  (2,'referente','a8f5f167f44f4964e6c998dee827110c','referente','activo','2013-11-11 11:05:19',2),
+  (3,'contrareferente','a8f5f167f44f4964e6c998dee827110c','contrareferente','activo','2013-11-11 11:05:54',3);
 COMMIT;
 
 #
