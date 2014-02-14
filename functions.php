@@ -25,8 +25,9 @@ function tramite_get_full_info($db_conx, $cod) {
   $info->estado = $row['TRA_ESTADO'];
   $info->pac_codigo = $row['PAC_CODIGO'];
   $info->unm_codigo = $row['UNM_CODIGO'];
-  $info->fecha = explode(' ', $row['TRA_FECHA'])[0];
-  $info->hora = explode(' ', $row['TRA_FECHA'])[1];
+  $cFecha = explode(' ', $row['TRA_FECHA']);
+  $info->fecha = $cFecha[0];
+  $info->hora = $cFecha[1];
   $info->motivo = $row['TRA_MOTIVO'];
   $info->resumen = $row['TRA_RESUM_CUAD_CLIN'];
   $info->hallazgo = $row['TRA_HALL_EXM_PROC_DIAG'];
@@ -931,13 +932,13 @@ function SelectMedicoReferenciado($db_conx, $query = NULL) {
  * @return string[]
  */
 function SelectValuesUnidadMedicoArray($db_conx, $uid) {
+  $data = array();
   $sql = "SELECT uni_codigo, uni_descrip FROM vunidadmedico WHERE med_codigo = $uid";
   $query = mysqli_query($db_conx, $sql);
 
   $n_filas = $query->num_rows;
   $c = 0;
-  while ($c < $n_filas) {
-    $row = mysqli_fetch_array($query);
+  while ($row = mysqli_fetch_array($query)) {    
     $data[$c] = $row[0] . "*" . $row[1];
     $c++;
   }

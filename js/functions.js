@@ -435,7 +435,7 @@ function createLocalizacion(){
   var c = _("canton").value;
   var pr = _("provincia").value;
   var status = _("status");
-  if(p == "" || c == "" || pr == "" ){
+  if(p == "" || c == "" || pr == "" || d == ""){
     status.innerHTML = "Todos los campos son requeridos";
   } else {    
     _("signupbtn").style.display = "none";
@@ -527,18 +527,23 @@ function editUnidad(id){
 }
 
 function createMedicoReferente(){
-  var usu = '0';
-  var cla = '0';
-  if(String(_("clave").value).length > 0 && String(_("clave").value).length < 6){
-    alert('La clave debe tener al menos 6 caracteres.');
-    _("clave").focus();
-    return false;
-  }
+  var usu = "0";
+  var cla = "0";
+  
   if(String(_("usuario").value).length > 5 && String(_("clave").value).length > 5){
     usu = _("usuario").value;
     cla = _("clave").value;
-  }
+  }else{
+      alert('El usuario y clave deben tener al menos 6 caracteres.');
+      return false;
+  }  
   
+  if($("#cmbunidad").val() == null){
+      alert('Debe seleccionar al menos una unidad.');
+  }else{
+      var unid = $("#cmbunidad").val();
+  }
+      
   var cod = _('cod_medicoreferente').value;
   var codmed = _("codmed").value;
   var esp = _("especialidad").value;
@@ -548,7 +553,6 @@ function createMedicoReferente(){
   var snom = _("snom").value;
   var pape = _("pape").value;
   var sape = _("sape").value;
-  var unid = $("#cmbunidad").val();
   var status = _("status");
   if(esp == "" || est == "" || pnom == "" ||
     snom == "" || pape == "" || sape == ""){

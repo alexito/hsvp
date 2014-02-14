@@ -17,7 +17,7 @@ if (isset($_POST['btn'])) {//Filtra los datos
 
 if (isset($_POST["codmed"])) {
   $set_user = FALSE;
-  if ($_POST['usu'] != "0" && $_POST['cla'] != "0") {
+  if ($_POST['usu'] !== "0" && $_POST['cla'] !== '0') {
     $u = $_POST['usu'];
     $c = md5($_POST['cla']);
     $set_user = TRUE;
